@@ -2,7 +2,7 @@ import * as React from "react";
 
 import { Card } from "@blueprintjs/core";
 
-import text from "../../text";
+import text from "../../constants/text";
 const AboutPanel = () => {
     return <Card>{text.panels.about.info}</Card>;
 };
