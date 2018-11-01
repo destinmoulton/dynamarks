@@ -1,0 +1,37 @@
+{
+    "name": "dynamarks",
+    "version": "0.1",
+    "description": "Dynalist bookmarks sync browser extension.",
+    "main": "index.js",
+    "author": "Destin Moulton",
+    "license": "MIT",
+    "scripts": {
+        "build": "webpack --config webpack.config.js -d --watch"
+    },
+    "dependencies": {
+        "@blueprintjs/core": "^3.7.0",
+        "@types/lodash": "^4.14.117",
+        "@types/react-dom": "^16.0.9",
+        "@types/react-redux": "^6.0.9",
+        "@types/redux-logger": "^3.0.6",
+        "@types/redux-thunk": "^2.1.0",
+        "eslint": "^5.8.0",
+        "eslint-plugin-react": "^7.11.1",
+        "immutable": "^4.0.0-rc.12",
+        "lodash": "^4.17.11",
+        "moment": "^2.22.2",
+        "prop-types": "^15.6.2",
+        "react": "^16.6.0",
+        "react-dom": "^16.6.0",
+        "react-redux": "^5.1.0",
+        "redux": "^4.0.1",
+        "redux-logger": "^3.0.6",
+        "redux-thunk": "^2.3.0",
+        "source-map-loader": "^0.2.4",
+        "ts-loader": "^5.3.0",
+        "typescript": "^3.1.5",
+        "web-ext-types": "^3.0.0",
+        "webpack": "^4.23.1",
+        "webpack-cli": "^3.1.2"
+    }
+}
