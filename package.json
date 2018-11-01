@@ -6,7 +6,8 @@
     "author": "Destin Moulton",
     "license": "MIT",
     "scripts": {
-        "build": "webpack --config webpack.config.js -d --watch"
+        "build:app": "webpack --config webpack.app.config.js -d --watch",
+        "build:kernel": "webpack --config webpack.kernel.config.js -d --watch"
     },
     "dependencies": {
         "@blueprintjs/core": "^3.7.0",
