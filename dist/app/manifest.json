@@ -8,6 +8,9 @@
         "96": "graphics/icons/dynamarks_96.svg"
     },
 
+    "background": {
+        "scripts": ["kernel.js"]
+    },
     "browser_action": {
         "browser_style": false,
         "default_popup": "index.html",
