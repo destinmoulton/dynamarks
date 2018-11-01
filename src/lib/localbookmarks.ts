@@ -19,15 +19,16 @@ function flattenBookmarks(
     node: browser.bookmarks.BookmarkTreeNode,
     result: types.ILocalBookmark[]
 ) {
+    let children: string[] = [];
     if (has(node, "children")) {
         // group or folder
         node.children.forEach(child => {
-            console.log(child);
-            flattenBookmarks(child, result);
+            children.push(flattenBookmarks(child, result));
         });
     }
     // bookmark
     result.push({
+        children,
         dateAdded: node.dateAdded || 0,
         dateGroupModified: node.dateGroupModified || 0,
         id: node.id,
@@ -37,7 +38,7 @@ function flattenBookmarks(
         url: node.url || ""
     });
 
-    return result;
+    return node.id;
 }
 
 export { getAll, pluckById };
