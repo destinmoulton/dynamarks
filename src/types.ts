@@ -1,4 +1,5 @@
 export interface ILocalBookmark {
+    children: string[];
     dateAdded: number;
     dateGroupModified: number;
     id: string;
