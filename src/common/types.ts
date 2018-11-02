@@ -1,3 +1,9 @@
+export enum EKernelStatus {
+    Unconfigured,
+    Synchronizing,
+    OK
+}
+
 export class IDispatcher {
     subscribers: any[];
 }
