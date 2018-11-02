@@ -4,10 +4,41 @@ export enum EKernelStatus {
     OK
 }
 
+// ---------------------
+// ClientMessenger Types
+//
+export interface IClientMessenger {
+    channel: any;
+    dispatcher: IDispatcher;
+    send: (msg: IDispatchMessage) => void;
+}
+// END ClientMessenger Types
+// -------------------------
+
+// ----------------
+// Dispatcher Types
+//
 export class IDispatcher {
-    subscribers: any[];
+    subscriptions: TDispatchSubscriptions;
+    subscribe: (topic: string, subscriber: TDispatchSubscriber) => void;
+    dispatch: (msg: IDispatchMessage) => void;
+}
+export interface IDispatchMessage {
+    topic: string;
+    action: string;
+    payload?: any;
 }
 
+export type TDispatchSubscriber = (msg: IDispatchMessage) => void;
+export interface TDispatchSubscriptions {
+    [key: string]: TDispatchSubscriber[];
+}
+// END Dispatcher Types
+// --------------------
+
+// --------------
+// Bookmark Types
+//
 export interface ILocalBookmark {
     children: string[];
     dateAdded: number;
@@ -18,8 +49,5 @@ export interface ILocalBookmark {
     title: string;
     url: string;
 }
-
-export interface IMessage {
-    action: string;
-    payload?: any;
-}
+// END Bookmark Types
+// ------------------
