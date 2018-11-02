@@ -26,6 +26,7 @@
         "alarms",
         "bookmarks",
         "notifications",
-        "tabs"
+        "tabs",
+        "storage"
     ]
 }
