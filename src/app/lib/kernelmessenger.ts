@@ -1,8 +1,8 @@
-class IMessenger {
+class IKernelMessenger {
     channel: any;
 }
 
-class Messenger extends IMessenger {
+class KernelMessenger extends IKernelMessenger {
     constructor() {
         super();
     }
@@ -23,4 +23,4 @@ class Messenger extends IMessenger {
     }
 }
 
-export default new Messenger();
+export default new KernelMessenger();
