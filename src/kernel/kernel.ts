@@ -7,36 +7,24 @@
  * To be run as a background process in the manifest.json.
  */
 import { has } from "lodash";
+
+import LocalBookmarks from "./lib/localbookmarks";
+import bookmarkids from "./constants/bookmarkids";
 class IKernel {
     channel: any;
+    localbookmarks: LocalBookmarks;
 }
 
 class Kernel extends IKernel {
     constructor() {
         super();
-        this.channel = null;
+        this.localbookmarks = new LocalBookmarks();
 
-        this.initializeEvents();
-    }
-
-    initializeEvents() {
-        browser.runtime.onConnect.addListener(this.listenForMessages);
-        browser.runtime.onMessage.addListener(this.handleMessage);
-    }
-
-    handleMessage = (msg: any) => {
-        console.log(msg);
-        this.channel.postMessage({ response: "TEST RESPONSE" });
-    };
-
-    listenForMessages = (port: any) => {
-        if (port.name !== "dynamarks") return;
-
-        this.channel = port;
-        this.channel.onMessage.addListener((msg: any) => {
-            this.handleMessage(msg);
+        this.localbookmarks.pluckById(bookmarkids.menu).then(bkmks => {
+            console.log("bkmks", bkmks);
         });
-    };
+    }
 }
 
+// Initialize the kernel
 new Kernel();
