@@ -23,6 +23,7 @@ export class IDispatcher {
     subscribe: (topic: string, subscriber: TDispatchSubscriber) => void;
     dispatch: (msg: IDispatchMessage) => void;
 }
+
 export interface IDispatchMessage {
     topic: string;
     action: string;
@@ -30,6 +31,7 @@ export interface IDispatchMessage {
 }
 
 export type TDispatchSubscriber = (msg: IDispatchMessage) => void;
+
 export interface TDispatchSubscriptions {
     [key: string]: TDispatchSubscriber[];
 }

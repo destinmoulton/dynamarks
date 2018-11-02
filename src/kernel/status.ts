@@ -19,7 +19,7 @@ class Status {
         this.dispatcher.subscribe("status", this._handleDispatch);
     }
 
-    private _handleDispatch(msg: types.IDispatchMessage) {
+    private _handleDispatch = (msg: types.IDispatchMessage) => {
         switch (msg.action) {
             case "get":
                 const message = {
@@ -29,7 +29,7 @@ class Status {
                 };
                 return this.messenger.send(message);
         }
-    }
+    };
 
     set(newStatus: types.EKernelStatus) {
         this.currentStatus = newStatus;

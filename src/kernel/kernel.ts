@@ -6,23 +6,25 @@
  *
  * To be run as a background process in the manifest.json.
  */
-import { has } from "lodash";
 
+import * as types from "../common/types";
+
+import ClientMessenger from "./lib/clientmessenger";
 import LocalBookmarks from "./lib/localbookmarks";
-import bookmarkids from "./constants/bookmarkids";
-class IKernel {
-    channel: any;
-    localbookmarks: LocalBookmarks;
-}
+import Dispatcher from "../common/dispatcher";
+import Status from "./status";
 
-class Kernel extends IKernel {
+class Kernel {
+    localbookmarks: LocalBookmarks = null;
+    dispatcher: Dispatcher = null;
+    messenger: ClientMessenger = null;
+    status: Status = null;
+
     constructor() {
-        super();
         this.localbookmarks = new LocalBookmarks();
-
-        this.localbookmarks.pluckById(bookmarkids.menu).then(bkmks => {
-            console.log("bkmks", bkmks);
-        });
+        this.dispatcher = new Dispatcher();
+        this.messenger = new ClientMessenger(this.dispatcher);
+        this.status = new Status(this.dispatcher, this.messenger);
     }
 }
 

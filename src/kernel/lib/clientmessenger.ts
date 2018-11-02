@@ -29,10 +29,10 @@ class ClientMessenger implements types.IClientMessenger {
         return this.channel.postMessage(msg);
     }
 
-    handleMessage = (msg: any) => {
-        if (!has(msg, "action")) {
+    private handleMessage = (msg: any) => {
+        if (!has(msg, "topic") || !has(msg, "action")) {
             this.channel.postMessage({
-                error: "No action provided in message.",
+                error: "No topic or action provided in message.",
                 original: msg
             });
             return;
@@ -49,3 +49,4 @@ class ClientMessenger implements types.IClientMessenger {
         });
     };
 }
+export default ClientMessenger;
