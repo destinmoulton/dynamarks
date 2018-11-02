@@ -1,10 +1,6 @@
 import { has } from "lodash";
 import Dispatcher from "../../common/dispatcher";
-
-class IClientMessenger {
-    channel: any;
-    dispatcher: Dispatcher;
-}
+import * as types from "../../common/types";
 
 /**
  * Setup the runtime messaging system for communicating
@@ -13,9 +9,11 @@ class IClientMessenger {
  *  - Listen for messages
  *  - Dispatch messages
  */
-class ClientMessenger extends IClientMessenger {
+class ClientMessenger implements types.IClientMessenger {
+    channel: any = null;
+    dispatcher: types.IDispatcher = null;
+
     constructor(dispatcher: Dispatcher) {
-        super();
         this.channel = null;
         this.dispatcher = dispatcher;
 
@@ -25,6 +23,10 @@ class ClientMessenger extends IClientMessenger {
     initializeEvents() {
         browser.runtime.onConnect.addListener(this.listenForMessages);
         browser.runtime.onMessage.addListener(this.handleMessage);
+    }
+
+    send(msg: types.IDispatchMessage) {
+        return this.channel.postMessage(msg);
     }
 
     handleMessage = (msg: any) => {
