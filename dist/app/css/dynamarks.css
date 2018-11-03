@@ -1,7 +1,7 @@
 html,
 body {
     width: 400px;
-    margin: 10px;
+    margin: 10px 29px 11px 10px;
 }
 
 div#dmks_addon_title {
@@ -10,4 +10,18 @@ div#dmks_addon_title {
     font-size: 1.2em;
     font-weight: bold;
     color: #008bff;
+    margin-bottom: 5px;
+}
+
+div.dkmks-keyform-button-container {
+    text-align: right;
+}
+
+textarea.dkmks-keyform-textarea {
+    width: 100%;
+}
+
+div.dkmks-keyform-infolink {
+    text-align: center;
+    margin-top: 10px;
 }
