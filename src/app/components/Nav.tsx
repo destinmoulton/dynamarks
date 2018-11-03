@@ -2,38 +2,43 @@ import * as React from "react";
 
 import { Tab, Tabs } from "@blueprintjs/core";
 
-import AboutPanel from "./panels/AboutPanel";
-import ActionsPanel from "./panels/ActionsPanel";
+import TabsController from "./TabsController";
+import KeyPanel from "./panels/KeyPanel";
+import { settings } from "../instances";
 
 interface IProps {}
 interface IState {
-    selectedIndex: number;
-    tabs: string[];
+    keyIsSet: boolean;
 }
 class Nav extends React.Component<IProps, IState> {
     constructor(props: IProps) {
         super(props);
 
         this.state = {
-            selectedIndex: 0,
-            tabs: ["Tags", "About"]
+            keyIsSet: false
         };
     }
 
+    async componentDidMount() {
+        // Check if dynalist key is set
+        const isKey = await settings.exists("dynalist_key");
+        this.setState({
+            keyIsSet: isKey
+        });
+    }
+
     render() {
-        const { tabs, selectedIndex } = this.state;
+        const { keyIsSet } = this.state;
+        let view = null;
+        if (!keyIsSet) {
+            view = <KeyPanel />;
+        } else {
+            view = <TabsController />;
+        }
         return (
             <div>
                 <div id="dmks_addon_title">Dynamarks</div>
-                <Tabs animate={true}>
-                    <Tab
-                        id="actions"
-                        title="Actions"
-                        panel={<ActionsPanel />}
-                    />
-                    <Tab id="about" title="About" panel={<AboutPanel />} />
-                    <Tabs.Expander />
-                </Tabs>
+                {view}
             </div>
         );
     }
