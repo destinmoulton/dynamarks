@@ -1,0 +1,3 @@
+// SETTINGS
+export const SETTINGS_GET = "SETTINGS_GET";
+export const SETTINGS_SET = "SETTINGS_SET";
