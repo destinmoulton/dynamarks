@@ -4,6 +4,7 @@ import { createLogger } from "redux-logger";
 import thunk from "redux-thunk";
 
 import bookmarksReducer from "./reducers/bookmarks.reducer";
+import settingsReducer from "./reducers/settings.reducer";
 
 let middleware = applyMiddleware(thunk);
 
@@ -14,6 +15,9 @@ let middleware = applyMiddleware(thunk);
 //     middleware = applyMiddleware(thunk, logger);
 // }
 
-const store = createStore(combineReducers({ bookmarksReducer }), middleware);
+const store = createStore(
+    combineReducers({ bookmarksReducer, settingsReducer }),
+    middleware
+);
 
 export default store;
