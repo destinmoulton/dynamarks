@@ -12,6 +12,7 @@ export interface IClientMessenger {
     dispatcher: IDispatcher;
     send: (msg: IDispatchMessage) => void;
 }
+//
 // END ClientMessenger Types
 // -------------------------
 
@@ -35,6 +36,7 @@ export type TDispatchSubscriber = (msg: IDispatchMessage) => void;
 export interface TDispatchSubscriptions {
     [key: string]: TDispatchSubscriber[];
 }
+//
 // END Dispatcher Types
 // --------------------
 
@@ -51,5 +53,21 @@ export interface ILocalBookmark {
     title: string;
     url: string;
 }
+//
 // END Bookmark Types
+// ------------------
+
+// --------------
+// Dynalist types
+//
+export interface IDynalistDocument {
+    id: string;
+    title: string;
+    type: string;
+    permission: number;
+    collapsed?: boolean;
+    children?: string[];
+}
+//
+// END Dynalist Types
 // ------------------
