@@ -1,3 +1,5 @@
+import { isEmpty } from "lodash";
+
 class Settings {
     error(err: Error) {
         console.error(err);
@@ -29,4 +31,16 @@ class Settings {
             return false;
         }
     }
+
+    async exists(name: string) {
+        try {
+            const val = await browser.storage.local.get(name);
+            return !isEmpty(val);
+        } catch (err) {
+            this.error(err);
+            return false;
+        }
+    }
 }
+
+export default Settings;
