@@ -3,7 +3,7 @@ import * as React from "react";
 import { Tab, Tabs } from "@blueprintjs/core";
 
 import TabsController from "./TabsController";
-import KeyPanel from "./panels/KeyPanel";
+import KeyForm from "./forms/KeyForm";
 import { settings } from "../instances";
 
 interface IProps {}
@@ -31,7 +31,7 @@ class Nav extends React.Component<IProps, IState> {
         const { keyIsSet } = this.state;
         let view = null;
         if (!keyIsSet) {
-            view = <KeyPanel />;
+            view = <KeyForm />;
         } else {
             view = <TabsController />;
         }
