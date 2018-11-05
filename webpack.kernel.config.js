@@ -7,7 +7,7 @@ var webpack = require("webpack");
 module.exports = {
     entry: "./src/kernel/kernel.ts",
     output: {
-        path: path.join(__dirname, "dist", "app"),
+        path: path.join(__dirname, "dist", "app", "js", "dynamarks"),
         filename: "kernel.js"
     },
     devtool: "source-map",

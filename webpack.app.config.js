@@ -4,7 +4,7 @@ var webpack = require("webpack");
 module.exports = {
     entry: "./src/app/App.tsx",
     output: {
-        path: path.join(__dirname, "dist", "app"),
+        path: path.join(__dirname, "dist", "app", "js", "dynamarks"),
         filename: "dynamarks.js"
     },
     devtool: "source-map",
