@@ -7,7 +7,9 @@ const BASE_URL = "https://dynalist.io/api/v1/";
 class DynalistAPI {
     token: string;
 
-    constructor(token: string) {
+    constructor() {}
+
+    public setToken(token: string) {
         this.token = token;
     }
 
