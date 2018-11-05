@@ -25,8 +25,17 @@ class DynalistAPI {
             });
     }
 
-    public async isTokenValid() {
-        const res = await this.getAllFiles();
+    public async isTokenValid(token: string) {
+        const url = BASE_URL + "file/list";
+        const params = {
+            body: JSON.stringify({ token }),
+            method: "POST"
+        };
+        const res = await fetch(url, params)
+            .then(res => res.json())
+            .catch(err => {
+                console.error(err);
+            });
 
         return res._code === "Ok";
     }
