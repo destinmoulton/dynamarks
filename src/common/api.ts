@@ -1,6 +1,6 @@
 import { List, Map } from "immutable";
 
-import * as types from "../../common/types";
+import * as types from "./types";
 
 const BASE_URL = "https://dynalist.io/api/v1/";
 
