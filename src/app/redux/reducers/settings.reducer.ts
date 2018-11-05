@@ -1,19 +1,19 @@
-import { keys } from "lodash";
+import { values } from "lodash";
 
 import * as ActionTypes from "../actiontypes";
+import * as Types from "../../../common/types";
 import settingsConstants from "../../../common/constants/settings.constants";
 
-interface ISettingsState {
-    [key: string]: any;
-}
+let initialState: Types.ISettingsState = {};
 
-let initialState: ISettingsState = {};
-
-keys(settingsConstants).forEach((key: string) => {
-    initialState[key] = null;
+values(settingsConstants).forEach((setting: string) => {
+    initialState[setting] = null;
 });
 
-function settingsReducer(state: ISettingsState = initialState, action: any) {
+function settingsReducer(
+    state: Types.ISettingsState = initialState,
+    action: any
+) {
     switch (action.type) {
         case ActionTypes.SETTINGS_SET:
             return {
