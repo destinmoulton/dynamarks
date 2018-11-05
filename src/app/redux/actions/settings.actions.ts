@@ -1,4 +1,4 @@
-import { isEmpty, values } from "lodash";
+import * as _ from "lodash";
 
 import * as ActionTypes from "../actiontypes";
 import * as Types from "../../../common/types";
@@ -16,11 +16,22 @@ export function set(key: string, value: any) {
 // Populate the settings from storage
 export function populate() {
     return (dispatch: Types.IDispatch) => {
-        values(SettingsConstants).forEach((settingName: string) => {
+        _.values(SettingsConstants).forEach((settingName: string) => {
             settings.get(settingName).then(setting => {
-                if (!isEmpty(setting)) {
+                if (_.isEmpty(setting)) {
                     dispatch(set(settingName, setting));
                 }
+            });
+        });
+    };
+}
+
+// Clear all settings
+export function clearAll() {
+    return (dispatch: Types.IDispatch) => {
+        _.values(SettingsConstants).forEach((settingName: string) => {
+            settings.remove(settingName).then(() => {
+                dispatch(set(settingName, null));
             });
         });
     };

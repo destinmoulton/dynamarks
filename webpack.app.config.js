@@ -29,6 +29,7 @@ module.exports = {
         react: "React",
         "react-dom": "ReactDOM",
         immutable: "Immutable",
-        moment: "moment"
+        moment: "moment",
+        lodash: "_"
     }
 };

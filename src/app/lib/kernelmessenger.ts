@@ -1,5 +1,5 @@
 import * as types from "../../common/types";
-import { has } from "lodash";
+import * as _ from "lodash";
 /**
  * Handle messaging with the kernel
  */
@@ -26,7 +26,7 @@ class KernelMessenger {
     }
 
     private handleMessage = (msg: types.IDispatchMessage) => {
-        if (!has(msg, "topic") || !has(msg, "action")) {
+        if (!_.has(msg, "topic") || !_.has(msg, "action")) {
             this.channel.postMessage({
                 error: "No topic or action provided in message.",
                 original: msg

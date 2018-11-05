@@ -1,4 +1,4 @@
-import { isEmpty } from "lodash";
+import * as _ from "lodash";
 
 class Settings {
     error(err: Error) {
@@ -35,7 +35,7 @@ class Settings {
     async exists(name: string) {
         try {
             const val = await browser.storage.local.get(name);
-            return !isEmpty(val);
+            return !_.isEmpty(val);
         } catch (err) {
             this.error(err);
             return false;
