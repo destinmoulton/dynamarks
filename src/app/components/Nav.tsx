@@ -1,39 +1,48 @@
+import { has } from "lodash";
 import * as React from "react";
+import { connect } from "react-redux";
 
-import { Tab, Tabs } from "@blueprintjs/core";
-
+import * as Types from "../../common/types";
 import TabsController from "./TabsController";
 import KeyForm from "./forms/KeyForm";
 import { settings } from "../instances";
+import SettingsConstants from "../../common/constants/settings.constants";
+import * as SettingsActions from "../redux/actions/settings.actions";
+
+interface IMapStateToProps {
+    settings: Types.ISettingsState;
+}
+
+interface IMapDispatchToProps {
+    settingsPopulate: () => void;
+}
 
 interface IProps {}
-interface IState {
-    keyIsSet: boolean;
-}
-class Nav extends React.Component<IProps, IState> {
-    constructor(props: IProps) {
+
+type TNavProps = IMapStateToProps & IMapDispatchToProps & IProps;
+interface IState {}
+class Nav extends React.Component<TNavProps, IState> {
+    constructor(props: TNavProps) {
         super(props);
 
-        this.state = {
-            keyIsSet: false
-        };
+        this.state = {};
     }
 
-    async componentDidMount() {
-        // Check if dynalist key is set
-        const isKey = await settings.exists("dynalist_key");
-        this.setState({
-            keyIsSet: isKey
-        });
+    componentDidMount() {
+        this.props.settingsPopulate();
     }
 
     render() {
-        const { keyIsSet } = this.state;
+        const { settings } = this.props;
+
         let view = null;
-        if (!keyIsSet) {
-            view = <KeyForm />;
-        } else {
+        if (
+            has(settings, SettingsConstants.token) &&
+            SettingsConstants.token !== null
+        ) {
             view = <TabsController />;
+        } else {
+            view = <KeyForm />;
         }
         return (
             <div>
@@ -44,4 +53,19 @@ class Nav extends React.Component<IProps, IState> {
     }
 }
 
-export default Nav;
+const mapStateToProps = (state: Types.IRootStoreState) => {
+    return {
+        settings: state.settingsStore
+    };
+};
+
+const mapDispatchToProps = (dispatch: Types.IDispatch) => {
+    return {
+        settingsPopulate: () => dispatch(SettingsActions.populate())
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(Nav);
