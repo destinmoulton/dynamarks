@@ -1,5 +1,5 @@
 export default {
-    panels: {
+    tabs: {
         about: {
             info: "Dynamarks was built by Destin Moulton."
         },
@@ -8,6 +8,11 @@ export default {
                 sync: "Sync",
                 upload: "Upload",
                 download: "Download"
+            }
+        },
+        settings: {
+            buttons: {
+                clear: "Sign Out"
             }
         }
     }

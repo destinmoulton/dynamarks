@@ -18,7 +18,7 @@ class ActionsTab extends React.Component {
     }
 
     render() {
-        const { buttons } = text.panels.actions;
+        const { buttons } = text.tabs.actions;
 
         return (
             <Card>
