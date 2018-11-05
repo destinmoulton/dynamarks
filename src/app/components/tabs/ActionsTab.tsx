@@ -4,15 +4,13 @@ import { Button, Card } from "@blueprintjs/core";
 import text from "../../constants/text";
 import { dispatcher, kernelmessenger } from "../../instances";
 
-class ActionsPanel extends React.Component {
+class ActionsTab extends React.Component {
     async componentDidMount() {
-        console.log("ActionsPanel :: componentDidMount() BEGIN");
         dispatcher.subscribe("status", this.handleMessage);
         kernelmessenger.send({
             topic: "status",
             action: "get"
         });
-        console.log("ActionsPanel :: componentDidMount() END");
     }
 
     handleMessage(msg: any) {
@@ -32,4 +30,4 @@ class ActionsPanel extends React.Component {
     }
 }
 
-export default ActionsPanel;
+export default ActionsTab;
