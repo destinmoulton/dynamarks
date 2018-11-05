@@ -4,6 +4,7 @@ import { Tab, Tabs } from "@blueprintjs/core";
 
 import AboutTab from "./tabs/AboutTab";
 import ActionsTab from "./tabs/ActionsTab";
+import SettingsTab from "./tabs/SettingsTab";
 
 interface IProps {}
 interface IState {
@@ -21,10 +22,10 @@ class TabController extends React.Component<IProps, IState> {
     }
 
     render() {
-        const { tabs, selectedIndex } = this.state;
         return (
             <Tabs animate={true}>
                 <Tab id="actions" title="Actions" panel={<ActionsTab />} />
+                <Tab id="settings" title="Settings" panel={<SettingsTab />} />
                 <Tab id="about" title="About" panel={<AboutTab />} />
                 <Tabs.Expander />
             </Tabs>
