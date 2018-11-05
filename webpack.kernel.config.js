@@ -32,7 +32,6 @@ module.exports = {
     //     react: "React",
     //     "react-dom": "ReactDOM",
     //     immutable: "Immutable",
-    //     moment: "moment",
-    //     "semantic-ui-react": "semanticUIReact"
+    //     moment: "moment"
     // }
 };

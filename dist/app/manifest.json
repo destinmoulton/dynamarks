@@ -9,7 +9,7 @@
     },
 
     "background": {
-        "scripts": ["kernel.js"]
+        "scripts": ["js/dynamarks/kernel.js"]
     },
     "browser_action": {
         "browser_style": false,
