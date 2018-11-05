@@ -1,23 +1,30 @@
 import * as React from "react";
+import { connect } from "react-redux";
 import { Button, Card, FormGroup, TextArea, Spinner } from "@blueprintjs/core";
 
-import DynalistAPI from "../../redux/api";
+import DynalistAPI from "../../../common/api";
 
-import settingsConstants from "../../constants/settings.constants";
+import settingsConstants from "../../../common/constants/settings.constants";
+import * as SettingsActions from "../../redux/actions/settings.actions";
+import * as Types from "../../../common/types";
 import { settings } from "../../instances";
 
-interface IProps {
-    navCheckToken: () => void;
+interface IMapDispatchToProps {
+    settingsSet: (key: string, value: any) => void;
 }
+
+interface IProps {}
+
+type TKeyFormProps = IProps & IMapDispatchToProps;
 
 interface IState {
     isValidatingToken: boolean;
 }
 
-class KeyForm extends React.Component<IProps, IState> {
+class KeyForm extends React.Component<TKeyFormProps, IState> {
     textarea: any;
 
-    constructor(props: IProps) {
+    constructor(props: TKeyFormProps) {
         super(props);
 
         this.textarea = React.createRef();
@@ -40,9 +47,7 @@ class KeyForm extends React.Component<IProps, IState> {
                 isValidatingToken: false
             });
             if (isValid) {
-                settings.set(settingsConstants.token, token).then(() => {
-                    this.props.navCheckToken();
-                });
+                this.props.settingsSet(settingsConstants.token, token);
             }
         });
     };
@@ -89,4 +94,18 @@ class KeyForm extends React.Component<IProps, IState> {
     }
 }
 
-export default KeyForm;
+const mapStateToProps = (state: Types.IRootStoreState) => {
+    return {};
+};
+
+const mapDispatchToProps = (dispatch: Types.IDispatch): IMapDispatchToProps => {
+    return {
+        settingsSet: (key: string, value: any) =>
+            dispatch(SettingsActions.set(key, value))
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(KeyForm);
