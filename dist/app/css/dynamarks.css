@@ -4,6 +4,10 @@ body {
     margin: 10px 29px 11px 10px;
 }
 
+.clear {
+    clear: both;
+}
+
 div#dmks_addon_title {
     width: 100%;
     text-align: center;
@@ -11,6 +15,29 @@ div#dmks_addon_title {
     font-weight: bold;
     color: #008bff;
     margin-bottom: 5px;
+}
+
+div.dmks-confirm-button-container {
+    width: 100%;
+    margin-top: 10px;
+}
+
+div.dmks-confirm-cancel-button-container {
+    position: relative;
+    float: left;
+    width: 50%;
+    text-align: left;
+}
+
+div.dmks-confirm-ok-button-container {
+    position: relative;
+    float: right;
+    width: 50%;
+    text-align: right;
+}
+
+div.dmks-confirm-message-container {
+    width: 100%;
 }
 
 div.dkmks-keyform-button-container {
