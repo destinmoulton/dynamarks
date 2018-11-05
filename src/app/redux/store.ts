@@ -16,7 +16,10 @@ let middleware = applyMiddleware(thunk);
 // }
 
 const store = createStore(
-    combineReducers({ bookmarksReducer, settingsReducer }),
+    combineReducers({
+        bookmarksStore: bookmarksReducer,
+        settingsStore: settingsReducer
+    }),
     middleware
 );
 
