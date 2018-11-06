@@ -7,8 +7,8 @@ import { settings } from "../../instances";
 
 export function set(key: string, value: any) {
     return (dispatch: Types.IDispatch) => {
-        settings.set(key, value).then(() => {
-            dispatch(setSingle(key, value));
+        return settings.set(key, value).then(() => {
+            return dispatch(setSingle(key, value));
         });
     };
 }

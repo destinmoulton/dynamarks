@@ -93,7 +93,10 @@ class SelectDoc extends React.Component<TSelectDocProps, IState> {
         this.setState({
             isConfirmingDoc: false
         });
-        this.props.settingsSet(SettingsConstants.doc, this.state.selectedDoc);
+        return this.props.settingsSet(
+            SettingsConstants.doc,
+            this.state.selectedDoc
+        );
     };
 
     render() {

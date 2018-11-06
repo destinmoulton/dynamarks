@@ -14,12 +14,11 @@ class DynalistAPI {
     }
 
     private async request(url: string, requestParams: any = {}) {
-        const set = await this.settings.get(SettingsConstants.token);
-        if (_.isEmpty(set)) {
+        const token = await this.settings.get(SettingsConstants.token);
+        if (_.isEmpty(token)) {
             throw Error("DynalistAPI :: request() -- token is not set.");
         }
 
-        const token = set[SettingsConstants.token];
         const params = {
             body: JSON.stringify({ token, ...requestParams }),
             method: "POST"

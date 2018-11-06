@@ -44,16 +44,13 @@ class ChangeDocument extends React.Component<TProps, IState> {
     };
 
     private handleConfirmOk = () => {
-        this.setState({
-            isConfirming: false
-        });
-
         this.props.settingRemove(SettingsConstants.doc);
     };
 
     private renderOption() {
         const { settingsStore } = this.props;
         const doc = settingsStore.settings[SettingsConstants.doc];
+
         return (
             <div>
                 <div className="">
