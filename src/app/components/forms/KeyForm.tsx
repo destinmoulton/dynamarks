@@ -45,7 +45,6 @@ class KeyForm extends React.Component<TKeyFormProps, IState> {
             });
             if (isValid) {
                 settings.set(settingsConstants.token, token).then(() => {
-                    settings.debug();
                     this.props.settingsSet(settingsConstants.token, token);
                 });
             }
