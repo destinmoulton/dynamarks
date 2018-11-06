@@ -6,7 +6,6 @@ import * as Types from "../../common/types";
 import TabsController from "./TabsController";
 import KeyForm from "./forms/KeyForm";
 import SelectDoc from "./settings/SelectDoc";
-import Settings from "./settings/Settings";
 
 import SettingsConstants from "../../common/constants/settings.constants";
 import * as SettingsActions from "../redux/actions/settings.actions";
