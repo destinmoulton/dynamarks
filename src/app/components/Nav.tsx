@@ -5,8 +5,9 @@ import { connect } from "react-redux";
 import * as Types from "../../common/types";
 import TabsController from "./TabsController";
 import KeyForm from "./forms/KeyForm";
+import SelectDoc from "./settings/SelectDoc";
 import Settings from "./settings/Settings";
-import { settings } from "../instances";
+
 import SettingsConstants from "../../common/constants/settings.constants";
 import * as SettingsActions from "../redux/actions/settings.actions";
 
@@ -41,7 +42,11 @@ class Nav extends React.Component<TNavProps, IState> {
             _.has(settings, SettingsConstants.token) &&
             settings[SettingsConstants.token] !== null
         ) {
-            view = <TabsController />;
+            if (settings[SettingsConstants.doc_id] === null) {
+                view = <SelectDoc />;
+            } else {
+                view = <TabsController />;
+            }
         } else {
             view = <KeyForm />;
         }
