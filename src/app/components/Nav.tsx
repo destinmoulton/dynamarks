@@ -42,7 +42,7 @@ class Nav extends React.Component<TNavProps, IState> {
             _.has(settings, SettingsConstants.token) &&
             settings[SettingsConstants.token] !== null
         ) {
-            if (settings[SettingsConstants.doc_id] === null) {
+            if (settings[SettingsConstants.doc] === null) {
                 view = <SelectDoc />;
             } else {
                 view = <TabsController />;
