@@ -1,6 +1,7 @@
 import * as _ from "lodash";
 
 import * as Types from "./types";
+import { SettingDefaults } from "./constants/settings.constants";
 
 class Settings implements Types.ISettingsClass {
     error(err: Error) {
@@ -16,10 +17,16 @@ class Settings implements Types.ISettingsClass {
         }
     }
 
-    public async get(name: string) {
+    public async get(key: string) {
         try {
-            return await browser.storage.local.get(name).then(res => {
-                return res[name];
+            return await browser.storage.local.get(key).then(res => {
+                if (_.isEmpty(res)) {
+                    if (_.has(SettingDefaults, key)) {
+                        return SettingDefaults[key];
+                    }
+                    return null;
+                }
+                return _.has(res, key) ? res[key] : res;
             });
         } catch (err) {
             this.error(err);

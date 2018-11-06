@@ -9,7 +9,7 @@ import {
 
 let initialSettings: Types.ISettingsState = {};
 _.values(SettingKeys).forEach((setting: string) => {
-    initialSettings[setting] = SettingDefaults[setting];
+    initialSettings[setting] = null;
 });
 
 let initialState: Types.ISettingsState = {

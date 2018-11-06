@@ -42,15 +42,12 @@ function populationComplete() {
     };
 }
 
-// Populate the settings from storage
+// Populate the settings from storage (or default)
 export function populate() {
     return (dispatch: Types.IDispatch) => {
         const promises = _.values(SettingKeys).map((settingName: string) => {
             return settings.get(settingName).then(setting => {
-                if (!_.isEmpty(setting)) {
-                    return dispatch(setSingle(settingName, setting));
-                }
-                return Promise.resolve();
+                return dispatch(setSingle(settingName, setting));
             });
         });
         return Promise.all(promises).then(() => {
