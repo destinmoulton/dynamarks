@@ -66,3 +66,16 @@ div.dkmks-loading-message {
     text-align: center;
     font-size: 0.9em;
 }
+
+/** SelectDoc.tsx component styles **/
+
+ul.dkmks-selectdoc-list {
+    list-style-type: none;
+    margin-left: 0;
+    padding-left: 15px;
+}
+
+li.dkmks-selectdoc-list-item {
+    margin-top: 4px;
+    cursor: pointer;
+}
