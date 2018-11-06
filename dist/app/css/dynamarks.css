@@ -17,6 +17,8 @@ div#dmks_addon_title {
     margin-bottom: 5px;
 }
 
+/** shared/Confirm.tsx component styles **/
+
 div.dmks-confirm-button-container {
     width: 100%;
     margin-top: 10px;
@@ -40,6 +42,8 @@ div.dmks-confirm-message-container {
     width: 100%;
 }
 
+/** forms/KeyForm.tsx styles **/
+
 div.dkmks-keyform-button-container {
     text-align: right;
 }
@@ -52,4 +56,13 @@ textarea.dkmks-keyform-textarea {
 div.dkmks-keyform-infolink {
     text-align: center;
     margin-top: 15px;
+}
+
+/** shared/Loading.tsx component styles **/
+
+div.dkmks-loading-message {
+    width: 100%;
+    margin-top: 15px;
+    text-align: center;
+    font-size: 0.9em;
 }
