@@ -1,6 +1,8 @@
 import * as _ from "lodash";
 
-class Settings {
+import * as Types from "./types";
+
+class Settings implements Types.ISettingsClass {
     error(err: Error) {
         console.error(err);
     }
