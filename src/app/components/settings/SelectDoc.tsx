@@ -4,7 +4,7 @@ import { List } from "immutable";
 
 import Loading from "../shared/Loading";
 import Confirm from "../shared/Confirm";
-import { dynalistapi, settings } from "../../instances";
+import { dynalistapi } from "../../instances";
 import * as Types from "../../../common/types";
 import * as SettingsActions from "../../redux/actions/settings.actions";
 import SettingsConstants from "../../../common/constants/settings.constants";
@@ -87,16 +87,12 @@ class SelectDoc extends React.Component<TSelectDocProps, IState> {
             selectedDoc: null
         });
     };
+
     private handleConfirmOk = () => {
         this.setState({
             isConfirmingDoc: false
         });
-        settings.set(SettingsConstants.doc, this.state.selectedDoc).then(() => {
-            this.props.settingsSet(
-                SettingsConstants.doc,
-                this.state.selectedDoc
-            );
-        });
+        this.props.settingsSet(SettingsConstants.doc, this.state.selectedDoc);
     };
 
     render() {
