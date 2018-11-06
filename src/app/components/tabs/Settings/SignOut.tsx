@@ -1,17 +1,22 @@
 import * as React from "react";
+import { connect } from "react-redux";
 
 import { Button, Card } from "@blueprintjs/core";
 import Confirm from "../../shared/Confirm";
 import text from "../../../constants/text";
+import * as Types from "../../../../common/types";
+import * as SettingsActions from "../../../redux/actions/settings.actions";
 
-interface IProps {}
+interface IMapDispatchToProps {
+    settingsClearAll: () => void;
+}
 
 interface IState {
     isConfirming: boolean;
 }
 
-class SignOut extends React.Component<IProps, IState> {
-    constructor(props: IProps) {
+class SignOut extends React.Component<IMapDispatchToProps, IState> {
+    constructor(props: IMapDispatchToProps) {
         super(props);
 
         this.state = {
@@ -26,14 +31,17 @@ class SignOut extends React.Component<IProps, IState> {
     };
 
     private handleConfirmCancel = () => {
-        console.log("CONFIRM CANCEL");
         this.setState({
             isConfirming: false
         });
     };
 
     private handleConfirmOk = () => {
-        console.log("CONFIRM OK");
+        this.setState({
+            isConfirming: false
+        });
+
+        this.props.settingsClearAll();
     };
 
     private renderButton() {
@@ -62,4 +70,19 @@ class SignOut extends React.Component<IProps, IState> {
     }
 }
 
-export default SignOut;
+const mapStateToProps = () => {
+    return {};
+};
+
+const mapDispatchToProps = (dispatch: Types.IDispatch) => {
+    return {
+        settingsClearAll: () => {
+            dispatch(SettingsActions.clearAll());
+        }
+    };
+};
+
+export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(SignOut);
