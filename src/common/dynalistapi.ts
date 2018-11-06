@@ -1,34 +1,48 @@
+import * as _ from "lodash";
 import { List, Map } from "immutable";
 
 import * as Types from "./types";
+import SettingsConstants from "./constants/settings.constants";
 
 const BASE_URL = "https://dynalist.io/api/v1/";
 
 class DynalistAPI {
-    token: string;
+    settings: Types.ISettingsClass;
 
-    constructor() {}
-
-    public setToken(token: string) {
-        this.token = token;
+    constructor(settings: Types.ISettingsClass) {
+        this.settings = settings;
     }
 
-    private request(url: string, requestParams: any = {}) {
+    private async request(url: string, requestParams: any = {}) {
+        const set = await this.settings.get(SettingsConstants.token);
+        if (_.isEmpty(set)) {
+            throw Error("DynalistAPI :: request() -- token is not set.");
+        }
+
+        const token = set[SettingsConstants.token];
         const params = {
-            body: JSON.stringify({ token: this.token, ...requestParams }),
+            body: JSON.stringify({ token, ...requestParams }),
             method: "POST"
         };
         return fetch(url, params)
             .then(res => res.json())
+            .then(json => {
+                if (json._code !== "Ok") {
+                    throw Error(
+                        `DynalistAPI request() invalid. _code = ${json._code}`
+                    );
+                }
+                return json;
+            })
             .catch(err => {
-                console.error(err);
+                throw err;
             });
     }
 
-    public isTokenValid(token: string) {
+    public isTokenValid(tokenToTest: string) {
         const url = BASE_URL + "file/list";
         const params = {
-            body: JSON.stringify({ token }),
+            body: JSON.stringify({ tokenToTest }),
             method: "POST"
         };
         return fetch(url, params)
@@ -43,6 +57,7 @@ class DynalistAPI {
 
     public async getTopDocs() {
         const res = await this.getAllFiles();
+
         const filesMap = this.mapFiles(res.files);
 
         let topDocs = List<Types.IDynalistDocument>();
@@ -59,10 +74,14 @@ class DynalistAPI {
         return topDocs;
     }
 
-    public getAllFiles() {
+    public async getAllFiles() {
         const url = BASE_URL + "file/list";
 
-        return this.request(url);
+        try {
+            return await this.request(url);
+        } catch (err) {
+            console.error(err);
+        }
     }
 
     private mapFiles(
