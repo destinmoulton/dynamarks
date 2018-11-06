@@ -1,6 +1,6 @@
 const settingsConstants = {
     token: "dynalist_token",
-    doc_id: "dynalist_document_id"
+    doc: "dynalist_bookmarks_document"
 };
 
 export default settingsConstants;
