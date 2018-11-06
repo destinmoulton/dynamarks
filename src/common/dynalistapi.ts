@@ -1,6 +1,6 @@
 import { List, Map } from "immutable";
 
-import * as types from "./types";
+import * as Types from "./types";
 
 const BASE_URL = "https://dynalist.io/api/v1/";
 
@@ -45,8 +45,8 @@ class DynalistAPI {
         const res = await this.getAllFiles();
         const filesMap = this.mapFiles(res.files);
 
-        let topDocs = List<types.IDynalistDocument>();
-        filesMap.forEach((file: types.IDynalistDocument) => {
+        let topDocs = List<Types.IDynalistDocument>();
+        filesMap.forEach((file: Types.IDynalistDocument) => {
             if (res.root_file_id === file.id) {
                 file.children.forEach(child_id => {
                     const child = filesMap.get(child_id);
@@ -66,11 +66,11 @@ class DynalistAPI {
     }
 
     private mapFiles(
-        files: types.IDynalistDocument[]
-    ): Map<string, types.IDynalistDocument> {
-        let docMap = Map<string, types.IDynalistDocument>();
+        files: Types.IDynalistDocument[]
+    ): Map<string, Types.IDynalistDocument> {
+        let docMap = Map<string, Types.IDynalistDocument>();
 
-        files.forEach((file: types.IDynalistDocument) => {
+        files.forEach((file: Types.IDynalistDocument) => {
             docMap = docMap.set(file.id, file);
         });
 
