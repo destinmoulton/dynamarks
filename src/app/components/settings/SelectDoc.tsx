@@ -7,7 +7,7 @@ import Confirm from "../shared/Confirm";
 import { dynalistapi } from "../../instances";
 import * as Types from "../../../common/types";
 import * as SettingsActions from "../../redux/actions/settings.actions";
-import SettingsConstants from "../../../common/constants/settings.constants";
+import { SettingKeys } from "../../../common/constants/settings.constants";
 
 import text from "../../constants/text";
 
@@ -93,10 +93,7 @@ class SelectDoc extends React.Component<TSelectDocProps, IState> {
         this.setState({
             isConfirmingDoc: false
         });
-        return this.props.settingsSet(
-            SettingsConstants.doc,
-            this.state.selectedDoc
-        );
+        return this.props.settingsSet(SettingKeys.doc, this.state.selectedDoc);
     };
 
     render() {

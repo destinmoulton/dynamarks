@@ -1,6 +1,15 @@
-const settingsConstants = {
+export const SettingKeys = {
     token: "dynalist_token",
-    doc: "dynalist_bookmarks_document"
+    doc: "dynalist_bookmarks_document",
+    interval: "synchronization_interval"
 };
 
-export default settingsConstants;
+interface IDefaults {
+    [key: string]: any;
+}
+
+export const SettingDefaults: IDefaults = {
+    token: null,
+    doc: null,
+    interval: 15000
+};

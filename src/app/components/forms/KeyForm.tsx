@@ -2,7 +2,7 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { Button, Card, FormGroup, Spinner } from "@blueprintjs/core";
 
-import SettingsConstants from "../../../common/constants/settings.constants";
+import { SettingKeys } from "../../../common/constants/settings.constants";
 import * as SettingsActions from "../../redux/actions/settings.actions";
 import * as Types from "../../../common/types";
 import { dynalistapi, settings } from "../../instances";
@@ -44,7 +44,7 @@ class KeyForm extends React.Component<TKeyFormProps, IState> {
                 isValidatingToken: false
             });
             if (isValid) {
-                this.props.settingsSet(SettingsConstants.token, token);
+                this.props.settingsSet(SettingKeys.token, token);
             }
         });
     };

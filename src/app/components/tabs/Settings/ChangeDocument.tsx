@@ -6,7 +6,7 @@ import Confirm from "../../shared/Confirm";
 import text from "../../../constants/text";
 import * as Types from "../../../../common/types";
 import * as SettingsActions from "../../../redux/actions/settings.actions";
-import SettingsConstants from "../../../../common/constants/settings.constants";
+import { SettingKeys } from "../../../../common/constants/settings.constants";
 
 interface IMapStateToProps {
     settingsStore: Types.ISettingsState;
@@ -44,12 +44,12 @@ class ChangeDocument extends React.Component<TProps, IState> {
     };
 
     private handleConfirmOk = () => {
-        this.props.settingRemove(SettingsConstants.doc);
+        this.props.settingRemove(SettingKeys.doc);
     };
 
     private renderOption() {
         const { settingsStore } = this.props;
-        const doc = settingsStore.settings[SettingsConstants.doc];
+        const doc = settingsStore.settings[SettingKeys.doc];
 
         return (
             <div>

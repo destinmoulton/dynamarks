@@ -2,11 +2,14 @@ import * as _ from "lodash";
 
 import * as ActionTypes from "../actiontypes";
 import * as Types from "../../../common/types";
-import settingsConstants from "../../../common/constants/settings.constants";
+import {
+    SettingKeys,
+    SettingDefaults
+} from "../../../common/constants/settings.constants";
 
 let initialSettings: Types.ISettingsState = {};
-_.values(settingsConstants).forEach((setting: string) => {
-    initialSettings[setting] = null;
+_.values(SettingKeys).forEach((setting: string) => {
+    initialSettings[setting] = SettingDefaults[setting];
 });
 
 let initialState: Types.ISettingsState = {

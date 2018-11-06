@@ -8,7 +8,7 @@ import TabsController from "./TabsController";
 import KeyForm from "./forms/KeyForm";
 import SelectDoc from "./settings/SelectDoc";
 
-import SettingsConstants from "../../common/constants/settings.constants";
+import { SettingKeys } from "../../common/constants/settings.constants";
 import * as SettingsActions from "../redux/actions/settings.actions";
 
 interface IMapStateToProps {
@@ -42,10 +42,10 @@ class Nav extends React.Component<TNavProps, IState> {
 
         if (isPopulated) {
             if (
-                _.has(settings, SettingsConstants.token) &&
-                settings[SettingsConstants.token] !== null
+                _.has(settings, SettingKeys.token) &&
+                settings[SettingKeys.token] !== null
             ) {
-                if (settings[SettingsConstants.doc] === null) {
+                if (settings[SettingKeys.doc] === null) {
                     view = <SelectDoc />;
                 } else {
                     view = <TabsController />;

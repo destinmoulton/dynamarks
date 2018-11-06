@@ -2,7 +2,7 @@ import * as _ from "lodash";
 import { List, Map } from "immutable";
 
 import * as Types from "./types";
-import SettingsConstants from "./constants/settings.constants";
+import { SettingKeys } from "./constants/settings.constants";
 
 const BASE_URL = "https://dynalist.io/api/v1/";
 
@@ -14,7 +14,7 @@ class DynalistAPI {
     }
 
     private async request(url: string, requestParams: any = {}) {
-        const token = await this.settings.get(SettingsConstants.token);
+        const token = await this.settings.get(SettingKeys.token);
         if (_.isEmpty(token)) {
             throw Error("DynalistAPI :: request() -- token is not set.");
         }
