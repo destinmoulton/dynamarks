@@ -6,17 +6,24 @@ import Confirm from "../../shared/Confirm";
 import text from "../../../constants/text";
 import * as Types from "../../../../common/types";
 import * as SettingsActions from "../../../redux/actions/settings.actions";
+import SettingsConstants from "../../../../common/constants/settings.constants";
+
+interface IMapStateToProps {
+    settingsStore: Types.ISettingsState;
+}
 
 interface IMapDispatchToProps {
-    settingsClearAll: () => void;
+    settingRemove: (key: string) => void;
 }
+
+type TProps = IMapStateToProps & IMapDispatchToProps;
 
 interface IState {
     isConfirming: boolean;
 }
 
-class SignOut extends React.Component<IMapDispatchToProps, IState> {
-    constructor(props: IMapDispatchToProps) {
+class ChangeDocument extends React.Component<TProps, IState> {
+    constructor(props: TProps) {
         super(props);
 
         this.state = {
@@ -41,22 +48,30 @@ class SignOut extends React.Component<IMapDispatchToProps, IState> {
             isConfirming: false
         });
 
-        this.props.settingsClearAll();
+        this.props.settingRemove(SettingsConstants.doc);
     };
 
-    private renderButton() {
+    private renderOption() {
+        const { settingsStore } = this.props;
+        const doc = settingsStore.settings[SettingsConstants.doc];
         return (
-            <Button
-                onClick={this.handleClick}
-                text={text.tabs.settings.clear.button}
-            />
+            <div>
+                <div className="">
+                    {text.tabs.settings.changedocument.title}
+                </div>
+                <div className="">{doc.title}</div>
+                <Button
+                    onClick={this.handleClick}
+                    text={text.tabs.settings.changedocument.button}
+                />
+            </div>
         );
     }
 
     private renderConfirm() {
         return (
             <Confirm
-                message={text.tabs.settings.clear.message}
+                message={text.tabs.settings.changedocument.confirm}
                 okHandler={this.handleConfirmOk}
                 cancelHandler={this.handleConfirmCancel}
             />
@@ -64,25 +79,25 @@ class SignOut extends React.Component<IMapDispatchToProps, IState> {
     }
     render() {
         const { isConfirming } = this.state;
-        let view = isConfirming ? this.renderConfirm() : this.renderButton();
+        let view = isConfirming ? this.renderConfirm() : this.renderOption();
 
         return <Card>{view}</Card>;
     }
 }
 
-const mapStateToProps = () => {
-    return {};
+const mapStateToProps = (state: Types.IRootStoreState) => {
+    return {
+        settingsStore: state.settingsStore
+    };
 };
 
 const mapDispatchToProps = (dispatch: Types.IDispatch) => {
     return {
-        settingsClearAll: () => {
-            dispatch(SettingsActions.clearAll());
-        }
+        settingRemove: (key: string) => dispatch(SettingsActions.remove(key))
     };
 };
 
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(SignOut);
+)(ChangeDocument);

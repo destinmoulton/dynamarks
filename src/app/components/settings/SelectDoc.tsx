@@ -39,15 +39,16 @@ class SelectDoc extends React.Component<TSelectDocProps, IState> {
         this.loadDocs();
     }
 
-    private async loadDocs() {
+    private loadDocs() {
         this.setState({
             isGettingDocs: true
         });
 
-        const docs = await dynalistapi.getTopDocs();
-        this.setState({
-            docs,
-            isGettingDocs: false
+        return dynalistapi.getTopDocs().then(docs => {
+            this.setState({
+                docs,
+                isGettingDocs: false
+            });
         });
     }
 

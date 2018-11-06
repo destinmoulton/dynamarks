@@ -2,6 +2,7 @@ import * as _ from "lodash";
 import * as React from "react";
 import { connect } from "react-redux";
 
+import Loading from "./shared/Loading";
 import * as Types from "../../common/types";
 import TabsController from "./TabsController";
 import KeyForm from "./forms/KeyForm";
@@ -12,6 +13,7 @@ import * as SettingsActions from "../redux/actions/settings.actions";
 
 interface IMapStateToProps {
     settings: Types.ISettingsState;
+    isPopulated: boolean;
 }
 
 interface IMapDispatchToProps {
@@ -34,20 +36,23 @@ class Nav extends React.Component<TNavProps, IState> {
     }
 
     render() {
-        const { settings } = this.props;
+        const { settings, isPopulated } = this.props;
 
-        let view = null;
-        if (
-            _.has(settings, SettingsConstants.token) &&
-            settings[SettingsConstants.token] !== null
-        ) {
-            if (settings[SettingsConstants.doc] === null) {
-                view = <SelectDoc />;
+        let view = <Loading message="Loading data..." />;
+
+        if (isPopulated) {
+            if (
+                _.has(settings, SettingsConstants.token) &&
+                settings[SettingsConstants.token] !== null
+            ) {
+                if (settings[SettingsConstants.doc] === null) {
+                    view = <SelectDoc />;
+                } else {
+                    view = <TabsController />;
+                }
             } else {
-                view = <TabsController />;
+                view = <KeyForm />;
             }
-        } else {
-            view = <KeyForm />;
         }
         return (
             <div>
@@ -59,8 +64,10 @@ class Nav extends React.Component<TNavProps, IState> {
 }
 
 const mapStateToProps = (state: Types.IRootStoreState) => {
+    const { settingsStore } = state;
     return {
-        settings: state.settingsStore
+        settings: settingsStore.settings,
+        isPopulated: settingsStore.isPopulated
     };
 };
 

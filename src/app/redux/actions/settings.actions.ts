@@ -30,21 +30,34 @@ function nullifySingle(key: string) {
 
 export function remove(key: string) {
     return (dispatch: Types.IDispatch) => {
-        settings.remove(key).then(() => {
+        return settings.remove(key).then(() => {
             dispatch(nullifySingle(key));
         });
+    };
+}
+
+function populationComplete() {
+    return {
+        type: ActionTypes.SETTINGS_POPULATION_COMPLETE
     };
 }
 
 // Populate the settings from storage
 export function populate() {
     return (dispatch: Types.IDispatch) => {
-        _.values(SettingsConstants).forEach((settingName: string) => {
-            settings.get(settingName).then(setting => {
-                if (!_.isEmpty(setting)) {
-                    dispatch(setSingle(settingName, setting));
-                }
-            });
+        const promises = _.values(SettingsConstants).map(
+            (settingName: string) => {
+                return settings.get(settingName).then(setting => {
+                    if (!_.isEmpty(setting)) {
+                        return dispatch(setSingle(settingName, setting));
+                    }
+                    return Promise.resolve();
+                });
+            }
+        );
+        return Promise.all(promises).then(() => {
+            console.log("Population complete");
+            dispatch(populationComplete());
         });
     };
 }
