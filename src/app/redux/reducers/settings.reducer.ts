@@ -15,10 +15,15 @@ function settingsReducer(
     action: any
 ) {
     switch (action.type) {
-        case ActionTypes.SETTINGS_SET:
+        case ActionTypes.SETTINGS_SET_SINGLE:
             return {
                 ...state,
                 [action.key]: action.value
+            };
+        case ActionTypes.SETTINGS_NULLIFY_SINGLE:
+            return {
+                ...state,
+                [action.key]: null
             };
         default:
             return { ...state };
