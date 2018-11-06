@@ -19,5 +19,8 @@ export default {
                     "Are you sure you want to sign out? This will clear the API key and stop all synchronization."
             }
         }
+    },
+    selectdoc: {
+        loading: "Loading Dynalist documents..."
     }
 };
