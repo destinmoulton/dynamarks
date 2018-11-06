@@ -18,7 +18,9 @@ class Settings implements Types.ISettingsClass {
 
     public async get(name: string) {
         try {
-            return await browser.storage.local.get(name);
+            return await browser.storage.local.get(name).then(res => {
+                return res[name];
+            });
         } catch (err) {
             this.error(err);
             return false;
