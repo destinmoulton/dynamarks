@@ -20,7 +20,7 @@ function settingsReducer(
 ) {
     switch (action.type) {
         case ActionTypes.SETTINGS_SET_SINGLE: {
-            let settings = state.settings;
+            let settings = _.cloneDeep(state.settings);
             settings[action.key] = action.value;
             return {
                 ...state,
@@ -28,7 +28,7 @@ function settingsReducer(
             };
         }
         case ActionTypes.SETTINGS_NULLIFY_SINGLE: {
-            let settings = state.settings;
+            let settings = _.cloneDeep(state.settings);
             settings[action.key] = null;
             return {
                 ...state,
