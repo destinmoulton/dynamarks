@@ -8,7 +8,7 @@ import { settings } from "../../instances";
 export function set(key: string, value: any) {
     return (dispatch: Types.IDispatch) => {
         settings.set(key, value).then(() => {
-            setSingle(key, value);
+            dispatch(setSingle(key, value));
         });
     };
 }
@@ -31,7 +31,7 @@ function nullifySingle(key: string) {
 export function remove(key: string) {
     return (dispatch: Types.IDispatch) => {
         settings.remove(key).then(() => {
-            nullifySingle(key);
+            dispatch(nullifySingle(key));
         });
     };
 }
