@@ -1,10 +1,11 @@
-import { has } from "lodash";
+import * as _ from "lodash";
 import * as React from "react";
 import { connect } from "react-redux";
 
 import * as Types from "../../common/types";
 import TabsController from "./TabsController";
 import KeyForm from "./forms/KeyForm";
+import Settings from "./settings/Settings";
 import { settings } from "../instances";
 import SettingsConstants from "../../common/constants/settings.constants";
 import * as SettingsActions from "../redux/actions/settings.actions";
@@ -37,8 +38,8 @@ class Nav extends React.Component<TNavProps, IState> {
 
         let view = null;
         if (
-            has(settings, SettingsConstants.token) &&
-            SettingsConstants.token !== null
+            _.has(settings, SettingsConstants.token) &&
+            settings[SettingsConstants.token] !== null
         ) {
             view = <TabsController />;
         } else {

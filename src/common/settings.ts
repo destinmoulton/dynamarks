@@ -41,6 +41,18 @@ class Settings {
             return false;
         }
     }
+
+    // Get all and print them out
+    async debug() {
+        try {
+            return await browser.storage.local.get(null).then((data: any) => {
+                console.log("Settings :: debug()", data);
+            });
+        } catch (err) {
+            this.error(err);
+            return false;
+        }
+    }
 }
 
 export default Settings;

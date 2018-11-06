@@ -2,12 +2,10 @@ import * as React from "react";
 import { connect } from "react-redux";
 import { Button, Card, FormGroup, TextArea, Spinner } from "@blueprintjs/core";
 
-import DynalistAPI from "../../../common/api";
-
 import settingsConstants from "../../../common/constants/settings.constants";
 import * as SettingsActions from "../../redux/actions/settings.actions";
 import * as Types from "../../../common/types";
-import { settings } from "../../instances";
+import { dynalistapi, settings } from "../../instances";
 
 interface IMapDispatchToProps {
     settingsSet: (key: string, value: any) => void;
@@ -41,13 +39,15 @@ class KeyForm extends React.Component<TKeyFormProps, IState> {
 
         this.setState({ isValidatingToken: true });
 
-        const dynalistapi = new DynalistAPI(token);
-        dynalistapi.isTokenValid().then((isValid: boolean) => {
+        dynalistapi.isTokenValid(token).then((isValid: boolean) => {
             this.setState({
                 isValidatingToken: false
             });
             if (isValid) {
-                this.props.settingsSet(settingsConstants.token, token);
+                settings.set(settingsConstants.token, token).then(() => {
+                    settings.debug();
+                    this.props.settingsSet(settingsConstants.token, token);
+                });
             }
         });
     };
