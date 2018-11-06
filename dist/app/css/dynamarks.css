@@ -79,3 +79,14 @@ li.dkmks-selectdoc-list-item {
     margin-top: 4px;
     cursor: pointer;
 }
+
+/** settings card styles **/
+
+div.dmks-settings-card-title {
+    font-weight: bold;
+    width: 100%;
+    text-align: left;
+    border-bottom: 1px dotted lightgray;
+    margin-bottom: 5px;
+    padding-bottom: 5px;
+}

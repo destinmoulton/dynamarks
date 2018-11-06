@@ -1,7 +1,7 @@
 import * as React from "react";
 import { connect } from "react-redux";
 
-import { Button, Card } from "@blueprintjs/core";
+import { Button, Card, Icon } from "@blueprintjs/core";
 import Confirm from "../../shared/Confirm";
 import text from "../../../constants/text";
 import * as Types from "../../../../common/types";
@@ -53,7 +53,8 @@ class ChangeDocument extends React.Component<TProps, IState> {
 
         return (
             <div>
-                <div className="">
+                <div className="dmks-settings-card-title">
+                    <Icon icon="document" />
                     {text.tabs.settings.changedocument.title}
                 </div>
                 <div className="">{doc.title}</div>
