@@ -8,7 +8,6 @@ import Nav from "./components/Nav";
 
 class App {
     run() {
-        console.log("running app");
         const container = document.getElementById("react-app");
 
         const routing = (
