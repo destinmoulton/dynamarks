@@ -18,7 +18,7 @@ export function populate() {
     return (dispatch: Types.IDispatch) => {
         _.values(SettingsConstants).forEach((settingName: string) => {
             settings.get(settingName).then(setting => {
-                if (_.isEmpty(setting)) {
+                if (!_.isEmpty(setting)) {
                     dispatch(set(settingName, setting));
                 }
             });
@@ -30,8 +30,8 @@ export function populate() {
 export function clearAll() {
     return (dispatch: Types.IDispatch) => {
         _.values(SettingsConstants).forEach((settingName: string) => {
-            settings.remove(settingName).then(() => {
-                dispatch(set(settingName, null));
+            return settings.remove(settingName).then(() => {
+                return dispatch(set(settingName, null));
             });
         });
     };
