@@ -54,7 +54,6 @@ export function populate() {
             });
         });
         return Promise.all(promises).then(() => {
-            console.log("Population complete");
             dispatch(populationComplete());
         });
     };
