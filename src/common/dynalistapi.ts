@@ -25,19 +25,20 @@ class DynalistAPI {
             });
     }
 
-    public async isTokenValid(token: string) {
+    public isTokenValid(token: string) {
         const url = BASE_URL + "file/list";
         const params = {
             body: JSON.stringify({ token }),
             method: "POST"
         };
-        const res = await fetch(url, params)
+        return fetch(url, params)
             .then(res => res.json())
+            .then(json => {
+                return json._code === "Ok";
+            })
             .catch(err => {
                 console.error(err);
             });
-
-        return res._code === "Ok";
     }
 
     public async getTopDocs() {

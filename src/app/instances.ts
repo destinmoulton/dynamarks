@@ -1,4 +1,4 @@
-import DynalistAPI from "../common/api";
+import DynalistAPI from "../common/dynalistapi";
 import KernelMessenger from "./lib/kernelmessenger";
 import Dispatcher from "../common/dispatcher";
 import Settings from "../common/settings";
