@@ -11,5 +11,5 @@ interface IDefaults {
 export const SettingDefaults: IDefaults = {
     token: null,
     doc: null,
-    interval: 15000
+    interval: 15
 };

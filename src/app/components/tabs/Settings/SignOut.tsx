@@ -1,7 +1,7 @@
 import * as React from "react";
 import { connect } from "react-redux";
 
-import { Button, Card } from "@blueprintjs/core";
+import { Button, Card, Icon } from "@blueprintjs/core";
 import Confirm from "../../shared/Confirm";
 import text from "../../../constants/text";
 import * as Types from "../../../../common/types";
@@ -66,7 +66,18 @@ class SignOut extends React.Component<IMapDispatchToProps, IState> {
         const { isConfirming } = this.state;
         let view = isConfirming ? this.renderConfirm() : this.renderButton();
 
-        return <Card>{view}</Card>;
+        return (
+            <Card>
+                <div>
+                    <div className="dmks-settings-card-title">
+                        <Icon icon="delete" intent="danger" />
+                        <span>{"  "}</span>
+                        {text.tabs.settings.clear.title}
+                    </div>
+                    {view}
+                </div>
+            </Card>
+        );
     }
 }
 

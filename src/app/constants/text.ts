@@ -12,6 +12,7 @@ export default {
         },
         settings: {
             clear: {
+                title: "Remove Settings",
                 button: "Sign Out",
                 message:
                     "Are you sure you want to sign out? This will clear the API key and stop all synchronization."
@@ -21,6 +22,9 @@ export default {
                 button: "Change Synchronization Document",
                 confirm:
                     "Are you sure you want to change the Dynalist synchronization document?"
+            },
+            syncinterval: {
+                title: "Sync Every (Minutes)"
             }
         }
     },
