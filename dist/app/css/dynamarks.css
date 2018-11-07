@@ -82,6 +82,15 @@ li.dkmks-selectdoc-list-item {
 
 /** settings card styles **/
 
+.dmks-settings-card {
+    margin-bottom: 6px;
+    padding: 10px;
+}
+
+.dmks-settings-card-icon {
+    margin: 0 4px -3px 0;
+}
+
 div.dmks-settings-card-title {
     font-weight: bold;
     width: 100%;

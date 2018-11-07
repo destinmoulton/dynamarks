@@ -54,7 +54,7 @@ class ChangeDocument extends React.Component<TProps, IState> {
         return (
             <div>
                 <div className="dmks-settings-card-title">
-                    <Icon icon="document" />
+                    <Icon icon="document" className="dmks-settings-card-icon" />
                     {text.tabs.settings.changedocument.title}
                 </div>
                 <div className="">{doc.title}</div>
@@ -79,7 +79,11 @@ class ChangeDocument extends React.Component<TProps, IState> {
         const { isConfirming } = this.state;
         let view = isConfirming ? this.renderConfirm() : this.renderOption();
 
-        return <Card>{view}</Card>;
+        return (
+            <Card className="dmks-settings-card" elevation={1}>
+                {view}
+            </Card>
+        );
     }
 }
 

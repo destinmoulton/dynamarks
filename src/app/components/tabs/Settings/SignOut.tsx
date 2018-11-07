@@ -67,11 +67,14 @@ class SignOut extends React.Component<IMapDispatchToProps, IState> {
         let view = isConfirming ? this.renderConfirm() : this.renderButton();
 
         return (
-            <Card>
+            <Card className="dmks-settings-card" elevation={1}>
                 <div>
                     <div className="dmks-settings-card-title">
-                        <Icon icon="delete" intent="danger" />
-                        <span>{"  "}</span>
+                        <Icon
+                            icon="delete"
+                            intent="danger"
+                            className="dmks-settings-card-icon"
+                        />
                         {text.tabs.settings.clear.title}
                     </div>
                     {view}

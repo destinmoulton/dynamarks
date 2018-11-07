@@ -36,21 +36,27 @@ class SyncInterval extends React.Component<TProps, IState> {
         return (
             <div>
                 <div className="dmks-settings-card-title">
-                    <Icon icon="time" />
+                    <Icon icon="time" className="dmks-settings-card-icon" />
                     {text.tabs.settings.syncinterval.title}
                 </div>
                 <input
                     type="text"
                     onChange={this.handleChangeInput}
                     value={settings[SettingKeys.interval]}
+                    size={2}
                 />
+                Minutes
             </div>
         );
     }
 
     render() {
         const view = this.renderInput();
-        return <Card>{view}</Card>;
+        return (
+            <Card className="dmks-settings-card" elevation={1}>
+                {view}
+            </Card>
+        );
     }
 }
 

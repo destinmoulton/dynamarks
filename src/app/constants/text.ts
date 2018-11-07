@@ -24,7 +24,7 @@ export default {
                     "Are you sure you want to change the Dynalist synchronization document?"
             },
             syncinterval: {
-                title: "Sync Every (Minutes)"
+                title: "Sync Interval"
             }
         }
     },
