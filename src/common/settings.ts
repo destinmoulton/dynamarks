@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 
 import * as Types from "./types";
-import { SettingDefaults } from "./constants/settings.constants";
+import { SettingDefaults, SettingKeys } from "./constants/settings.constants";
 
 class Settings implements Types.ISettingsClass {
     error(err: Error) {
@@ -21,8 +21,10 @@ class Settings implements Types.ISettingsClass {
         try {
             return await browser.storage.local.get(key).then(res => {
                 if (_.isEmpty(res)) {
-                    if (_.has(SettingDefaults, key)) {
-                        return SettingDefaults[key];
+                    // invert the keys because the defaults are keyed to the path
+                    const inverted = _.invert(_.clone(SettingKeys));
+                    if (_.has(inverted, key)) {
+                        return SettingDefaults[inverted[key]];
                     }
                     return null;
                 }
