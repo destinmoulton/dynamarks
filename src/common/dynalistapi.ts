@@ -54,6 +54,20 @@ class DynalistAPI {
             });
     }
 
+    public async getBookmarks() {
+        const doc = this.settings.get(SettingKeys.doc);
+        if (doc === null) {
+            return;
+        }
+
+        const params = {
+            file_id: doc.id
+        };
+
+        const url = BASE_URL + "doc/read";
+        return this.request(url, params);
+    }
+
     public async getTopDocs() {
         const res = await this.getAllFiles();
 
