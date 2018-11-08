@@ -1,3 +1,5 @@
+import moment, { Moment } from "moment";
+
 export enum EKernelStatus {
     Unconfigured,
     Synchronizing,
@@ -91,6 +93,10 @@ export interface IGetState {
 
 export interface ISettingsState {
     [key: string]: any;
+}
+
+export interface IBookmarksState {
+    lastSync: Moment;
 }
 
 export interface IRootStoreState {
