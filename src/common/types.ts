@@ -29,7 +29,7 @@ export class IDispatcher {
 
 export interface IDispatchMessage {
     topic: string;
-    action: string;
+    action?: string;
     payload?: any;
 }
 
