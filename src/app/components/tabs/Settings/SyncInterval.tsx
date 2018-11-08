@@ -1,3 +1,4 @@
+import * as _ from "lodash";
 import * as React from "react";
 import { connect } from "react-redux";
 
@@ -9,7 +10,7 @@ import * as SettingsActions from "../../../redux/actions/settings.actions";
 import { SettingKeys } from "../../../../common/constants/settings.constants";
 
 interface IMapStateToProps {
-    settings: Types.ISettingsState;
+    settingInterval: number;
 }
 
 interface IMapDispatchToProps {
@@ -27,34 +28,53 @@ class SyncInterval extends React.Component<TProps, IState> {
         this.state = {};
     }
 
-    private handleChangeInput(evt: any) {
-        console.log(evt.target.value);
+    private handleChangeInput = (evt: any) => {
+        const newInterval = evt.target.value;
+
+        this.props.settingSet(SettingKeys.interval, newInterval);
+    };
+
+    private domOptions() {
+        return _.range(5, 60).map(number => {
+            return (
+                <option key={number} value={number}>
+                    {number.toString()}
+                </option>
+            );
+        });
     }
 
-    private renderInput() {
-        const { settings } = this.props;
+    private domSelect() {
+        const options = this.domOptions();
+        const { settingInterval } = this.props;
         return (
             <div>
-                <div className="dmks-settings-card-title">
-                    <Icon icon="time" className="dmks-settings-card-icon" />
-                    {text.tabs.settings.syncinterval.title}
-                </div>
-                <input
-                    type="text"
+                <select
+                    value={settingInterval}
                     onChange={this.handleChangeInput}
-                    value={settings[SettingKeys.interval]}
-                    size={2}
-                />
-                Minutes
+                >
+                    {options}
+                </select>
+                <span>
+                    {"   "}
+                    Minutes
+                </span>
             </div>
         );
     }
 
     render() {
-        const view = this.renderInput();
+        let view = this.domSelect();
+
         return (
             <Card className="dmks-settings-card" elevation={1}>
-                {view}
+                <div>
+                    <div className="dmks-settings-card-title">
+                        <Icon icon="time" className="dmks-settings-card-icon" />
+                        {text.tabs.settings.syncinterval.title}
+                    </div>
+                    {view}
+                </div>
             </Card>
         );
     }
@@ -63,7 +83,7 @@ class SyncInterval extends React.Component<TProps, IState> {
 const mapStateToProps = (state: Types.IRootStoreState) => {
     const { settings } = state.settingsStore;
     return {
-        settings
+        settingInterval: settings[SettingKeys.interval]
     };
 };
 

@@ -24,7 +24,10 @@ export default {
                     "Are you sure you want to change the Dynalist synchronization document?"
             },
             syncinterval: {
-                title: "Sync Interval"
+                title: "Sync Interval",
+                editbutton: "Edit",
+                cancelbutton: "Cancel",
+                savebutton: "Save"
             }
         }
     },
