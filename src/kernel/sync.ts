@@ -1,14 +1,19 @@
 import DynalistAPI from "../common/dynalistapi";
+import LocalBookmarks from "./lib/localbookmarks";
 
 class Sync {
     private dynalistapi: DynalistAPI = null;
+    private localbookmarks: LocalBookmarks = null;
 
-    constructor(dynalistapi: DynalistAPI) {
+    constructor(dynalistapi: DynalistAPI, localbookmarks: LocalBookmarks) {
         this.dynalistapi = dynalistapi;
+        this.localbookmarks = localbookmarks;
     }
 
     // Get the local bookmarks
-    async getLocalBookmarks() {}
+    async getLocalBookmarks() {
+        return await this.localbookmarks.getBookmarks();
+    }
 
     // Get the remote bookmarks
     public async getRemoteBookmarks() {
