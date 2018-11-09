@@ -1,25 +1,23 @@
 import { flatten, has, map } from "lodash";
 
 import bookmarkids from "../constants/bookmarkids";
-import * as types from "../../common/types";
+import * as Types from "../../common/types";
 
 class LocalBookmarks {
-    async getTree() {
+    private async getTree() {
         return await browser.bookmarks.getTree();
     }
 
-    async pluckById(id: string) {
+    public async getBookmarks() {
         const bmks = await this.getTree();
-        console.log("bmks", bmks);
-        let result: types.ILocalBookmark[] = [];
+        let result: Types.ILocalBookmark[] = [];
         this.flattenBookmarks(bmks[0], result);
-        console.log("flat", result);
-        return map(flatten(bmks), id);
+        return Promise.resolve(result);
     }
 
-    flattenBookmarks(
+    private flattenBookmarks(
         node: browser.bookmarks.BookmarkTreeNode,
-        result: types.ILocalBookmark[]
+        result: Types.ILocalBookmark[]
     ) {
         let children: string[] = [];
         if (has(node, "children")) {
