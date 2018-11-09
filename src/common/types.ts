@@ -70,6 +70,22 @@ export interface IDynalistDocument {
     collapsed?: boolean;
     children?: string[];
 }
+
+export interface IDynalistNode {
+    id: string;
+    content: string;
+    note: string;
+    parent: string;
+    children: string[];
+}
+
+export interface IDynalistNodeChange {
+    action: string;
+    parent_id?: string;
+    node_id?: string;
+    content?: string;
+    note?: string;
+}
 //
 // END Dynalist Types
 // ------------------
