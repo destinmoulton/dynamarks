@@ -66,7 +66,8 @@ class DynalistAPI {
             };
 
             const url = BASE_URL + "doc/read";
-            return await this.request(url, params);
+            const res = await this.request(url, params);
+            return res.nodes;
         } catch (err) {
             throw err;
         }
