@@ -17,6 +17,10 @@ interface IMoveInfo {
 }
 
 class BrowserEvents {
+    constructor() {
+        this.setupListeners();
+    }
+
     private setupListeners() {
         browser.bookmarks.onCreated.addListener(this.bookmarkCreated);
         browser.bookmarks.onRemoved.addListener(this.bookmarkRemoved);
@@ -27,13 +31,21 @@ class BrowserEvents {
     private bookmarkCreated(
         id: string,
         node: browser.bookmarks.BookmarkTreeNode
-    ) {}
+    ) {
+        console.log("BrowserEvents :: bookmarkCreated");
+    }
 
-    private bookmarkRemoved(id: string, removeInfo: IRemoveInfo) {}
+    private bookmarkRemoved(id: string, removeInfo: IRemoveInfo) {
+        console.log("BrowserEvents :: bookmarkRemoved");
+    }
 
-    private bookmarkChanged(id: string, changeInfo: IChangeInfo) {}
+    private bookmarkChanged(id: string, changeInfo: IChangeInfo) {
+        console.log("BrowserEvents :: bookmarkChanged");
+    }
 
-    private bookmarkMoved(id: string, moveInfo: IMoveInfo) {}
+    private bookmarkMoved(id: string, moveInfo: IMoveInfo) {
+        console.log("BrowserEvents :: bookmarkMoved");
+    }
 }
 
 export default BrowserEvents;
