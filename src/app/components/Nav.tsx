@@ -31,7 +31,7 @@ class Nav extends React.Component<TNavProps, IState> {
         this.state = {};
     }
 
-    componentDidMount() {
+    async componentDidMount() {
         this.props.settingsPopulate();
     }
 
