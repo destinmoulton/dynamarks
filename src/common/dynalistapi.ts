@@ -73,6 +73,26 @@ class DynalistAPI {
         }
     }
 
+    public async submitChanges(changes: Types.IDynalistNodeChange[]) {
+        try {
+            const doc = await this.settings.get(SettingKeys.doc);
+            if (doc === null) {
+                return;
+            }
+
+            const params = {
+                file_id: doc.id,
+                changes
+            };
+
+            const url = BASE_URL + "doc/edit";
+            const res = await this.request(url, params);
+            return res.results;
+        } catch (err) {
+            throw err;
+        }
+    }
+
     public async getTopDocs() {
         const res = await this.getAllFiles();
 
