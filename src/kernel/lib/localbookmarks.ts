@@ -1,6 +1,5 @@
 import { flatten, has, map } from "lodash";
 
-import bookmarkids from "../constants/bookmarkids";
 import * as Types from "../../common/types";
 
 class LocalBookmarks {
