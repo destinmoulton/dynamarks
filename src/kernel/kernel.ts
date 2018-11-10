@@ -35,7 +35,11 @@ class Kernel {
         this.status = new Status(this.dispatcher, this.messenger);
         this.settings = new Settings();
         this.dynalistapi = new DynalistAPI(this.settings);
-        this.sync = new Sync(this.dynalistapi, this.localbookmarks);
+        this.sync = new Sync(
+            this.dynalistapi,
+            this.localbookmarks,
+            this.settings
+        );
         this.browserevents = new BrowserEvents();
 
         // this.sync
@@ -46,9 +50,6 @@ class Kernel {
         //     .catch(err => {
         //         console.error(err);
         //     });
-        this.localbookmarks.getBookmarks().then(res => {
-            console.log(res);
-        });
     }
 }
 
