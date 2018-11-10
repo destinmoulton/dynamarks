@@ -1,15 +1,10 @@
-import { node } from "prop-types";
-
-interface INodeChange {
-    action: string;
-    parent_id?: string;
-    node_id?: string;
-    content?: string;
-    note?: string;
-}
+import * as Types from "../../../common/types";
 
 class DocumentChanges {
-    changes: INodeChange[] = null;
+    changes: Types.IDynalistNodeChange[] = null;
+    constructor() {
+        this.changes = [];
+    }
 
     public addNode(parentId: string, nodeTitle: string, nodeNote: string = "") {
         const change = {
@@ -42,7 +37,7 @@ class DocumentChanges {
         this.addChange(change);
     }
 
-    private addChange(change: INodeChange) {
+    private addChange(change: Types.IDynalistNodeChange) {
         this.changes.push(change);
     }
 
