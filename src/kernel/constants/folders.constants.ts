@@ -1,4 +1,8 @@
-export const BrowserFolderIDs = {
+interface IFolders {
+    [key: string]: string;
+}
+
+export const BrowserFolderIDs: IFolders = {
     root: "root________",
     menu: "menu________",
     toolbar: "toolbar_____",
@@ -6,11 +10,12 @@ export const BrowserFolderIDs = {
     mobile: "mobile______"
 };
 
-export const DynalistFolderNames = {
+export const DynalistFolders: IFolders = {
     menu: "Menu",
     toolbar: "Toolbar",
     unfiled: "Other Bookmarks",
-    mobile: "Mobile"
+    mobile: "Mobile",
+    meta: "Dynamarks"
 };
 
 export const Keys = ["menu", "toolbar", "unfiled", "mobile"];
