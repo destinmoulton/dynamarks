@@ -1,17 +1,23 @@
-import { flatten, has, map } from "lodash";
+import { filter, find, has } from "lodash";
 
 import * as Types from "../../common/types";
 
 class LocalBookmarks {
-    private async getTree() {
-        return await browser.bookmarks.getTree();
+    bookmarks: Types.ILocalBookmark[] = null;
+
+    public getFolderContents(parentId: string) {
+        return filter(this.bookmarks, bookmark => {
+            return bookmark.parentId === parentId;
+        });
     }
 
-    public async getBookmarks() {
-        const bmks = await this.getTree();
+    public async populate() {
+        const bmks = await browser.bookmarks.getTree();
         let result: Types.ILocalBookmark[] = [];
         this.flattenBookmarks(bmks[0], result);
-        return Promise.resolve(result);
+
+        this.bookmarks = result;
+        return result;
     }
 
     private flattenBookmarks(
