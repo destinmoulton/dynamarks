@@ -41,7 +41,7 @@ class DynalistAPI {
     public isTokenValid(tokenToTest: string) {
         const url = BASE_URL + "file/list";
         const params = {
-            body: JSON.stringify({ tokenToTest }),
+            body: JSON.stringify({ token: tokenToTest }),
             method: "POST"
         };
         return fetch(url, params)
