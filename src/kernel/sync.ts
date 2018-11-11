@@ -1,82 +1,42 @@
 import { keys, remove, values } from "lodash";
-import DynalistAPI from "../common/dynalistapi";
+
 import LocalBookmarks from "./lib/localbookmarks";
+
+import Messenger from "../common/messenger";
 import Settings from "../common/settings";
 import * as Types from "../common/types";
-import { DynalistFolders } from "./constants/folders.constants";
-import DocumentChanges from "./lib/dynalist/documentchanges";
+
 import { SettingKeys } from "../common/constants/settings.constants";
+import RemoteBookmarks from "./lib/remotebookmarks";
 
 class Sync {
-    private iDynalistAPI: DynalistAPI = null;
+    private iMessenger: Messenger = null;
     private iLocalBookmarks: LocalBookmarks = null;
+    private iRemoteBookmarks: RemoteBookmarks = null;
     private iSettings: Settings = null;
 
-    private bookmarksLocal: Types.ILocalBookmark[] = null;
-    private bookmarksRemote: any = null;
-
-    constructor(
-        dynalistapi: DynalistAPI,
-        localbookmarks: LocalBookmarks,
-        settings: Settings
-    ) {
-        this.iDynalistAPI = dynalistapi;
-        this.iLocalBookmarks = localbookmarks;
+    constructor(messenger: Messenger, settings: Settings) {
+        this.iMessenger = messenger;
         this.iSettings = settings;
 
-        this.canSynchronize().then(canSync => {
-            console.log("Sync :: constructor() canSync", canSync);
+        this.iLocalBookmarks = new LocalBookmarks();
+        this.iRemoteBookmarks = new RemoteBookmarks(this.iSettings);
+
+        this.iMessenger.subscribe("settings", this.handleDispatchSettings);
+
+        this.synchronize();
+    }
+
+    private handleDispatchSettings = (packet: Types.IDispatchMessage) => {
+        console.log("Sync :: handleDispatchSettings() :: packet = ", packet);
+    };
+
+    private synchronize() {
+        return this.canSynchronize().then(canSync => {
             if (canSync) {
-                return this.populate().then(() => {
-                    console.log(
-                        "Sync :: constructor() this.bookmarksRemote",
-                        this.bookmarksRemote
-                    );
-                    console.log(
-                        "Sync :: constructor() this.bookmarksLocal",
-                        this.bookmarksLocal
-                    );
-                    return this.syncDynamarksFolders();
-                });
+                return this.populate().then(() => {});
             }
         });
-    }
-
-    private populate() {
-        const prom1 = this.getRemoteBookmarks().then(bookmarks => {
-            this.bookmarksRemote = bookmarks;
-        });
-
-        const prom2 = this.getLocalBookmarks().then(bookmarks => {
-            this.bookmarksLocal = bookmarks;
-        });
-
-        return Promise.all([prom1, prom2]).catch(err => {
-            console.error(err);
-        });
-    }
-
-    private async syncDynamarksFolders() {
-        const foldersToCreate = values(DynalistFolders);
-        keys(DynalistFolders).forEach(folderKey => {
-            const folderName = DynalistFolders[folderKey];
-            this.bookmarksRemote.forEach((node: Types.IDynalistNode) => {
-                if (node.content === folderName) {
-                    remove(foldersToCreate, val => val === folderName);
-                }
-            });
-        });
-        const documentChanges = new DocumentChanges();
-        foldersToCreate.forEach(folder => {
-            documentChanges.addNode("root", folder);
-        });
-        console.log(
-            "Sync :: syncDynamarksFolders foldersToCreate",
-            foldersToCreate
-        );
-        return await this.iDynalistAPI.submitChanges(
-            documentChanges.getChanges()
-        );
     }
 
     private canSynchronize() {
@@ -90,22 +50,14 @@ class Sync {
         });
     }
 
-    // Get the local bookmarks
-    private async getLocalBookmarks() {
-        try {
-            return await this.iLocalBookmarks.getBookmarks();
-        } catch (err) {
-            throw err;
-        }
-    }
+    private populate() {
+        const prom1 = this.iRemoteBookmarks.populate();
 
-    // Get the remote bookmarks
-    private async getRemoteBookmarks() {
-        try {
-            return await this.iDynalistAPI.getBookmarks();
-        } catch (err) {
-            throw err;
-        }
+        const prom2 = this.iLocalBookmarks.populate();
+
+        return Promise.all([prom1, prom2]).catch(err => {
+            console.error(err);
+        });
     }
 }
 
