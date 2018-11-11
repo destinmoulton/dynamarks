@@ -3,11 +3,17 @@ import * as _ from "lodash";
 import * as ActionTypes from "../actiontypes";
 import * as Types from "../../../common/types";
 import { SettingKeys } from "../../../common/constants/settings.constants";
-import { settings } from "../../instances";
+import { messenger, settings } from "../../instances";
 
 export function set(key: string, value: any) {
     return (dispatch: Types.IDispatch) => {
         return settings.set(key, value).then(() => {
+            // Notify the kernel of setting set
+            messenger.send("settings", {
+                action: "set",
+                payload: key
+            });
+
             return dispatch(setSingle(key, value));
         });
     };
