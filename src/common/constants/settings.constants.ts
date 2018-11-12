@@ -8,8 +8,19 @@ interface IDefaults {
     [key: string]: any;
 }
 
+const info = [
+    navigator.appCodeName,
+    navigator.appName,
+    navigator.appVersion,
+    navigator.language,
+    navigator.platform,
+    navigator.product
+];
+const browserID = info.join(" | ");
+
 export const SettingDefaults: IDefaults = {
     token: null,
     doc: null,
-    interval: 15
+    interval: 15,
+    browserID
 };
