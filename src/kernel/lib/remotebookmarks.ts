@@ -1,6 +1,9 @@
 import { filter, find, keys, remove, reverse, values } from "lodash";
 
-import { DynalistFolders } from "../constants/folders.constants";
+import {
+    BookmarkFolderKeys,
+    DynalistFolders
+} from "../constants/folders.constants";
 import DocumentChanges from "./dynalist/documentchanges";
 import DynalistAPI from "../../common/dynalistapi";
 import DynamarksDB from "./dynamarksdb";
@@ -25,13 +28,17 @@ class RemoteBookmarks {
         this.iDynamarksDB = new DynamarksDB(this.iDynalistAPI);
     }
 
-    public async populate() {
+    public async setup() {
         try {
-            this.bookmarks = await this.iDynalistAPI.getBookmarks();
+            await this.populateBookmarks();
+            console.log(
+                "RemoteBookmarks :: populate() bookmarks",
+                this.bookmarks
+            );
             const { doFoldersExist, foldersToCreate } = this.checkTopFolders();
             if (!doFoldersExist) {
                 await this.createTopFolders(foldersToCreate);
-                await this.populate();
+                await this.setup();
             } else {
                 const dbNode = this.getSingleByName(DynalistFolders.db);
                 // Verify/instantiate the database
@@ -52,6 +59,10 @@ class RemoteBookmarks {
                 err
             );
         }
+    }
+
+    public async populateBookmarks() {
+        this.bookmarks = await this.iDynalistAPI.getBookmarks();
     }
 
     private mapTopFoldersFromDB() {
@@ -79,18 +90,38 @@ class RemoteBookmarks {
         return find(this.bookmarks, { id });
     }
 
-    public getChildren(parent_id: string) {
-        return filter(this.bookmarks, { parent_id });
+    public getChildren(parent_node_id: string) {
+        const node = this.getSingleById(parent_node_id);
+        return node.children instanceof Array && node.children.length > 0
+            ? node.children
+            : [];
+    }
+
+    public getTopFolderByKey(folderKey: string) {
+        return this.topFoldersMap[folderKey];
     }
 
     public removeAllChildNodes(parent_id: string) {
-        const children = this.getChildren(parent_id);
-        const changes = new DocumentChanges();
-        children.forEach((child: Types.IDynalistNode) => {
-            changes.deleteNode(child.id);
-        });
+        const childIds = this.getChildren(parent_id);
+        if (childIds.length > 0) {
+            const changes = new DocumentChanges();
+            childIds.forEach((childId: string) => {
+                changes.deleteNode(childId);
+            });
 
-        return this.iDynalistAPI.submitChanges(changes.getChanges());
+            return this.iDynalistAPI.submitChanges(changes.getChanges());
+        }
+    }
+
+    // Remove all the nodes from the top folders
+    public purgeTopFolderChildNodes() {
+        const promixes = BookmarkFolderKeys.map(async key => {
+            const topFolder = this.getTopFolderByKey(key);
+            return await this.removeAllChildNodes(topFolder.id);
+        });
+        return Promise.all(promixes).then(() => {
+            return this.populateBookmarks();
+        });
     }
 
     private checkTopFolders() {
