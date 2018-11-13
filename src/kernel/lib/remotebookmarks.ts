@@ -1,4 +1,4 @@
-import { find, keys, remove, reverse, values } from "lodash";
+import { filter, find, keys, remove, reverse, values } from "lodash";
 
 import { DynalistFolders } from "../constants/folders.constants";
 import DocumentChanges from "./dynalist/documentchanges";
@@ -6,6 +6,7 @@ import DynalistAPI from "../../common/dynalistapi";
 import DynamarksDB from "./dynamarksdb";
 import Settings from "../../common/settings";
 import * as Types from "../../common/types";
+import { FILTER } from "@blueprintjs/icons/lib/esm/generated/iconNames";
 
 interface ITopFoldersMap {
     [key: string]: Types.IDynalistNode;
@@ -76,6 +77,10 @@ class RemoteBookmarks {
 
     private getSingleById(id: string): Types.IDynalistNode {
         return find(this.bookmarks, { id });
+    }
+
+    public getChildren(parent_id: string) {
+        return filter(this.bookmarks, { parent_id });
     }
 
     private checkTopFolders() {
