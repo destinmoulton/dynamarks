@@ -10,17 +10,18 @@ import DynamarksDB from "./dynamarksdb";
 import Settings from "../../common/settings";
 import * as Types from "../../common/types";
 import { FILTER } from "@blueprintjs/icons/lib/esm/generated/iconNames";
+import { Children } from "react";
 
 interface ITopFoldersMap {
     [key: string]: Types.IDynalistNode;
 }
 
 class RemoteBookmarks {
-    bookmarks: Types.IDynalistNode[];
-    topFoldersMap: ITopFoldersMap = {};
-    iDynalistAPI: DynalistAPI = null;
-    iDynamarksDB: DynamarksDB = null;
-    iSettings: Settings = null;
+    private bookmarks: Types.IDynalistNode[];
+    private topFoldersMap: ITopFoldersMap = {};
+    private iDynalistAPI: DynalistAPI = null;
+    private iDynamarksDB: DynamarksDB = null;
+    private iSettings: Settings = null;
 
     constructor(settings: Settings) {
         this.iSettings = settings;
@@ -122,6 +123,14 @@ class RemoteBookmarks {
         return Promise.all(promixes).then(() => {
             return this.populateBookmarks();
         });
+    }
+
+    public addChildren(parent_id: string, children: Types.ILocalBookmark[]) {
+        const changes = new DocumentChanges();
+        children.forEach((child: Types.ILocalBookmark) => {
+            changes.addNode(parent_id, child.title, child.url);
+        });
+        return this.iDynalistAPI.submitChanges(changes.getChanges());
     }
 
     private checkTopFolders() {
