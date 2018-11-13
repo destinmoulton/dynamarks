@@ -2,6 +2,7 @@ import * as _ from "lodash";
 
 import * as Types from "./types";
 import { SettingDefaults, SettingKeys } from "./constants/settings.constants";
+import { has } from "immutable";
 
 class Settings implements Types.ISettingsClass {
     error(err: Error) {
@@ -20,15 +21,7 @@ class Settings implements Types.ISettingsClass {
     public async get(key: string) {
         try {
             return await browser.storage.local.get(key).then(res => {
-                if (_.isEmpty(res)) {
-                    // invert the keys because the defaults are keyed to the path
-                    const inverted = _.invert(_.clone(SettingKeys));
-                    if (_.has(inverted, key)) {
-                        return SettingDefaults[inverted[key]];
-                    }
-                    return null;
-                }
-                return _.has(res, key) ? res[key] : res;
+                return has(res, key) ? res[key] : res;
             });
         } catch (err) {
             this.error(err);
