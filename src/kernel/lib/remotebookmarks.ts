@@ -83,6 +83,16 @@ class RemoteBookmarks {
         return filter(this.bookmarks, { parent_id });
     }
 
+    public removeAllChildNodes(parent_id: string) {
+        const children = this.getChildren(parent_id);
+        const changes = new DocumentChanges();
+        children.forEach((child: Types.IDynalistNode) => {
+            changes.deleteNode(child.id);
+        });
+
+        return this.iDynalistAPI.submitChanges(changes.getChanges());
+    }
+
     private checkTopFolders() {
         const foldersToCreate = values(DynalistFolders);
         keys(DynalistFolders).forEach(folderKey => {
