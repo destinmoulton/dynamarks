@@ -5,9 +5,14 @@ import LocalBookmarks from "./lib/localbookmarks";
 import Messenger from "../common/messenger";
 import Settings from "../common/settings";
 import * as Types from "../common/types";
-
+import * as MessengerActions from "../common/constants/messengeractions.constants";
 import { SettingKeys } from "../common/constants/settings.constants";
+import {
+    BookmarkFolderKeys,
+    BrowserFolderIDs
+} from "./constants/folders.constants";
 import RemoteBookmarks from "./lib/remotebookmarks";
+import DocumentChanges from "./lib/dynalist/documentchanges";
 
 class Sync {
     private iMessenger: Messenger = null;
@@ -23,23 +28,38 @@ class Sync {
         this.iRemoteBookmarks = new RemoteBookmarks(this.iSettings);
 
         this.iMessenger.subscribe("settings", this.handleDispatchSettings);
+        this.iMessenger.subscribe("sync", this.handleDispatchSync);
 
-        this.synchronize();
+        this.prepareToAct();
     }
 
     private handleDispatchSettings = (packet: Types.IDispatchMessage) => {
         console.log("Sync :: handleDispatchSettings() :: packet = ", packet);
     };
 
-    private synchronize() {
-        return this.canSynchronize().then(canSync => {
+    private handleDispatchSync = async (packet: Types.IDispatchMessage) => {
+        await this.prepareToAct();
+        switch (packet.action) {
+            case MessengerActions.SYNC_OVERWRITE_SERVER:
+                return await this.overwriteServer();
+            case MessengerActions.SYNC_OVERWRITE_LOCAL:
+                return await this.overwriteLocal();
+            case MessengerActions.SYNC_SYNCHRONIZE:
+                return await this.synchronize();
+            default:
+                return;
+        }
+    };
+
+    private prepareToAct() {
+        return this.areSettingsLoaded().then(canSync => {
             if (canSync) {
-                return this.populate().then(() => {});
+                return this.populate();
             }
         });
     }
 
-    private canSynchronize() {
+    private areSettingsLoaded() {
         const prom1 = this.iSettings.exists(SettingKeys.token);
         const prom2 = this.iSettings.exists(SettingKeys.doc);
 
@@ -51,7 +71,7 @@ class Sync {
     }
 
     private populate() {
-        const prom1 = this.iRemoteBookmarks.populate();
+        const prom1 = this.iRemoteBookmarks.setup();
 
         const prom2 = this.iLocalBookmarks.populate();
 
@@ -59,6 +79,19 @@ class Sync {
             console.error(err);
         });
     }
+
+    private async overwriteServer() {
+        console.log("Sync :: overwriteServer()");
+
+        // Remove current children
+        await this.iRemoteBookmarks.purgeTopFolderChildNodes();
+    }
+
+    private overwriteLocal() {
+        this.iLocalBookmarks;
+    }
+
+    private synchronize() {}
 }
 
 export default Sync;
