@@ -1,12 +1,12 @@
-export const SettingKeys = {
-    token: "dynalist_token",
-    doc: "dynalist_bookmarks_document",
-    interval: "synchronization_interval"
-};
-
-interface IDefaults {
+interface ISettings {
     [key: string]: any;
 }
+export const SettingKeys: ISettings = {
+    token: "dynalist_token",
+    doc: "dynalist_bookmarks_document",
+    interval: "synchronization_interval",
+    browserID: "browserID"
+};
 
 const info = [
     navigator.appCodeName,
@@ -18,7 +18,7 @@ const info = [
 ];
 const browserID = info.join(" | ");
 
-export const SettingDefaults: IDefaults = {
+export const SettingDefaults: ISettings = {
     token: null,
     doc: null,
     interval: 15,
