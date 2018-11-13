@@ -15,7 +15,7 @@ export const DynalistFolders: IFolders = {
     toolbar: "Toolbar",
     unfiled: "Other Bookmarks",
     mobile: "Mobile",
-    meta: "Dynamarks"
+    db: "Dynamarks Database"
 };
 
 export const Keys = ["menu", "toolbar", "unfiled", "mobile"];
