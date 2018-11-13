@@ -2,7 +2,10 @@ import * as _ from "lodash";
 
 import * as ActionTypes from "../actiontypes";
 import * as Types from "../../../common/types";
-import { SettingKeys } from "../../../common/constants/settings.constants";
+import {
+    SettingDefaults,
+    SettingKeys
+} from "../../../common/constants/settings.constants";
 import { messenger, settings } from "../../instances";
 
 export function set(key: string, value: any) {
@@ -51,9 +54,18 @@ function populationComplete() {
 // Populate the settings from storage (or default)
 export function populate() {
     return (dispatch: Types.IDispatch) => {
-        const promises = _.values(SettingKeys).map((settingName: string) => {
-            return settings.get(settingName).then(setting => {
-                return dispatch(setSingle(settingName, setting));
+        const promises = _.keys(SettingKeys).map((settingKey: string) => {
+            const settingName = SettingKeys[settingKey];
+            return settings.exists(settingName).then(doesExist => {
+                if (doesExist) {
+                    return settings.get(settingName).then(setting => {
+                        return dispatch(setSingle(settingName, setting));
+                    });
+                } else if (SettingDefaults[settingKey] !== null) {
+                    return dispatch(
+                        set(settingName, SettingDefaults[settingKey])
+                    );
+                }
             });
         });
         return Promise.all(promises).then(() => {
