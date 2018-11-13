@@ -4,13 +4,7 @@ import * as Types from "../../common/types";
 import DocumentChanges from "./dynalist/documentchanges";
 
 class LocalBookmarks {
-    bookmarks: Types.ILocalBookmark[] = null;
-
-    public getFolderContents(parentId: string) {
-        return filter(this.bookmarks, bookmark => {
-            return bookmark.parentId === parentId;
-        });
-    }
+    private bookmarks: Types.ILocalBookmark[] = null;
 
     public async populate() {
         const bmks = await browser.bookmarks.getTree();
@@ -23,8 +17,8 @@ class LocalBookmarks {
         return sorted;
     }
 
-    public getChildren(localFolderID: string) {
-        return filter(this.bookmarks, { parentId: localFolderID });
+    public getSingleById(id: string) {
+        return find(this.bookmarks, { id });
     }
 
     private flattenBookmarks(
