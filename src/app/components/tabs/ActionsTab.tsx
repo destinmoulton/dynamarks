@@ -2,11 +2,19 @@ import * as React from "react";
 import { Button, Card } from "@blueprintjs/core";
 
 import text from "../../constants/text";
+import * as MessengerActions from "../../../common/constants/messengeractions.constants";
+import { messenger } from "../../instances";
 
 class ActionsTab extends React.Component {
     handleMessage(msg: any) {
         console.log(msg);
     }
+
+    handleClickUpload = () => {
+        messenger.send("sync", {
+            action: MessengerActions.SYNC_OVERWRITE_SERVER
+        });
+    };
 
     render() {
         const { buttons } = text.tabs.actions;
@@ -14,7 +22,9 @@ class ActionsTab extends React.Component {
         return (
             <Card>
                 <Button icon="refresh">{buttons.sync}</Button>
-                <Button icon="arrow-up">{buttons.upload}</Button>
+                <Button icon="arrow-up" onClick={this.handleClickUpload}>
+                    {buttons.upload}
+                </Button>
                 <Button icon="arrow-down">{buttons.download}</Button>
             </Card>
         );
