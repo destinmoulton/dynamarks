@@ -10,9 +10,10 @@ import SelectDoc from "./settings/SelectDoc";
 
 import { SettingKeys } from "../../common/constants/settings.constants";
 import * as SettingsActions from "../redux/actions/settings.actions";
+import { settings } from "../instances";
 
 interface IMapStateToProps {
-    settings: Types.ISettingsState;
+    settingsState: Types.ISettingsState;
     isPopulated: boolean;
 }
 
@@ -36,16 +37,16 @@ class Nav extends React.Component<TNavProps, IState> {
     }
 
     render() {
-        const { settings, isPopulated } = this.props;
+        const { settingsState, isPopulated } = this.props;
 
         let view = <Loading message="Loading data..." />;
 
         if (isPopulated) {
             if (
-                _.has(settings, SettingKeys.token) &&
-                settings[SettingKeys.token] !== null
+                _.has(settingsState, SettingKeys.token) &&
+                settingsState[SettingKeys.token] !== null
             ) {
-                if (settings[SettingKeys.doc] === null) {
+                if (settingsState[SettingKeys.doc] === null) {
                     view = <SelectDoc />;
                 } else {
                     view = <TabsController />;
@@ -66,7 +67,7 @@ class Nav extends React.Component<TNavProps, IState> {
 const mapStateToProps = (state: Types.IRootStoreState) => {
     const { settingsStore } = state;
     return {
-        settings: settingsStore.settings,
+        settingsState: settingsStore.settings,
         isPopulated: settingsStore.isPopulated
     };
 };
