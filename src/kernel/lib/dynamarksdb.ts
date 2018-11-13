@@ -2,7 +2,7 @@
  * The database stored in Dynamarks for meta data
  */
 
-import { cloneDeep, keys } from "lodash";
+import { cloneDeep, find, keys } from "lodash";
 import { DynalistFolders } from "../constants/folders.constants";
 
 import DynalistAPI from "../../common/dynalistapi";
@@ -13,12 +13,19 @@ interface IFolderMap {
     [folder_key: string]: string;
 }
 
+interface IInstallation {
+    lastSynchronization: string;
+    browserID: string;
+}
+
 interface IDynarksDB {
     folderMap: IFolderMap;
+    installations: IInstallation[];
 }
 
 const INITIAL_DB: IDynarksDB = {
-    folderMap: {}
+    folderMap: {},
+    installations: []
 };
 class DynamarksDB {
     db: IDynarksDB = null;
@@ -65,6 +72,18 @@ class DynamarksDB {
 
     public getTopFolderMap() {
         return this.db.folderMap;
+    }
+
+    public addInstallation(browserID: string) {
+        const inst = {
+            browserID,
+            lastSynchronization: ""
+        };
+        this.db.installations.push(inst);
+    }
+
+    public getInstallation(browserID: string) {
+        return find(this.db.installations, { browserID });
     }
 }
 
