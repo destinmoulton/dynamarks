@@ -6,7 +6,7 @@ export default {
         actions: {
             buttons: {
                 sync: "Sync",
-                upload: "Upload",
+                upload: "Overwrite Server",
                 download: "Download"
             }
         },
