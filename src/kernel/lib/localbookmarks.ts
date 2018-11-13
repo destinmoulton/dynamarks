@@ -1,6 +1,7 @@
-import { filter, find, has } from "lodash";
+import { filter, find, has, sortBy } from "lodash";
 
 import * as Types from "../../common/types";
+import DocumentChanges from "./dynalist/documentchanges";
 
 class LocalBookmarks {
     bookmarks: Types.ILocalBookmark[] = null;
@@ -15,9 +16,15 @@ class LocalBookmarks {
         const bmks = await browser.bookmarks.getTree();
         let result: Types.ILocalBookmark[] = [];
         this.flattenBookmarks(bmks[0], result);
+        const sorted = sortBy(result, ["index"]);
+        this.bookmarks = sorted;
 
-        this.bookmarks = result;
-        return result;
+        console.log("LocalBookmarks :: bookmarks", sorted);
+        return sorted;
+    }
+
+    public getChildren(localFolderID: string) {
+        return filter(this.bookmarks, { parentId: localFolderID });
     }
 
     private flattenBookmarks(
