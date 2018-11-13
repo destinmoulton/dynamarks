@@ -18,4 +18,4 @@ export const DynalistFolders: IFolders = {
     db: "Dynamarks Database"
 };
 
-export const Keys = ["menu", "toolbar", "unfiled", "mobile"];
+export const BookmarkFolderKeys = ["menu", "toolbar", "unfiled", "mobile"];
