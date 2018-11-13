@@ -23,6 +23,10 @@ class DynalistAPI {
             body: JSON.stringify({ token, ...requestParams }),
             method: "POST"
         };
+
+        console.log("DynalistAPI :: request()", {
+            request: { url, requestParams }
+        });
         return fetch(url, params)
             .then(res => res.json())
             .then(json => {
