@@ -1,4 +1,4 @@
-import { filter, find, keys, remove, reverse, values } from "lodash";
+import { find, isArray, keys, remove, reverse, values } from "lodash";
 
 import {
     BookmarkFolderKeys,
@@ -32,10 +32,7 @@ class RemoteBookmarks {
     public async setup() {
         try {
             await this.populateBookmarks();
-            console.log(
-                "RemoteBookmarks :: populate() bookmarks",
-                this.bookmarks
-            );
+
             const { doFoldersExist, foldersToCreate } = this.checkTopFolders();
             if (!doFoldersExist) {
                 await this.createTopFolders(foldersToCreate);
@@ -64,6 +61,10 @@ class RemoteBookmarks {
 
     public async populateBookmarks() {
         this.bookmarks = await this.iDynalistAPI.getBookmarks();
+        console.log(
+            "RemoteBookmarks :: populateBookmarks() :: bookmarks",
+            this.bookmarks
+        );
     }
 
     private mapTopFoldersFromDB() {
@@ -87,8 +88,21 @@ class RemoteBookmarks {
         return find(this.bookmarks, { content: name });
     }
 
-    private getSingleById(id: string): Types.IDynalistNode {
+    public getSingleById(id: string): Types.IDynalistNode {
         return find(this.bookmarks, { id });
+    }
+
+    public getChildIdByIndex(parent_id: string, child_index: number) {
+        console.log(
+            "RemoteBookmarks :: getChildIdByIndex() parent_id,child_index = ",
+            parent_id,
+            child_index
+        );
+        const parent = this.getSingleById(parent_id);
+        if (isArray(parent.children)) {
+            return parent.children[child_index];
+        }
+        return "";
     }
 
     public getChildren(parent_node_id: string) {
