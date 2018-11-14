@@ -9,8 +9,6 @@ import DynalistAPI from "../../common/dynalistapi";
 import DynamarksDB from "./dynamarksdb";
 import Settings from "../../common/settings";
 import * as Types from "../../common/types";
-import { FILTER } from "@blueprintjs/icons/lib/esm/generated/iconNames";
-import { Children } from "react";
 
 interface ITopFoldersMap {
     [key: string]: Types.IDynalistNode;
