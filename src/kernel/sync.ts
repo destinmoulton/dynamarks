@@ -1,4 +1,4 @@
-import { keys, remove, values } from "lodash";
+import { toInteger } from "lodash";
 
 import LocalBookmarks from "./lib/localbookmarks";
 
@@ -85,6 +85,51 @@ class Sync {
 
         // Remove current children
         await this.iRemoteBookmarks.purgeTopFolderChildNodes();
+
+        const promixes = BookmarkFolderKeys.map(async key => {
+            const topLocalFolder = this.iLocalBookmarks.getSingleById(
+                BrowserFolderIDs[key]
+            );
+
+            const remoteFolder = this.iRemoteBookmarks.getTopFolderByKey(key);
+            return await this.addLocalChildrenToRemote(
+                remoteFolder,
+                topLocalFolder
+            );
+        });
+        return Promise.all(promixes);
+    }
+
+    private async addLocalChildrenToRemote(
+        remoteFolder: Types.IDynalistNode,
+        localFolder: Types.ILocalBookmark
+    ): Promise<any> {
+        const children = localFolder.children.map(childId => {
+            return this.iLocalBookmarks.getSingleById(childId);
+        });
+        await this.iRemoteBookmarks.addChildren(remoteFolder.id, children);
+
+        // Get the new version
+        await this.iRemoteBookmarks.populateBookmarks();
+        const promixes = children.map(async (child, child_index) => {
+            if (child.children.length > 0) {
+                // Find the remote folder
+                const remoteChildId = this.iRemoteBookmarks.getChildIdByIndex(
+                    remoteFolder.id,
+                    child_index
+                );
+
+                if (remoteChildId && remoteChildId !== "") {
+                    const remoteChild = this.iRemoteBookmarks.getSingleById(
+                        remoteChildId
+                    );
+
+                    return this.addLocalChildrenToRemote(remoteChild, child);
+                }
+            }
+            return true;
+        });
+        return Promise.all(promixes);
     }
 
     private overwriteLocal() {
