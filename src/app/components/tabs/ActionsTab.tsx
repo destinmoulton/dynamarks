@@ -16,6 +16,12 @@ class ActionsTab extends React.Component {
         });
     };
 
+    handleClickDownload = () => {
+        messenger.send("sync", {
+            action: MessengerActions.SYNC_OVERWRITE_LOCAL
+        });
+    };
+
     render() {
         const { buttons } = text.tabs.actions;
 
@@ -25,7 +31,9 @@ class ActionsTab extends React.Component {
                 <Button icon="arrow-up" onClick={this.handleClickUpload}>
                     {buttons.upload}
                 </Button>
-                <Button icon="arrow-down">{buttons.download}</Button>
+                <Button icon="arrow-down" onClick={this.handleClickDownload}>
+                    {buttons.download}
+                </Button>
             </Card>
         );
     }
