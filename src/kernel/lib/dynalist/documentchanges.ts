@@ -1,3 +1,4 @@
+import { reverse } from "lodash";
 import * as Types from "../../../common/types";
 
 class DocumentChanges {
@@ -41,8 +42,10 @@ class DocumentChanges {
         this.changes.push(change);
     }
 
+    // Get the reversed changes so that they
+    // run in the order specified rather than LIFO
     public getChanges() {
-        return this.changes;
+        return reverse(this.changes);
     }
 }
 
