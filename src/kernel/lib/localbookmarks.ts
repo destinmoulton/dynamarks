@@ -38,7 +38,7 @@ class LocalBookmarks {
             dateAdded: node.dateAdded || 0,
             dateGroupModified: node.dateGroupModified || 0,
             id: node.id,
-            index: node.index || -1,
+            index: node.index || 0,
             parentId: node.parentId || "",
             title: node.title,
             url: node.url || ""
