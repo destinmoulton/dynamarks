@@ -7,7 +7,7 @@ export default {
             buttons: {
                 sync: "Sync",
                 upload: "Overwrite Server",
-                download: "Download"
+                download: "Overwrite Local"
             }
         },
         settings: {
