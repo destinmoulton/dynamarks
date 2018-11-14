@@ -1,13 +1,19 @@
-import { filter, find, has, sortBy } from "lodash";
+import { filter, find, has, isArray, sortBy, values } from "lodash";
 
 import * as Types from "../../common/types";
 import DocumentChanges from "./dynalist/documentchanges";
+
+import {
+    BookmarkFolderKeys,
+    BrowserFolderIDs
+} from "../constants/folders.constants";
 
 class LocalBookmarks {
     private bookmarks: Types.ILocalBookmark[] = null;
 
     public async populate() {
         const bmks = await browser.bookmarks.getTree();
+
         let result: Types.ILocalBookmark[] = [];
         this.flattenBookmarks(bmks[0], result);
         const sorted = sortBy(result, ["index"]);
@@ -19,6 +25,21 @@ class LocalBookmarks {
 
     public getSingleById(id: string) {
         return find(this.bookmarks, { id });
+    }
+
+    // Remove all the bookmarks in the browser top folders
+    public async purgeTopFolderBookmarks() {
+        return BookmarkFolderKeys.map(async key => {
+            const browserFolderId = BrowserFolderIDs[key];
+            const subTree = await browser.bookmarks.getSubTree(browserFolderId);
+
+            if (isArray(subTree) && subTree[0].id === browserFolderId) {
+                const promixes = subTree[0].children.map(child => {
+                    return browser.bookmarks.removeTree(child.id);
+                });
+                return Promise.all(promixes);
+            }
+        });
     }
 
     private flattenBookmarks(
