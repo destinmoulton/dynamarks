@@ -114,23 +114,30 @@ class RemoteBookmarks {
         return this.topFoldersMap[folderKey];
     }
 
-    public removeAllChildNodes(parent_id: string) {
+    public removeChildrenRecursively(
+        parent_id: string,
+        changes: DocumentChanges
+    ) {
         const childIds = this.getChildren(parent_id);
         if (childIds.length > 0) {
-            const changes = new DocumentChanges();
             childIds.forEach((childId: string) => {
+                const child = this.getSingleById(childId);
                 changes.deleteNode(childId);
+                if (isArray(child.children) && child.children.length > 0) {
+                    return this.removeChildrenRecursively(child.id, changes);
+                }
             });
-
-            return this.iDynalistAPI.submitChanges(changes.getChanges());
         }
+        return true;
     }
 
     // Remove all the nodes from the top folders
     public purgeTopFolderChildNodes() {
         const promixes = BookmarkFolderKeys.map(async key => {
+            const changes = new DocumentChanges();
             const topFolder = this.getTopFolderByKey(key);
-            return await this.removeAllChildNodes(topFolder.id);
+            await this.removeChildrenRecursively(topFolder.id, changes);
+            return this.iDynalistAPI.submitChanges(changes.getChanges());
         });
         return Promise.all(promixes).then(() => {
             return this.populateBookmarks();
@@ -166,7 +173,7 @@ class RemoteBookmarks {
         if (foldersToCreate.length > 0) {
             const documentChanges = new DocumentChanges();
 
-            reverse(foldersToCreate).forEach(folder => {
+            foldersToCreate.forEach(folder => {
                 documentChanges.addNode("root", folder);
             });
             console.log(
