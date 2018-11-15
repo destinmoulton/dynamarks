@@ -37,9 +37,26 @@ class LocalBookmarks {
                 const promixes = subTree[0].children.map(child => {
                     return browser.bookmarks.removeTree(child.id);
                 });
-                return Promise.all(promixes);
+                return Promise.all(promixes).catch(err => {
+                    console.error(
+                        "LocalBookmarks :: purgeTopFolderBookmarks() :: Error removing a sub tree.",
+                        err
+                    );
+                });
             }
         });
+    }
+
+    public async addBookmark(bookmark: browser.bookmarks.CreateDetails) {
+        try {
+            return browser.bookmarks.create(bookmark);
+        } catch (err) {
+            console.error(
+                "LocalBookmarks :: addBookmark() :: Error creating a bookmark",
+                err,
+                bookmark
+            );
+        }
     }
 
     private flattenBookmarks(
