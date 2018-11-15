@@ -97,7 +97,7 @@ class RemoteBookmarks {
             child_index
         );
         const parent = this.getSingleById(parent_id);
-        if (isArray(parent.children)) {
+        if (isArray(parent.children) && parent.children.length > 0) {
             return parent.children[child_index];
         }
         return "";
