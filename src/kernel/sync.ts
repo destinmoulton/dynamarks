@@ -132,25 +132,22 @@ class Sync {
     }
 
     private async overwriteLocal() {
-        console.log("overwriteLocal() running");
         await this.iLocalBookmarks.purgeTopFolderBookmarks();
 
         await this.iRemoteBookmarks.populateBookmarks();
 
-        const promixes = BookmarkFolderKeys.map(async key => {
+        for (let key of BookmarkFolderKeys) {
             const topLocalFolder = this.iLocalBookmarks.getSingleById(
                 BrowserFolderIDs[key]
             );
 
             const remoteFolder = this.iRemoteBookmarks.getTopFolderByKey(key);
-            return await this.addRemoteChildrenToBrowser(
-                remoteFolder,
-                topLocalFolder
-            );
-        });
-        await Promise.all(promixes);
+            await this.addRemoteChildrenToBrowser(remoteFolder, topLocalFolder);
+        }
     }
 
+    // Recursive method to add the remote bookmarks
+    // to the browser
     private async addRemoteChildrenToBrowser(
         remoteFolder: Types.IDynalistNode,
         localFolder: Types.ILocalBookmark
@@ -159,8 +156,14 @@ class Sync {
             return true;
         }
 
-        // Add the children
-        const addPromises = remoteFolder.children.map((childId, childIndex) => {
+        // Add the children for the remoteFolder
+        let newChildren: browser.bookmarks.BookmarkTreeNode[] = [];
+        for (
+            let childIndex = 0;
+            childIndex < remoteFolder.children.length;
+            childIndex++
+        ) {
+            const childId = remoteFolder.children[childIndex];
             const child = this.iRemoteBookmarks.getSingleById(childId);
 
             let newBookmark: browser.bookmarks.CreateDetails = {
@@ -171,33 +174,36 @@ class Sync {
             if (child.note && child.note !== "") {
                 newBookmark.url = child.note;
             }
-            return this.iLocalBookmarks.addBookmark(newBookmark);
-        });
-        const newChildren = await Promise.all(addPromises);
+            const newChild = await this.iLocalBookmarks.addBookmark(
+                newBookmark
+            );
+            newChildren.push(newChild);
+        }
 
+        // Make sure the data model matches the browser tree
         await this.iLocalBookmarks.populate();
 
-        const childPromises: any = newChildren.map(
-            (newChild, newChildIndex) => {
-                const localChild = this.iLocalBookmarks.getSingleById(
-                    newChild.id
-                );
-                const remoteChildId = remoteFolder.children[newChildIndex];
-                const remoteChild = this.iRemoteBookmarks.getSingleById(
-                    remoteChildId
-                );
-                if (has(remoteChild, "children")) {
-                    if (remoteChild.children.length > 0) {
-                        return this.addRemoteChildrenToBrowser(
-                            remoteChild,
-                            localChild
-                        );
-                    }
+        // Process any folders in the added children
+        for (
+            let newChildIndex = 0;
+            newChildIndex < newChildren.length;
+            newChildIndex++
+        ) {
+            const newChild = newChildren[newChildIndex];
+            const localChild = this.iLocalBookmarks.getSingleById(newChild.id);
+            const remoteChildId = remoteFolder.children[newChildIndex];
+            const remoteChild = this.iRemoteBookmarks.getSingleById(
+                remoteChildId
+            );
+            if (has(remoteChild, "children")) {
+                if (remoteChild.children.length > 0) {
+                    await this.addRemoteChildrenToBrowser(
+                        remoteChild,
+                        localChild
+                    );
                 }
-                return true;
             }
-        );
-        return Promise.all(childPromises);
+        }
     }
 
     private synchronize() {}
