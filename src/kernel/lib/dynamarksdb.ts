@@ -63,7 +63,10 @@ class DynamarksDB {
         try {
             return await this.iDynalistAPI.submitChanges(changes.getChanges());
         } catch (err) {
-            console.error(err);
+            console.error(
+                "DynamarksDB :: upload() :: Error uploading db.",
+                err
+            );
         }
     }
 
@@ -75,13 +78,14 @@ class DynamarksDB {
         return this.db.folderMap;
     }
 
-    public addInstallation(browserID: string) {
+    public async addInstallation(browserID: string) {
         const inst = {
             browserID,
             lastSyncTime: "",
             lastBookmarks: ""
         };
         this.db.installations.push(inst);
+        return await this.upload();
     }
 
     public getInstallation(browserID: string) {
