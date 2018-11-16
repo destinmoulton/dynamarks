@@ -34,35 +34,33 @@ class RemoteBookmarks {
             const { doFoldersExist, foldersToCreate } = this.checkTopFolders();
             if (!doFoldersExist) {
                 await this.createTopFolders(foldersToCreate);
+
+                // Re-run the this method after the top folders are created
                 await this.setup();
             } else {
-                const dbNode = this.getSingleByName(DynalistFolders.db);
-                // Verify/instantiate the database
-                const isDB = this.iDynamarksDB.doesNodeContainDB(dbNode);
-
-                this.iDynamarksDB.setDB(dbNode);
-                if (!isDB) {
-                    // The folder ids have not been mapped yet
-                    this.createDBTopFolders();
-                    await this.iDynamarksDB.upload();
-                }
-
-                this.mapTopFoldersFromDB();
+                await this.setupDB();
             }
         } catch (err) {
             console.error(
-                "RemoteBookmarks :: populate() :: Error populating the bookmarks.",
+                "RemoteBookmarks :: setup() :: Error setting up RemoteBookmarks.",
                 err
             );
         }
     }
 
     public async populateBookmarks() {
-        this.bookmarks = await this.iDynalistAPI.getBookmarks();
-        console.log(
-            "RemoteBookmarks :: populateBookmarks() :: bookmarks",
-            this.bookmarks
-        );
+        try {
+            this.bookmarks = await this.iDynalistAPI.getBookmarks();
+            console.log(
+                "RemoteBookmarks :: populateBookmarks() :: bookmarks",
+                this.bookmarks
+            );
+        } catch (err) {
+            console.error(
+                "RemoteBookmarks :: populateBookmarks() :: Error getting the bookmarks.",
+                err
+            );
+        }
     }
 
     private mapTopFoldersFromDB() {
@@ -72,14 +70,28 @@ class RemoteBookmarks {
                 dbMap[folderKey]
             );
         });
-        console.log(this.topFoldersMap);
     }
 
-    private createDBTopFolders() {
+    private async setupDB() {
+        const dbNode = this.getSingleByName(DynalistFolders.db);
+        // Verify/instantiate the database
+        const isDB = this.iDynamarksDB.doesNodeContainDB(dbNode);
+
+        this.iDynamarksDB.setDBNode(dbNode);
+        if (!isDB) {
+            // The folder ids have not been mapped yet
+            await this.createDBTopFolders();
+        }
+
+        this.mapTopFoldersFromDB();
+    }
+
+    private async createDBTopFolders() {
         keys(DynalistFolders).forEach(folderKey => {
             const folder = this.getSingleByName(DynalistFolders[folderKey]);
             this.iDynamarksDB.addFolderMap(folderKey, folder.id);
         });
+        await this.iDynamarksDB.upload();
     }
 
     private getSingleByName(name: string): Types.IDynalistNode {
