@@ -16,11 +16,12 @@ const info = [
     navigator.platform,
     navigator.product
 ];
-const browserID = info.join(" | ");
+
+export const BrowserID = info.join(" | ");
 
 export const SettingDefaults: ISettings = {
     token: null,
     doc: null,
     interval: 15,
-    browserID
+    browserID: BrowserID
 };
