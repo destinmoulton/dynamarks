@@ -14,8 +14,9 @@ interface IFolderMap {
 }
 
 interface IInstallation {
-    lastSynchronization: string;
+    lastSyncTime: string;
     browserID: string;
+    lastBookmarks: string;
 }
 
 interface IDynarksDB {
@@ -36,7 +37,7 @@ class DynamarksDB {
         this.iDynalistAPI = dynalistapi;
     }
 
-    public setDB(node: Types.IDynalistNode) {
+    public setDBNode(node: Types.IDynalistNode) {
         let dbData = cloneDeep(INITIAL_DB);
         if (this.doesNodeContainDB(node)) {
             dbData = JSON.parse(node.note);
@@ -77,7 +78,8 @@ class DynamarksDB {
     public addInstallation(browserID: string) {
         const inst = {
             browserID,
-            lastSynchronization: ""
+            lastSyncTime: "",
+            lastBookmarks: ""
         };
         this.db.installations.push(inst);
     }
