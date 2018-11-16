@@ -35,8 +35,13 @@ class Sync {
         this.prepareToAct();
     }
 
-    private handleDispatchSettings = (packet: Types.IDispatchMessage) => {
-        console.log("Sync :: handleDispatchSettings() :: packet = ", packet);
+    private handleDispatchSettings = async (packet: Types.IDispatchMessage) => {
+        switch (packet.action) {
+            case MessengerActions.SETTINGS_CHANGE:
+                return await this.prepareToAct();
+            default:
+                return;
+        }
     };
 
     private handleDispatchSync = async (packet: Types.IDispatchMessage) => {

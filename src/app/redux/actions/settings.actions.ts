@@ -1,6 +1,7 @@
 import * as _ from "lodash";
 
 import * as ActionTypes from "../actiontypes";
+import * as MessengerActions from "../../../common/constants/messengeractions.constants";
 import * as Types from "../../../common/types";
 import {
     SettingDefaults,
@@ -13,7 +14,7 @@ export function set(key: string, value: any) {
         return settings.set(key, value).then(() => {
             // Notify the kernel of setting set
             messenger.send("settings", {
-                action: "set",
+                action: MessengerActions.SETTINGS_CHANGE,
                 payload: key
             });
 
