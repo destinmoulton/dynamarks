@@ -1,4 +1,4 @@
-import { find, isArray, keys, remove, reverse, values } from "lodash";
+import { find, isArray, isObject, keys, remove, values } from "lodash";
 
 import {
     BookmarkFolderKeys,
@@ -9,6 +9,10 @@ import DynalistAPI from "../../common/dynalistapi";
 import DynamarksDB from "./dynamarksdb";
 import Settings from "../../common/settings";
 import * as Types from "../../common/types";
+import {
+    BrowserID,
+    SettingKeys
+} from "../../common/constants/settings.constants";
 
 interface ITopFoldersMap {
     [key: string]: Types.IDynalistNode;
@@ -84,6 +88,12 @@ class RemoteBookmarks {
         }
 
         this.mapTopFoldersFromDB();
+
+        const installation = this.iDynamarksDB.getInstallation(BrowserID);
+        if (!isObject(installation)) {
+            // Create a new installation
+            await this.iDynamarksDB.addInstallation(BrowserID);
+        }
     }
 
     private async createDBTopFolders() {
