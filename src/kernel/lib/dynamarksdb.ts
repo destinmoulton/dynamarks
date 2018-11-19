@@ -2,7 +2,7 @@
  * The database stored in Dynamarks for meta data
  */
 
-import { cloneDeep, find, keys } from "lodash";
+import { cloneDeep, find, isObject, keys } from "lodash";
 import { DynalistFolders } from "../constants/folders.constants";
 
 import DynalistAPI from "../../common/dynalistapi";
@@ -90,6 +90,10 @@ class DynamarksDB {
 
     public getInstallation(browserID: string) {
         return find(this.db.installations, { browserID });
+    }
+
+    public hasInstallation(browserID: string){
+        return isObject(this.getInstallation(browserID));
     }
 }
 
