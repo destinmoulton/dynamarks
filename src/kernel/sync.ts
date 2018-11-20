@@ -1,22 +1,26 @@
-import { toInteger } from "lodash";
+import { has, isArray, keys } from "lodash";
 
-import LocalBookmarks from "./lib/localbookmarks";
-
-import Messenger from "../common/messenger";
-import Settings from "../common/settings";
-import * as Types from "../common/types";
-import * as MessengerActions from "../common/constants/messengeractions.constants";
-import { SettingKeys } from "../common/constants/settings.constants";
 import {
     BookmarkFolderKeys,
-    BrowserFolderIDs
+    BrowserFolderIDs,
+    DynalistFolders
 } from "./constants/folders.constants";
+import DynalistAPI from "../common/dynalistapi";
+import DynamarksDB from "./lib/dynamarksdb";
+import LocalBookmarks from "./lib/localbookmarks";
+import Messenger from "../common/messenger";
+import * as MessengerActions from "../common/constants/messengeractions.constants";
+import Settings from "../common/settings";
+import { SettingKeys } from "../common/constants/settings.constants";
+
+import * as Types from "../common/types";
+
 import RemoteBookmarks from "./lib/remotebookmarks";
 import DocumentChanges from "./lib/dynalist/documentchanges";
-import { isArray } from "util";
-import { has } from "immutable";
 
 class Sync {
+    private iDynalistAPI: DynalistAPI = null;
+    private iDynamarksDB: DynamarksDB = null;
     private iMessenger: Messenger = null;
     private iLocalBookmarks: LocalBookmarks = null;
     private iRemoteBookmarks: RemoteBookmarks = null;
@@ -26,8 +30,14 @@ class Sync {
         this.iMessenger = messenger;
         this.iSettings = settings;
 
+        this.iDynalistAPI = new DynalistAPI(this.iSettings);
+        this.iDynamarksDB = new DynamarksDB(this.iDynalistAPI);
         this.iLocalBookmarks = new LocalBookmarks();
-        this.iRemoteBookmarks = new RemoteBookmarks(this.iSettings);
+        this.iRemoteBookmarks = new RemoteBookmarks(
+            this.iDynalistAPI,
+            this.iDynamarksDB,
+            this.iSettings
+        );
 
         this.iMessenger.subscribe("settings", this.handleDispatchSettings);
         this.iMessenger.subscribe("sync", this.handleDispatchSync);
@@ -66,25 +76,42 @@ class Sync {
         });
     }
 
-    private areSettingsLoaded() {
-        const prom1 = this.iSettings.exists(SettingKeys.token);
-        const prom2 = this.iSettings.exists(SettingKeys.doc);
-
-        return Promise.all([prom1, prom2]).then((exists: boolean[]) => {
-            return exists.every(doesExist => {
-                return doesExist;
-            });
-        });
+    private async areSettingsLoaded() {
+        const existsToken = await this.iSettings.exists(SettingKeys.token);
+        const existsDoc = await this.iSettings.exists(SettingKeys.doc);
+        return existsToken && existsDoc;
     }
 
-    private populate() {
-        const prom1 = this.iRemoteBookmarks.setup();
+    private async populate() {
+        await this.iRemoteBookmarks.setup();
+        await this.setupDB();
+        await this.iLocalBookmarks.populate();
+    }
 
-        const prom2 = this.iLocalBookmarks.populate();
+    private async setupDB() {
+        const dbNode = this.iRemoteBookmarks.getSingleByName(
+            DynalistFolders.db
+        );
+        // Verify/instantiate the database
+        const isDB = this.iDynamarksDB.doesNodeContainDB(dbNode);
 
-        return Promise.all([prom1, prom2]).catch(err => {
-            console.error(err);
+        this.iDynamarksDB.setDBNode(dbNode);
+        if (!isDB) {
+            await this.mapRemoteFoldersToDB();
+        }
+
+        this.iDynamarksDB.updateSync(this.iLocalBookmarks.getBookmarks());
+    }
+
+    private async mapRemoteFoldersToDB() {
+        keys(DynalistFolders).forEach(folderKey => {
+            const folder = this.iRemoteBookmarks.getSingleByName(
+                DynalistFolders[folderKey]
+            );
+
+            this.iDynamarksDB.addFolderMap(folderKey, folder.id);
         });
+        await this.iDynamarksDB.upload();
     }
 
     private async overwriteServer() {
@@ -95,8 +122,10 @@ class Sync {
             const topLocalFolder = this.iLocalBookmarks.getSingleById(
                 BrowserFolderIDs[key]
             );
-
-            const remoteFolder = this.iRemoteBookmarks.getTopFolderByKey(key);
+            const remoteFolderID = this.iDynamarksDB.getMappedFolderByKey(key);
+            const remoteFolder = this.iRemoteBookmarks.getSingleById(
+                remoteFolderID
+            );
             await this.addLocalChildrenToRemote(remoteFolder, topLocalFolder);
         }
     }
@@ -145,8 +174,10 @@ class Sync {
             const topLocalFolder = this.iLocalBookmarks.getSingleById(
                 BrowserFolderIDs[key]
             );
-
-            const remoteFolder = this.iRemoteBookmarks.getTopFolderByKey(key);
+            const remoteFolderID = this.iDynamarksDB.getMappedFolderByKey(key);
+            const remoteFolder = this.iRemoteBookmarks.getSingleById(
+                remoteFolderID
+            );
             await this.addRemoteChildrenToBrowser(remoteFolder, topLocalFolder);
         }
     }

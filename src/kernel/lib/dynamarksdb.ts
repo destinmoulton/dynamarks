@@ -4,6 +4,7 @@
 
 import { cloneDeep, find, has, isObject, keys } from "lodash";
 import { DynalistFolders } from "../constants/folders.constants";
+import { BrowserID } from "../../common/constants/settings.constants";
 
 import DynalistAPI from "../../common/dynalistapi";
 import DocumentChanges from "./dynalist/documentchanges";
@@ -14,9 +15,9 @@ interface IFolderMap {
 }
 
 interface IInstallation {
-    lastSyncTime: string;
     browserID: string;
     lastBookmarks: string;
+    lastSyncTime: number;
 }
 
 interface IDynarksDB {
@@ -32,6 +33,7 @@ class DynamarksDB {
     db: IDynarksDB = null;
     iDynalistAPI: DynalistAPI = null;
     dbNode: Types.IDynalistNode = null;
+    currentInstallation: IInstallation = null;
 
     constructor(dynalistapi: DynalistAPI) {
         this.iDynalistAPI = dynalistapi;
@@ -44,6 +46,10 @@ class DynamarksDB {
         }
         this.dbNode = node;
         this.db = dbData;
+
+        if (!this.hasInstallation(BrowserID)) {
+            this.addInstallation(BrowserID);
+        }
     }
 
     public doesNodeContainDB(dbNode: Types.IDynalistNode) {
@@ -73,30 +79,38 @@ class DynamarksDB {
         }
     }
 
+    // Map the dynalist nodes to the folders
     public addFolderMap(folder_key: string, node_id: string) {
         this.db.folderMap[folder_key] = node_id;
     }
 
-    public getTopFolderMap() {
-        return this.db.folderMap;
+    public getMappedFolderByKey(key: string) {
+        return this.db.folderMap[key];
     }
 
-    public async addInstallation(browserID: string) {
+    private async addInstallation(browserID: string) {
         const inst = {
             browserID,
-            lastSyncTime: "",
+            lastSyncTime: 0,
             lastBookmarks: ""
         };
         this.db.installations.push(inst);
         return await this.upload();
     }
 
-    public getInstallation(browserID: string) {
+    private getInstallation(browserID: string): IInstallation {
         return find(this.db.installations, { browserID });
     }
 
-    public hasInstallation(browserID: string) {
+    private hasInstallation(browserID: string) {
         return isObject(this.getInstallation(browserID));
+    }
+
+    public updateSync(newBookmarks: Types.ILocalBookmark[]) {
+        const inst: IInstallation = this.getInstallation(BrowserID);
+        inst.lastBookmarks = JSON.stringify(newBookmarks);
+        inst.lastSyncTime = Date.now();
+        console.log(this.db.installations);
     }
 }
 

@@ -14,21 +14,20 @@ import {
     SettingKeys
 } from "../../common/constants/settings.constants";
 
-interface ITopFoldersMap {
-    [key: string]: Types.IDynalistNode;
-}
-
 class RemoteBookmarks {
     private bookmarks: Types.IDynalistNode[];
-    private topFoldersMap: ITopFoldersMap = {};
     private iDynalistAPI: DynalistAPI = null;
     private iDynamarksDB: DynamarksDB = null;
     private iSettings: Settings = null;
 
-    constructor(settings: Settings) {
+    constructor(
+        dynalistapi: DynalistAPI,
+        dynamarksdb: DynamarksDB,
+        settings: Settings
+    ) {
+        this.iDynalistAPI = dynalistapi;
+        this.iDynamarksDB = dynamarksdb;
         this.iSettings = settings;
-        this.iDynalistAPI = new DynalistAPI(this.iSettings);
-        this.iDynamarksDB = new DynamarksDB(this.iDynalistAPI);
     }
 
     public async setup() {
@@ -41,9 +40,8 @@ class RemoteBookmarks {
 
                 // Re-run the this method after the top folders are created
                 await this.setup();
-            } else {
-                await this.setupDB();
             }
+            return true;
         } catch (err) {
             console.error(
                 "RemoteBookmarks :: setup() :: Error setting up RemoteBookmarks.",
@@ -67,44 +65,7 @@ class RemoteBookmarks {
         }
     }
 
-    private mapTopFoldersFromDB() {
-        const dbMap = this.iDynamarksDB.getTopFolderMap();
-        keys(DynalistFolders).forEach(folderKey => {
-            this.topFoldersMap[folderKey] = this.getSingleById(
-                dbMap[folderKey]
-            );
-        });
-    }
-
-    private async setupDB() {
-        const dbNode = this.getSingleByName(DynalistFolders.db);
-        // Verify/instantiate the database
-        const isDB = this.iDynamarksDB.doesNodeContainDB(dbNode);
-
-        this.iDynamarksDB.setDBNode(dbNode);
-        if (!isDB) {
-            // The folder ids have not been mapped yet
-            await this.createDBTopFolders();
-        }
-
-        this.mapTopFoldersFromDB();
-
-        const installation = this.iDynamarksDB.getInstallation(BrowserID);
-        if (!isObject(installation)) {
-            // Create a new installation
-            await this.iDynamarksDB.addInstallation(BrowserID);
-        }
-    }
-
-    private async createDBTopFolders() {
-        keys(DynalistFolders).forEach(folderKey => {
-            const folder = this.getSingleByName(DynalistFolders[folderKey]);
-            this.iDynamarksDB.addFolderMap(folderKey, folder.id);
-        });
-        await this.iDynamarksDB.upload();
-    }
-
-    private getSingleByName(name: string): Types.IDynalistNode {
+    public getSingleByName(name: string): Types.IDynalistNode {
         return find(this.bookmarks, { content: name });
     }
 
@@ -132,10 +93,6 @@ class RemoteBookmarks {
             : [];
     }
 
-    public getTopFolderByKey(folderKey: string) {
-        return this.topFoldersMap[folderKey];
-    }
-
     public removeChildrenRecursively(
         parent_id: string,
         changes: DocumentChanges
@@ -157,7 +114,8 @@ class RemoteBookmarks {
     public purgeTopFolderChildNodes() {
         const promixes = BookmarkFolderKeys.map(async key => {
             const changes = new DocumentChanges();
-            const topFolder = this.getTopFolderByKey(key);
+            const topFolderID = this.iDynamarksDB.getMappedFolderByKey(key);
+            const topFolder = this.getSingleById(topFolderID);
             await this.removeChildrenRecursively(topFolder.id, changes);
             return this.iDynalistAPI.submitChanges(changes.getChanges());
         });
