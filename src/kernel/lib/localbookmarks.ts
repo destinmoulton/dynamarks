@@ -23,6 +23,10 @@ class LocalBookmarks {
         return sorted;
     }
 
+    public getBookmarks() {
+        return this.bookmarks;
+    }
+
     public getSingleById(id: string) {
         return find(this.bookmarks, { id });
     }
