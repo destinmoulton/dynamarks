@@ -93,6 +93,18 @@ class RemoteBookmarks {
             : [];
     }
 
+    // Remove all the nodes from the top folders
+    public async purgeTopFolderChildNodes() {
+        for (let key of BookmarkFolderKeys) {
+            const changes = new DocumentChanges();
+            const topFolderID = this.iDynamarksDB.getMappedFolderByKey(key);
+            const topFolder = this.getSingleById(topFolderID);
+            this.removeChildrenRecursively(topFolder.id, changes);
+            await this.iDynalistAPI.submitChanges(changes);
+        }
+        await this.populateBookmarks();
+    }
+
     public removeChildrenRecursively(
         parent_id: string,
         changes: DocumentChanges
@@ -108,20 +120,6 @@ class RemoteBookmarks {
             });
         }
         return true;
-    }
-
-    // Remove all the nodes from the top folders
-    public purgeTopFolderChildNodes() {
-        const promixes = BookmarkFolderKeys.map(async key => {
-            const changes = new DocumentChanges();
-            const topFolderID = this.iDynamarksDB.getMappedFolderByKey(key);
-            const topFolder = this.getSingleById(topFolderID);
-            await this.removeChildrenRecursively(topFolder.id, changes);
-            return this.iDynalistAPI.submitChanges(changes);
-        });
-        return Promise.all(promixes).then(() => {
-            return this.populateBookmarks();
-        });
     }
 
     public addChildren(parent_id: string, children: Types.ILocalBookmark[]) {
