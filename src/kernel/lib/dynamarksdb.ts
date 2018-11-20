@@ -70,7 +70,7 @@ class DynamarksDB {
         changes.editNode(this.dbNode.id, this.dbNode.content, jsonDB);
 
         try {
-            return await this.iDynalistAPI.submitChanges(changes.getChanges());
+            return await this.iDynalistAPI.submitChanges(changes);
         } catch (err) {
             console.error(
                 "DynamarksDB :: upload() :: Error uploading db.",

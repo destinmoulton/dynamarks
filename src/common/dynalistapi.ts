@@ -1,6 +1,7 @@
 import * as _ from "lodash";
 import { List, Map } from "immutable";
 
+import DocumentChanges from "../kernel/lib/dynalist/documentchanges";
 import * as Types from "./types";
 import { SettingKeys } from "./constants/settings.constants";
 
@@ -77,7 +78,7 @@ class DynalistAPI {
         }
     }
 
-    public async submitChanges(changes: Types.IDynalistNodeChange[]) {
+    public async submitChanges(docChanges: DocumentChanges) {
         try {
             const doc = await this.settings.get(SettingKeys.doc);
             if (doc === null) {
@@ -86,7 +87,7 @@ class DynalistAPI {
 
             const params = {
                 file_id: doc.id,
-                changes
+                changes: docChanges.getChanges()
             };
 
             const url = BASE_URL + "doc/edit";

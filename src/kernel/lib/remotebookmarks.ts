@@ -117,7 +117,7 @@ class RemoteBookmarks {
             const topFolderID = this.iDynamarksDB.getMappedFolderByKey(key);
             const topFolder = this.getSingleById(topFolderID);
             await this.removeChildrenRecursively(topFolder.id, changes);
-            return this.iDynalistAPI.submitChanges(changes.getChanges());
+            return this.iDynalistAPI.submitChanges(changes);
         });
         return Promise.all(promixes).then(() => {
             return this.populateBookmarks();
@@ -129,7 +129,7 @@ class RemoteBookmarks {
         children.forEach((child: Types.ILocalBookmark) => {
             changes.addNode(parent_id, child.title, child.url);
         });
-        return this.iDynalistAPI.submitChanges(changes.getChanges());
+        return this.iDynalistAPI.submitChanges(changes);
     }
 
     private checkTopFolders() {
@@ -151,18 +151,16 @@ class RemoteBookmarks {
 
     private async createTopFolders(foldersToCreate: string[]) {
         if (foldersToCreate.length > 0) {
-            const documentChanges = new DocumentChanges();
+            const changes = new DocumentChanges();
 
             foldersToCreate.forEach(folder => {
-                documentChanges.addNode("root", folder);
+                changes.addNode("root", folder);
             });
             console.log(
                 "Sync :: syncDynamarksFolders foldersToCreate",
                 foldersToCreate
             );
-            return await this.iDynalistAPI.submitChanges(
-                documentChanges.getChanges()
-            );
+            return await this.iDynalistAPI.submitChanges(changes);
         }
         return true;
     }
