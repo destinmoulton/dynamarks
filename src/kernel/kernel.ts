@@ -15,20 +15,20 @@ import Messenger from "../common/messenger";
 import LocalBookmarks from "./lib/localbookmarks";
 import Settings from "../common/settings";
 
-import Sync from "./sync";
+import SyncSetup from "./syncsetup";
 
 class Kernel {
     private browserevents: BrowserEvents = null;
     private settings: Settings = null;
     private messenger: Messenger = null;
-    private sync: Sync = null;
+    private syncsetup: SyncSetup = null;
 
     constructor() {
         this.messenger = new Messenger();
         this.settings = new Settings();
         this.browserevents = new BrowserEvents();
 
-        this.sync = new Sync(this.messenger, this.settings);
+        this.syncsetup = new SyncSetup(this.messenger, this.settings);
     }
 }
 

@@ -13,7 +13,7 @@ import * as Types from "../common/types";
 
 import RemoteBookmarks from "./lib/remotebookmarks";
 
-class Sync {
+class SyncSetup {
     private iDynalistAPI: DynalistAPI = null;
     private iDynamarksDB: DynamarksDB = null;
     private iMessenger: Messenger = null;
@@ -119,4 +119,4 @@ class Sync {
     private synchronize() {}
 }
 
-export default Sync;
+export default SyncSetup;
