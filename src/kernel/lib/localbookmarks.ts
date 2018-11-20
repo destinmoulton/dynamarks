@@ -33,22 +33,16 @@ class LocalBookmarks {
 
     // Remove all the bookmarks in the browser top folders
     public async purgeTopFolderBookmarks() {
-        return BookmarkFolderKeys.map(async key => {
+        for (let key of BookmarkFolderKeys) {
             const browserFolderId = BrowserFolderIDs[key];
             const subTree = await browser.bookmarks.getSubTree(browserFolderId);
 
             if (isArray(subTree) && subTree[0].id === browserFolderId) {
-                const promixes = subTree[0].children.map(child => {
-                    return browser.bookmarks.removeTree(child.id);
-                });
-                return Promise.all(promixes).catch(err => {
-                    console.error(
-                        "LocalBookmarks :: purgeTopFolderBookmarks() :: Error removing a sub tree.",
-                        err
-                    );
-                });
+                for (let child of subTree[0].children) {
+                    await browser.bookmarks.removeTree(child.id);
+                }
             }
-        });
+        }
     }
 
     public async addBookmark(bookmark: browser.bookmarks.CreateDetails) {
