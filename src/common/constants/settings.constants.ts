@@ -8,20 +8,9 @@ export const SettingKeys: ISettings = {
     browserID: "browserID"
 };
 
-const info = [
-    navigator.appCodeName,
-    navigator.appName,
-    navigator.appVersion,
-    navigator.language,
-    navigator.platform,
-    navigator.product
-];
-
-export const BrowserID = info.join(" | ");
-
 export const SettingDefaults: ISettings = {
     token: null,
     doc: null,
     interval: 15,
-    browserID: BrowserID
+    browserID: null
 };
