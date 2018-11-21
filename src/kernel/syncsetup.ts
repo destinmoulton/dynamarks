@@ -27,7 +27,7 @@ class SyncSetup {
         this.iSettings = settings;
 
         this.iDynalistAPI = new DynalistAPI(this.iSettings);
-        this.iDynamarksDB = new DynamarksDB(this.iDynalistAPI);
+        this.iDynamarksDB = new DynamarksDB(this.iDynalistAPI, this.iSettings);
         this.iLocalBookmarks = new LocalBookmarks();
         this.iRemoteBookmarks = new RemoteBookmarks(
             this.iDynalistAPI,
@@ -97,12 +97,10 @@ class SyncSetup {
         // Verify/instantiate the database
         const isDB = this.iDynamarksDB.doesNodeContainDB(dbNode);
 
-        this.iDynamarksDB.setDBNode(dbNode);
+        await this.iDynamarksDB.setupDB(dbNode);
         if (!isDB) {
             await this.mapRemoteFoldersToDB();
         }
-
-        this.iDynamarksDB.updateSync(this.iLocalBookmarks.getBookmarks());
     }
 
     private async mapRemoteFoldersToDB() {

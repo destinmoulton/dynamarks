@@ -3,21 +3,27 @@
  */
 
 import { cloneDeep, find, has, isObject, keys } from "lodash";
-import { DynalistFolders } from "../constants/folders.constants";
-import { BrowserID } from "../../common/constants/settings.constants";
 
+import { DynalistFolders } from "../constants/folders.constants";
+import { SettingKeys } from "../../common/constants/settings.constants";
 import DynalistAPI from "../../common/dynalistapi";
 import DocumentChanges from "./dynalist/documentchanges";
+import Settings from "../../common/settings";
 import * as Types from "../../common/types";
 
 interface IFolderMap {
     [folder_key: string]: string;
 }
 
+interface IBookmarkMap {
+    browserBookmarkId: string;
+    dynalistNodeId: string;
+}
+
 interface IInstallation {
     browserID: string;
-    lastBookmarks: string;
     lastSyncTime: number;
+    bookmarkMap: IBookmarkMap[];
 }
 
 interface IDynarksDB {
@@ -29,17 +35,20 @@ const INITIAL_DB: IDynarksDB = {
     folderMap: {},
     installations: []
 };
+
 class DynamarksDB {
     db: IDynarksDB = null;
     iDynalistAPI: DynalistAPI = null;
+    iSettings: Settings = null;
     dbNode: Types.IDynalistNode = null;
     currentInstallation: IInstallation = null;
 
-    constructor(dynalistapi: DynalistAPI) {
+    constructor(dynalistapi: DynalistAPI, settings: Settings) {
         this.iDynalistAPI = dynalistapi;
+        this.iSettings = settings;
     }
 
-    public setDBNode(node: Types.IDynalistNode) {
+    public async setupDB(node: Types.IDynalistNode) {
         let dbData = cloneDeep(INITIAL_DB);
         if (this.doesNodeContainDB(node)) {
             dbData = JSON.parse(node.note);
@@ -47,8 +56,10 @@ class DynamarksDB {
         this.dbNode = node;
         this.db = dbData;
 
-        if (!this.hasInstallation(BrowserID)) {
-            this.addInstallation(BrowserID);
+        const browserId: any = await this.iSettings.get(SettingKeys.browserID);
+        if (!this.hasInstallation(browserId)) {
+            await this.addInstallation(browserId);
+            this.currentInstallation = this.getInstallation(browserId);
         }
     }
 
@@ -89,10 +100,10 @@ class DynamarksDB {
     }
 
     private async addInstallation(browserID: string) {
-        const inst = {
+        const inst: IInstallation = {
             browserID,
             lastSyncTime: 0,
-            lastBookmarks: ""
+            bookmarkMap: []
         };
         this.db.installations.push(inst);
         return await this.upload();
@@ -106,11 +117,8 @@ class DynamarksDB {
         return isObject(this.getInstallation(browserID));
     }
 
-    public updateSync(newBookmarks: Types.ILocalBookmark[]) {
-        const inst: IInstallation = this.getInstallation(BrowserID);
-        inst.lastBookmarks = JSON.stringify(newBookmarks);
-        inst.lastSyncTime = Date.now();
-        console.log(this.db.installations);
+    public addBookmarkMap(localBookmarkId: string, dynalistNodeId: string) {
+        this.db.installations;
     }
 }
 
