@@ -9,10 +9,6 @@ import DynalistAPI from "../../common/dynalistapi";
 import DynamarksDB from "./dynamarksdb";
 import Settings from "../../common/settings";
 import * as Types from "../../common/types";
-import {
-    BrowserID,
-    SettingKeys
-} from "../../common/constants/settings.constants";
 
 class RemoteBookmarks {
     private bookmarks: Types.IDynalistNode[];
