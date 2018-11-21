@@ -2,8 +2,7 @@ import { has, isArray } from "lodash";
 
 import {
     BookmarkFolderKeys,
-    BrowserFolderIDs,
-    DynalistFolders
+    BrowserFolderIDs
 } from "../constants/folders.constants";
 import DynamarksDB from "./dynamarksdb";
 import LocalBookmarks from "./localbookmarks";
@@ -14,6 +13,7 @@ class SyncOverwrite {
     private iDynamarksDB: DynamarksDB = null;
     private iLocalBookmarks: LocalBookmarks = null;
     private iRemoteBookmarks: RemoteBookmarks = null;
+
     constructor(
         dynamarksdb: DynamarksDB,
         localbookmarks: LocalBookmarks,
