@@ -1,4 +1,5 @@
 import * as _ from "lodash";
+import sum from "hash-sum";
 
 import * as Types from "./types";
 import { SettingDefaults, SettingKeys } from "./constants/settings.constants";
@@ -7,6 +8,14 @@ import { has } from "immutable";
 class Settings implements Types.ISettingsClass {
     error(err: Error) {
         console.error(err);
+    }
+
+    public async initialize() {
+        const hasBrowserId = await this.exists(SettingKeys.browserId);
+        if (!hasBrowserId) {
+            // Create a browser id
+            await this.set(SettingKeys.browserId, sum(Date.now()));
+        }
     }
 
     public async set(name: string, data: any) {
@@ -20,9 +29,8 @@ class Settings implements Types.ISettingsClass {
 
     public async get(key: string) {
         try {
-            return await browser.storage.local.get(key).then(res => {
-                return has(res, key) ? res[key] : res;
-            });
+            const res = await browser.storage.local.get(key);
+            return has(res, key) ? res[key] : res;
         } catch (err) {
             this.error(err);
             return false;
