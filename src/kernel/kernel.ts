@@ -25,8 +25,11 @@ class Kernel {
 
     constructor() {
         this.messenger = new Messenger();
-        this.settings = new Settings();
+
         this.browserevents = new BrowserEvents();
+
+        this.settings = new Settings();
+        this.settings.initialize();
 
         this.syncsetup = new SyncSetup(this.messenger, this.settings);
     }
