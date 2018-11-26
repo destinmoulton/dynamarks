@@ -83,6 +83,7 @@ class DynalistAPI {
 
     public async submitChanges(docChanges: DocumentChanges) {
         try {
+            // Bookmarks are stored as a dynalist doc in the settings
             const doc: any = await this.settings.get(SettingKeys.doc);
             if (doc === null) {
                 return;
