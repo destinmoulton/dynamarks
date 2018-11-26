@@ -19,7 +19,7 @@ class LocalBookmarks {
         const sorted = sortBy(result, ["index"]);
         this.bookmarks = sorted;
 
-        console.log("LocalBookmarks :: bookmarks", sorted);
+        //console.log("LocalBookmarks :: bookmarks", sorted);
         return sorted;
     }
 
