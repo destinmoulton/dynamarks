@@ -16,7 +16,9 @@ class Settings {
         const hasBrowserId = await this.exists(SettingKeys.browserId);
         if (!hasBrowserId) {
             // Create a browser id
-            await this.set(SettingKeys.browserId, sum(Date.now()));
+            const browserID = sum(Date.now());
+            log("initialize() :: generated browserID", browserID);
+            await this.set(SettingKeys.browserId, browserID);
         }
     }
 
@@ -52,6 +54,16 @@ class Settings {
         try {
             const val = await browser.storage.local.get(name);
             return !_.isEmpty(val);
+        } catch (err) {
+            this.error(err);
+            return false;
+        }
+    }
+
+    // Clear all the settings in storage.local
+    public async clearAll() {
+        try {
+            return await browser.storage.local.clear();
         } catch (err) {
             this.error(err);
             return false;
