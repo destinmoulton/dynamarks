@@ -121,13 +121,3 @@ export interface IRootStoreState {
 //
 // END Redux Types
 // ---------------
-
-// -------------------
-// Settings Class Type
-//
-export interface ISettingsClass {
-    get: (key: string) => any;
-}
-//
-// END Settings Class Type
-// -----------------------

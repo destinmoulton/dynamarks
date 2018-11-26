@@ -3,11 +3,11 @@ import * as _ from "lodash";
 import sum from "hash-sum";
 
 import * as Types from "./types";
-import { SettingDefaults, SettingKeys } from "./constants/settings.constants";
+import { SettingKeys } from "./constants/settings.constants";
 import { has } from "immutable";
 
 const log = debug("common:settings");
-class Settings implements Types.ISettingsClass {
+class Settings {
     error(err: Error) {
         log("ERROR", err);
     }

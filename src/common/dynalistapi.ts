@@ -5,14 +5,15 @@ import { List, Map } from "immutable";
 import DocumentChanges from "../kernel/lib/dynalist/documentchanges";
 import * as Types from "./types";
 import { SettingKeys } from "./constants/settings.constants";
+import Settings from "./settings";
 
 const BASE_URL = "https://dynalist.io/api/v1/";
 
 const log = debug("common:dynalistapi");
 class DynalistAPI {
-    settings: Types.ISettingsClass;
+    settings: Settings;
 
-    constructor(settings: Types.ISettingsClass) {
+    constructor(settings: Settings) {
         this.settings = settings;
     }
 
@@ -63,7 +64,7 @@ class DynalistAPI {
 
     public async getBookmarks() {
         try {
-            const doc = await this.settings.get(SettingKeys.doc);
+            const doc: any = await this.settings.get(SettingKeys.doc);
             if (doc === null) {
                 return;
             }
@@ -82,7 +83,7 @@ class DynalistAPI {
 
     public async submitChanges(docChanges: DocumentChanges) {
         try {
-            const doc = await this.settings.get(SettingKeys.doc);
+            const doc: any = await this.settings.get(SettingKeys.doc);
             if (doc === null) {
                 return;
             }
