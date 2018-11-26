@@ -49,10 +49,10 @@ class RemoteBookmarks {
     public async populateBookmarks() {
         try {
             this.bookmarks = await this.iDynalistAPI.getBookmarks();
-            console.log(
-                "RemoteBookmarks :: populateBookmarks() :: bookmarks",
-                this.bookmarks
-            );
+            // console.log(
+            //     "RemoteBookmarks :: populateBookmarks() :: bookmarks",
+            //     this.bookmarks
+            // );
         } catch (err) {
             console.error(
                 "RemoteBookmarks :: populateBookmarks() :: Error getting the bookmarks.",
