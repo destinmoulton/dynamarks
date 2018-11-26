@@ -15,9 +15,16 @@ interface IFolderMap {
     [folder_key: string]: string;
 }
 
-interface IBookmarkMap {
+interface IBookmarkMapChild {
     browserBookmarkId: string;
     dynalistNodeId: string;
+}
+
+interface IBookmarkMap {
+    mapId: string;
+    browserBookmarkId: string;
+    dynalistNodeId: string;
+    children: IBookmarkMapChild[];
 }
 
 interface IInstallation {
@@ -117,8 +124,35 @@ class DynamarksDB {
         return isObject(this.getInstallation(browserID));
     }
 
-    public addBookmarkMap(localBookmarkId: string, dynalistNodeId: string) {
-        this.db.installations;
+    public clearBookmarkMap() {
+        this.currentInstallation.bookmarkMap = [];
+    }
+
+    public addBookmarkMap(browserBookmarkId: string, dynalistNodeId: string) {
+        const newMap: IBookmarkMap = {
+            mapId: browserBookmarkId + dynalistNodeId,
+            browserBookmarkId,
+            dynalistNodeId,
+            children: []
+        };
+
+        this.currentInstallation.bookmarkMap.push(newMap);
+    }
+
+    public addBookmarkMapChild(
+        parentBrowserBookmarkId: string,
+        parentDynalistNodeId: string,
+        childBrowserBookmarkId: string,
+        childDynalistNodeId: string
+    ) {
+        const mapping = find(this.currentInstallation.bookmarkMap, {
+            browserBookmarkId: parentBrowserBookmarkId,
+            dynalistNodeId: parentDynalistNodeId
+        });
+        mapping.children.push({
+            browserBookmarkId: childBrowserBookmarkId,
+            dynalistNodeId: childDynalistNodeId
+        });
     }
 }
 

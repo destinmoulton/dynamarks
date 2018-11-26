@@ -1,3 +1,4 @@
+import debug from "debug";
 import * as _ from "lodash";
 import { List, Map } from "immutable";
 
@@ -7,6 +8,7 @@ import { SettingKeys } from "./constants/settings.constants";
 
 const BASE_URL = "https://dynalist.io/api/v1/";
 
+const log = debug("common:dynalistapi");
 class DynalistAPI {
     settings: Types.ISettingsClass;
 
@@ -25,7 +27,7 @@ class DynalistAPI {
             method: "POST"
         };
 
-        console.log("DynalistAPI :: request()", {
+        log("request()", {
             request: { url, requestParams }
         });
         return fetch(url, params)

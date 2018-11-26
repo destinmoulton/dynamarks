@@ -1,3 +1,4 @@
+import debug from "debug";
 import { find, isArray, isObject, keys, remove, values } from "lodash";
 
 import {
@@ -10,6 +11,7 @@ import DynamarksDB from "./dynamarksdb";
 import Settings from "../../common/settings";
 import * as Types from "../../common/types";
 
+const log = debug("kernel:remotebookmarks");
 class RemoteBookmarks {
     private bookmarks: Types.IDynalistNode[];
     private iDynalistAPI: DynalistAPI = null;
@@ -39,20 +41,14 @@ class RemoteBookmarks {
             }
             return true;
         } catch (err) {
-            console.error(
-                "RemoteBookmarks :: setup() :: Error setting up RemoteBookmarks.",
-                err
-            );
+            log("setup() :: ERROR :: Problem in setup.", err);
         }
     }
 
     public async populateBookmarks() {
         try {
             this.bookmarks = await this.iDynalistAPI.getBookmarks();
-            // console.log(
-            //     "RemoteBookmarks :: populateBookmarks() :: bookmarks",
-            //     this.bookmarks
-            // );
+            log("populateBookmarks() :: bookmarks", this.bookmarks);
         } catch (err) {
             console.error(
                 "RemoteBookmarks :: populateBookmarks() :: Error getting the bookmarks.",

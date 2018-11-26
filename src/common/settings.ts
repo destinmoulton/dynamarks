@@ -1,3 +1,4 @@
+import debug from "debug";
 import * as _ from "lodash";
 import sum from "hash-sum";
 
@@ -5,6 +6,7 @@ import * as Types from "./types";
 import { SettingDefaults, SettingKeys } from "./constants/settings.constants";
 import { has } from "immutable";
 
+const log = debug("common:settings");
 class Settings implements Types.ISettingsClass {
     error(err: Error) {
         console.error(err);
@@ -60,7 +62,7 @@ class Settings implements Types.ISettingsClass {
     public async debug() {
         try {
             return await browser.storage.local.get(null).then((data: any) => {
-                console.log("Settings :: debug()", data);
+                log("debug()", data);
             });
         } catch (err) {
             this.error(err);

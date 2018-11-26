@@ -1,3 +1,5 @@
+import debug from "debug";
+
 import { filter, find, has, isArray, sortBy, values } from "lodash";
 
 import * as Types from "../../common/types";
@@ -7,6 +9,8 @@ import {
     BookmarkFolderKeys,
     BrowserFolderIDs
 } from "../constants/folders.constants";
+
+const log = debug("kernel:localbookmarks");
 
 class LocalBookmarks {
     private bookmarks: Types.ILocalBookmark[] = null;
@@ -19,7 +23,7 @@ class LocalBookmarks {
         const sorted = sortBy(result, ["index"]);
         this.bookmarks = sorted;
 
-        //console.log("LocalBookmarks :: bookmarks", sorted);
+        log("populate() :: bookmarks", sorted);
         return sorted;
     }
 
