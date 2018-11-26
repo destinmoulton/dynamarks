@@ -50,8 +50,8 @@ class RemoteBookmarks {
             this.bookmarks = await this.iDynalistAPI.getBookmarks();
             log("populateBookmarks() :: bookmarks", this.bookmarks);
         } catch (err) {
-            console.error(
-                "RemoteBookmarks :: populateBookmarks() :: Error getting the bookmarks.",
+            log(
+                "ERROR :: populateBookmarks() :: Error getting the bookmarks.",
                 err
             );
         }
@@ -66,11 +66,6 @@ class RemoteBookmarks {
     }
 
     public getChildIdByIndex(parent_id: string, child_index: number) {
-        console.log(
-            "RemoteBookmarks :: getChildIdByIndex() parent_id,child_index = ",
-            parent_id,
-            child_index
-        );
         const parent = this.getSingleById(parent_id);
         if (isArray(parent.children) && parent.children.length > 0) {
             return parent.children[child_index];
@@ -146,10 +141,7 @@ class RemoteBookmarks {
             foldersToCreate.forEach(folder => {
                 changes.addNode("root", folder);
             });
-            console.log(
-                "Sync :: syncDynamarksFolders foldersToCreate",
-                foldersToCreate
-            );
+
             return await this.iDynalistAPI.submitChanges(changes);
         }
         return true;

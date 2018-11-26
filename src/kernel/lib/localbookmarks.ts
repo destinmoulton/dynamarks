@@ -1,9 +1,7 @@
 import debug from "debug";
-
-import { filter, find, has, isArray, sortBy, values } from "lodash";
+import { find, has, isArray, sortBy } from "lodash";
 
 import * as Types from "../../common/types";
-import DocumentChanges from "./dynalist/documentchanges";
 
 import {
     BookmarkFolderKeys,
@@ -53,8 +51,8 @@ class LocalBookmarks {
         try {
             return browser.bookmarks.create(bookmark);
         } catch (err) {
-            console.error(
-                "LocalBookmarks :: addBookmark() :: Error creating a bookmark",
+            log(
+                "ERROR :: addBookmark() :: Error creating a bookmark",
                 err,
                 bookmark
             );

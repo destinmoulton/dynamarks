@@ -57,7 +57,7 @@ class DynalistAPI {
                 return json._code === "Ok";
             })
             .catch(err => {
-                console.error(err);
+                log("ERROR :: isTokenValid()", err);
             });
     }
 
@@ -125,7 +125,7 @@ class DynalistAPI {
         try {
             return await this.request(url);
         } catch (err) {
-            console.error(err);
+            log("ERROR :: getAllFiles()", err);
         }
     }
 

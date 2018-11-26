@@ -1,10 +1,9 @@
 /**
  * The database stored in Dynamarks for meta data
  */
-
+import debug from "debug";
 import { cloneDeep, find, has, isObject, keys } from "lodash";
 
-import { DynalistFolders } from "../constants/folders.constants";
 import { SettingKeys } from "../../common/constants/settings.constants";
 import DynalistAPI from "../../common/dynalistapi";
 import DocumentChanges from "./dynalist/documentchanges";
@@ -42,6 +41,8 @@ const INITIAL_DB: IDynarksDB = {
     folderMap: {},
     installations: []
 };
+
+const log = debug("kernel:dynamarksdb");
 
 class DynamarksDB {
     db: IDynarksDB = null;
@@ -86,14 +87,11 @@ class DynamarksDB {
         const changes = new DocumentChanges();
         const jsonDB = JSON.stringify(this.db);
         changes.editNode(this.dbNode.id, this.dbNode.content, jsonDB);
-
+        log("upload()", this.db);
         try {
             return await this.iDynalistAPI.submitChanges(changes);
         } catch (err) {
-            console.error(
-                "DynamarksDB :: upload() :: Error uploading db.",
-                err
-            );
+            log("ERROR :: upload() :: Error uploading db.", err);
         }
     }
 

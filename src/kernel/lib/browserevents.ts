@@ -1,3 +1,5 @@
+import debug from "debug";
+
 interface IRemoveInfo {
     parentId: string;
     index: number;
@@ -15,7 +17,7 @@ interface IMoveInfo {
     oldParentId: string;
     oldIndex: number;
 }
-
+const log = debug("kernel:browserevents");
 class BrowserEvents {
     constructor() {
         this.setupListeners();
@@ -32,19 +34,19 @@ class BrowserEvents {
         id: string,
         node: browser.bookmarks.BookmarkTreeNode
     ) {
-        console.log("BrowserEvents :: bookmarkCreated");
+        log("bookmarkCreated()");
     }
 
     private bookmarkRemoved(id: string, removeInfo: IRemoveInfo) {
-        console.log("BrowserEvents :: bookmarkRemoved");
+        log("bookmarkRemoved()");
     }
 
     private bookmarkChanged(id: string, changeInfo: IChangeInfo) {
-        console.log("BrowserEvents :: bookmarkChanged");
+        log("bookmarkChanged()");
     }
 
     private bookmarkMoved(id: string, moveInfo: IMoveInfo) {
-        console.log("BrowserEvents :: bookmarkMoved");
+        log("bookmarkMoved()");
     }
 }
 

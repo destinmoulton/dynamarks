@@ -9,7 +9,7 @@ import { has } from "immutable";
 const log = debug("common:settings");
 class Settings implements Types.ISettingsClass {
     error(err: Error) {
-        console.error(err);
+        log("ERROR", err);
     }
 
     public async initialize() {
