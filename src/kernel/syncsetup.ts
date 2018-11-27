@@ -1,3 +1,4 @@
+import debug from "debug";
 import { keys } from "lodash";
 
 import { DynalistFolders } from "./constants/folders.constants";
@@ -13,6 +14,7 @@ import * as Types from "../common/types";
 
 import RemoteBookmarks from "./lib/remotebookmarks";
 
+const log = debug("kernel:syncsetup");
 class SyncSetup {
     private iDynalistAPI: DynalistAPI = null;
     private iDynamarksDB: DynamarksDB = null;
@@ -99,6 +101,7 @@ class SyncSetup {
 
         await this.iDynamarksDB.setupDB(dbNode);
         if (!isDB) {
+            log("setupDB() isDB = false");
             await this.mapRemoteFoldersToDB();
         }
     }
