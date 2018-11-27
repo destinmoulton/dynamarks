@@ -40,6 +40,10 @@ function settingsReducer(
                 ...state,
                 isPopulated: true
             };
+        case ActionTypes.SETTINGS_RESET:
+            return {
+                ...initialState
+            };
         default:
             return { ...state };
     }

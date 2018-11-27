@@ -46,6 +46,12 @@ export function remove(key: string) {
     };
 }
 
+function reset() {
+    return {
+        type: ActionTypes.SETTINGS_RESET
+    };
+}
+
 function populationComplete() {
     return {
         type: ActionTypes.SETTINGS_POPULATION_COMPLETE
@@ -78,10 +84,8 @@ export function populate() {
 // Clear all settings
 export function clearAll() {
     return (dispatch: Types.IDispatch) => {
-        _.values(SettingKeys).forEach((settingName: string) => {
-            return settings.remove(settingName).then(() => {
-                return dispatch(nullifySingle(settingName));
-            });
+        return settings.clearAll().then(() => {
+            return dispatch(reset());
         });
     };
 }
