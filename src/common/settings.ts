@@ -17,7 +17,10 @@ class Settings {
         if (!hasBrowserId) {
             // Create a browser id
             const browserID = sum(Date.now());
-            log("initialize() :: generated browserID", browserID);
+            log(
+                "initialize() :: New installation. Generated browserID = %s",
+                browserID
+            );
             await this.set(SettingKeys.browserID, browserID);
         }
     }
