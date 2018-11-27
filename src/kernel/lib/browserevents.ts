@@ -1,4 +1,5 @@
 import debug from "debug";
+import { has } from "lodash";
 
 interface IRemoveInfo {
     parentId: string;
@@ -38,15 +39,38 @@ class BrowserEvents {
     }
 
     private bookmarkRemoved(id: string, removeInfo: IRemoveInfo) {
-        log("bookmarkRemoved()");
+        log("bookmarkRemoved()", removeInfo);
     }
 
+    /**
+     * changeInfo = { title OR url }
+     *
+     * @param id
+     * @param changeInfo
+     */
     private bookmarkChanged(id: string, changeInfo: IChangeInfo) {
-        log("bookmarkChanged()");
+        if (has(changeInfo, "url")) {
+            // URL Changed
+        } else if (has(changeInfo, "title")) {
+            // Title changed
+        }
+        log("bookmarkChanged() id=%s", id, changeInfo);
     }
 
+    /**
+     *
+     * moveInfo = {
+     *  index:
+     *  oldIndex:
+     *  oldParentId:
+     *  parentId:
+     * }
+     *
+     * @param id
+     * @param moveInfo
+     */
     private bookmarkMoved(id: string, moveInfo: IMoveInfo) {
-        log("bookmarkMoved()");
+        log("bookmarkMoved() id=%s", id, moveInfo);
     }
 }
 
