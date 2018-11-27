@@ -2,9 +2,9 @@ interface ISettings {
     [key: string]: any;
 }
 export const SettingKeys: ISettings = {
-    token: "dynalist_token",
-    doc: "dynalist_bookmarks_document",
-    interval: "synchronization_interval",
+    token: "dynalistToken",
+    doc: "dynalistBookmarksDocument",
+    interval: "synchronizationInterval",
     browserID: "browserID"
 };
 
