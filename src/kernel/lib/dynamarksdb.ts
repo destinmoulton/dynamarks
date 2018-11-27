@@ -92,6 +92,10 @@ class DynamarksDB {
         return find(this.db.installations, { browserID });
     }
 
+    public getAllInstallations() {
+        return this.db.installations;
+    }
+
     private hasInstallation(browserID: string) {
         return isObject(this.getInstallation(browserID));
     }
