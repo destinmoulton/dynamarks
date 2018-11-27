@@ -1,6 +1,6 @@
 import debug from "debug";
 import * as _ from "lodash";
-import sum from "hash-sum";
+const sum = require("hash-sum");
 
 import * as Types from "./types";
 import { SettingKeys } from "./constants/settings.constants";
@@ -18,7 +18,7 @@ class Settings {
             // Create a browser id
             const browserID = sum(Date.now());
             log("initialize() :: generated browserID", browserID);
-            await this.set(SettingKeys.browserId, browserID);
+            await this.set(SettingKeys.browserID, browserID);
         }
     }
 
