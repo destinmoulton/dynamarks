@@ -107,16 +107,16 @@ export interface IGetState {
     (): IRootStoreState;
 }
 
-export interface ISettingsState {
+export interface IStateSettings {
     [key: string]: any;
 }
 
-export interface IBookmarksState {
+export interface IStateBookmarks {
     lastSync: Moment;
 }
 
 export interface IRootStoreState {
-    settingsStore: ISettingsState;
+    settingsStore: IStateSettings;
 }
 //
 // END Redux Types

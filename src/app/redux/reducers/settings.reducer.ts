@@ -4,18 +4,18 @@ import * as ActionTypes from "../actiontypes";
 import * as Types from "../../../common/types";
 import { SettingKeys } from "../../../common/constants/settings.constants";
 
-let initialSettings: Types.ISettingsState = {};
+let initialSettings: Types.IStateSettings = {};
 _.values(SettingKeys).forEach((setting: string) => {
     initialSettings[setting] = null;
 });
 
-let initialState: Types.ISettingsState = {
+let initialState: Types.IStateSettings = {
     settings: initialSettings,
     isPopulated: false
 };
 
 function settingsReducer(
-    state: Types.ISettingsState = initialState,
+    state: Types.IStateSettings = initialState,
     action: any
 ) {
     switch (action.type) {
