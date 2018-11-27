@@ -121,3 +121,36 @@ export interface IRootStoreState {
 //
 // END Redux Types
 // ---------------
+
+// --------
+// DB Types
+//
+export interface IDBFolderMap {
+    [folder_key: string]: string;
+}
+
+export interface IDBBookmarkMapChild {
+    browserBookmarkId: string;
+    dynalistNodeId: string;
+}
+
+export interface IDBBookmarkMap {
+    mapId: string;
+    browserBookmarkId: string;
+    dynalistNodeId: string;
+    children: IDBBookmarkMapChild[];
+}
+
+export interface IDBInstallation {
+    browserID: string;
+    lastSyncTime: number;
+    bookmarkMap: IDBBookmarkMap[];
+}
+
+export interface IDB {
+    folderMap: IDBFolderMap;
+    installations: IDBInstallation[];
+}
+//
+// END DB Types
+// ------------

@@ -10,34 +10,7 @@ import DocumentChanges from "./dynalist/documentchanges";
 import Settings from "../../common/settings";
 import * as Types from "../../common/types";
 
-interface IFolderMap {
-    [folder_key: string]: string;
-}
-
-interface IBookmarkMapChild {
-    browserBookmarkId: string;
-    dynalistNodeId: string;
-}
-
-interface IBookmarkMap {
-    mapId: string;
-    browserBookmarkId: string;
-    dynalistNodeId: string;
-    children: IBookmarkMapChild[];
-}
-
-interface IInstallation {
-    browserID: string;
-    lastSyncTime: number;
-    bookmarkMap: IBookmarkMap[];
-}
-
-interface IDynarksDB {
-    folderMap: IFolderMap;
-    installations: IInstallation[];
-}
-
-const INITIAL_DB: IDynarksDB = {
+const INITIAL_DB: Types.IDB = {
     folderMap: {},
     installations: []
 };
@@ -45,11 +18,11 @@ const INITIAL_DB: IDynarksDB = {
 const log = debug("kernel:dynamarksdb");
 
 class DynamarksDB {
-    db: IDynarksDB = null;
+    db: Types.IDB = null;
     iDynalistAPI: DynalistAPI = null;
     iSettings: Settings = null;
     dbNode: Types.IDynalistNode = null;
-    currentInstallation: IInstallation = null;
+    currentInstallation: Types.IDBInstallation = null;
 
     constructor(dynalistapi: DynalistAPI, settings: Settings) {
         this.iDynalistAPI = dynalistapi;
@@ -77,7 +50,7 @@ class DynamarksDB {
             const possibleDB = JSON.parse(dbNode.note);
 
             return (
-                has(possibleDB, "foldermap") && has(possibleDB, "installations")
+                has(possibleDB, "folderMap") && has(possibleDB, "installations")
             );
         } catch (err) {
             return false;
@@ -106,7 +79,7 @@ class DynamarksDB {
     }
 
     private async addInstallation(browserID: string) {
-        const inst: IInstallation = {
+        const inst: Types.IDBInstallation = {
             browserID,
             lastSyncTime: 0,
             bookmarkMap: []
@@ -115,7 +88,7 @@ class DynamarksDB {
         return await this.upload();
     }
 
-    private getInstallation(browserID: string): IInstallation {
+    private getInstallation(browserID: string): Types.IDBInstallation {
         return find(this.db.installations, { browserID });
     }
 
@@ -128,7 +101,7 @@ class DynamarksDB {
     }
 
     public addBookmarkMap(browserBookmarkId: string, dynalistNodeId: string) {
-        const newMap: IBookmarkMap = {
+        const newMap: Types.IDBBookmarkMap = {
             mapId: browserBookmarkId + dynalistNodeId,
             browserBookmarkId,
             dynalistNodeId,
