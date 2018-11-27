@@ -64,11 +64,12 @@ class DynamarksDB {
         this.dbNode = node;
         this.db = dbData;
 
-        const browserId: any = await this.iSettings.get(SettingKeys.browserID);
-        if (!this.hasInstallation(browserId)) {
-            await this.addInstallation(browserId);
-            this.currentInstallation = this.getInstallation(browserId);
+        const browserID: any = await this.iSettings.get(SettingKeys.browserID);
+        if (!this.hasInstallation(browserID)) {
+            await this.addInstallation(browserID);
         }
+        this.currentInstallation = this.getInstallation(browserID);
+        log("setupDB() :: this.db", this.db);
     }
 
     public doesNodeContainDB(dbNode: Types.IDynalistNode) {
