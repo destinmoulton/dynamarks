@@ -2,7 +2,7 @@ import moment, { Moment } from "moment";
 
 import * as Types from "../../../common/types";
 
-const INITIAL_STATE: Types.IBookmarksState = {
+const INITIAL_STATE: Types.IStateBookmarks = {
     lastSync: null
 };
 
