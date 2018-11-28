@@ -3,12 +3,11 @@ import { has, isArray } from "lodash";
 import {
     BookmarkFolderKeys,
     BrowserFolderIDs
-} from "../constants/folders.constants";
-import DynamarksDB from "./dynamarksdb";
-import LocalBookmarks from "./localbookmarks";
-import RemoteBookmarks from "./remotebookmarks";
-import * as Types from "../../common/types";
-import { SSL_OP_ALLOW_UNSAFE_LEGACY_RENEGOTIATION } from "constants";
+} from "../../constants/folders.constants";
+import DynamarksDB from "../dynamarksdb";
+import LocalBookmarks from "../localbookmarks";
+import RemoteBookmarks from "../remotebookmarks";
+import * as Types from "../../../common/types";
 
 class SyncOverwrite {
     private iDynamarksDB: DynamarksDB = null;
