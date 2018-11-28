@@ -4,10 +4,12 @@
 import debug from "debug";
 import { cloneDeep, find, has, isObject, keys } from "lodash";
 
-import { SettingKeys } from "../../../common/constants/settings.constants";
-import DynalistAPI from "../../../common/dynalistapi";
 import DocumentChanges from "../dynalist/documentchanges";
+import DynalistAPI from "../../../common/dynalistapi";
+import { DynalistFolders } from "../../constants/folders.constants";
+import RemoteBookmarks from "../remotebookmarks";
 import Settings from "../../../common/settings";
+import { SettingKeys } from "../../../common/constants/settings.constants";
 import * as Types from "../../../common/types";
 
 const INITIAL_DB: Types.IDB = {
@@ -18,24 +20,42 @@ const INITIAL_DB: Types.IDB = {
 const log = debug("kernel:DB");
 
 class DB {
-    db: Types.IDB = null;
-    iDynalistAPI: DynalistAPI = null;
+    private db: Types.IDB = null;
+    private iDynalistAPI: DynalistAPI = null;
+    private iRemoteBookmarks: RemoteBookmarks = null;
     iSettings: Settings = null;
     dbNode: Types.IDynalistNode = null;
     currentInstallation: Types.IDBInstallation = null;
 
-    constructor(dynalistapi: DynalistAPI, settings: Settings) {
+    constructor(
+        dynalistapi: DynalistAPI,
+        remotebookmarks: RemoteBookmarks,
+        settings: Settings
+    ) {
         this.iDynalistAPI = dynalistapi;
+        this.iRemoteBookmarks = remotebookmarks;
         this.iSettings = settings;
     }
 
-    public async setupDB(node: Types.IDynalistNode) {
+    public async setup() {
+        const dbNode = this.iRemoteBookmarks.getSingleByName(
+            DynalistFolders.db
+        );
+
+        // Verify/instantiate the database
+
+        const isNodeDB = this.doesNodeContainDB(dbNode);
         let dbData = cloneDeep(INITIAL_DB);
-        if (this.doesNodeContainDB(node)) {
-            dbData = JSON.parse(node.note);
+        if (isNodeDB) {
+            dbData = JSON.parse(dbNode.note);
         }
-        this.dbNode = node;
+        this.dbNode = dbNode;
         this.db = dbData;
+
+        if (!isNodeDB) {
+            log("setupDB() isDB = false");
+            await this.mapRemoteFolders();
+        }
 
         const browserID: any = await this.iSettings.get(SettingKeys.browserID);
         if (!this.hasInstallation(browserID)) {
@@ -43,6 +63,17 @@ class DB {
         }
         this.currentInstallation = this.getInstallation(browserID);
         log("setupDB() :: this.db", this.db);
+    }
+
+    private async mapRemoteFolders() {
+        keys(DynalistFolders).forEach(folderKey => {
+            const folder = this.iRemoteBookmarks.getSingleByName(
+                DynalistFolders[folderKey]
+            );
+
+            this.addFolderMap(folderKey, folder.id);
+        });
+        await this.upload();
     }
 
     public doesNodeContainDB(dbNode: Types.IDynalistNode) {
@@ -78,9 +109,12 @@ class DB {
         return this.db.folderMap[key];
     }
 
-    private async addInstallation(browserID: string) {
+    private async addInstallation(installationID: string) {
         const inst: Types.IDBInstallation = {
-            browserID,
+            id: installationID,
+            name: "",
+            browser: "",
+            os: "",
             lastSyncTime: 0,
             bookmarkMap: []
         };
@@ -88,8 +122,8 @@ class DB {
         return await this.upload();
     }
 
-    private getInstallation(browserID: string): Types.IDBInstallation {
-        return find(this.db.installations, { browserID });
+    private getInstallation(installationID: string): Types.IDBInstallation {
+        return find(this.db.installations, { id: installationID });
     }
 
     public getAllInstallations() {
