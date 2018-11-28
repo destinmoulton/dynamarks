@@ -21,7 +21,7 @@ class SyncEvents {
         this.iMessenger.subscribe("sync", this.handleDispatch);
     }
 
-    private handleDispatch = async (packet: Types.IDispatchMessage) => {
+    private handleDispatch = async (packet: Types.IMessage) => {
         switch (packet.action) {
             case MessengerActions.SYNC_OVERWRITE_SERVER:
                 return await this.iSyncOverwrite.overwriteServer();
