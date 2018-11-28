@@ -4,20 +4,20 @@
 import debug from "debug";
 import { cloneDeep, find, has, isObject, keys } from "lodash";
 
-import { SettingKeys } from "../../common/constants/settings.constants";
-import DynalistAPI from "../../common/dynalistapi";
-import DocumentChanges from "./dynalist/documentchanges";
-import Settings from "../../common/settings";
-import * as Types from "../../common/types";
+import { SettingKeys } from "../../../common/constants/settings.constants";
+import DynalistAPI from "../../../common/dynalistapi";
+import DocumentChanges from "../dynalist/documentchanges";
+import Settings from "../../../common/settings";
+import * as Types from "../../../common/types";
 
 const INITIAL_DB: Types.IDB = {
     folderMap: {},
     installations: []
 };
 
-const log = debug("kernel:dynamarksdb");
+const log = debug("kernel:DB");
 
-class DynamarksDB {
+class DB {
     db: Types.IDB = null;
     iDynalistAPI: DynalistAPI = null;
     iSettings: Settings = null;
@@ -132,4 +132,4 @@ class DynamarksDB {
     }
 }
 
-export default DynamarksDB;
+export default DB;

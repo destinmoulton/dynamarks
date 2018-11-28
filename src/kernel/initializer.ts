@@ -1,10 +1,11 @@
 import debug from "debug";
 import { keys } from "lodash";
 
+import BrowserEvents from "./lib/browserevents";
 import DBEvents from "./lib/db/dbevents";
 import { DynalistFolders } from "./constants/folders.constants";
 import DynalistAPI from "../common/dynalistapi";
-import DynamarksDB from "./lib/dynamarksdb";
+import DB from "./lib/db/db";
 import LocalBookmarks from "./lib/localbookmarks";
 import Messenger from "../common/messenger";
 import * as MessengerActions from "../common/constants/messengeractions.constants";
@@ -18,9 +19,10 @@ import * as Types from "../common/types";
 
 const log = debug("kernel:syncsetup");
 class Initializer {
+    private iBrowserEvents: BrowserEvents = null;
     private iDBEvents: DBEvents = null;
     private iDynalistAPI: DynalistAPI = null;
-    private iDynamarksDB: DynamarksDB = null;
+    private iDynamarksDB: DB = null;
     private iMessenger: Messenger = null;
     private iLocalBookmarks: LocalBookmarks = null;
     private iRemoteBookmarks: RemoteBookmarks = null;
@@ -29,9 +31,11 @@ class Initializer {
     private iSyncEvents: SyncEvents = null;
     private iSyncOverwrite: SyncOverwrite = null;
 
-    constructor(messenger: Messenger, settings: Settings) {
-        this.iMessenger = messenger;
-        this.iSettings = settings;
+    constructor() {
+        this.iMessenger = new Messenger();
+        this.iSettings = new Settings();
+        this.iSettings.initialize();
+        this.iBrowserEvents = new BrowserEvents();
 
         this.iDynalistAPI = new DynalistAPI(this.iSettings);
 
@@ -44,7 +48,7 @@ class Initializer {
     }
 
     private initializeDB() {
-        this.iDynamarksDB = new DynamarksDB(this.iDynalistAPI, this.iSettings);
+        this.iDynamarksDB = new DB(this.iDynalistAPI, this.iSettings);
 
         this.iDBEvents = new DBEvents(this.iDynamarksDB, this.iMessenger);
     }

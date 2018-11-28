@@ -7,7 +7,7 @@ import {
 } from "../constants/folders.constants";
 import DocumentChanges from "./dynalist/documentchanges";
 import DynalistAPI from "../../common/dynalistapi";
-import DynamarksDB from "./dynamarksdb";
+import DB from "./db/db";
 import Settings from "../../common/settings";
 import * as Types from "../../common/types";
 
@@ -15,16 +15,12 @@ const log = debug("kernel:remotebookmarks");
 class RemoteBookmarks {
     private bookmarks: Types.IDynalistNode[];
     private iDynalistAPI: DynalistAPI = null;
-    private iDynamarksDB: DynamarksDB = null;
+    private iDynamarksDB: DB = null;
     private iSettings: Settings = null;
 
-    constructor(
-        dynalistapi: DynalistAPI,
-        dynamarksdb: DynamarksDB,
-        settings: Settings
-    ) {
+    constructor(dynalistapi: DynalistAPI, DB: DB, settings: Settings) {
         this.iDynalistAPI = dynalistapi;
-        this.iDynamarksDB = dynamarksdb;
+        this.iDynamarksDB = DB;
         this.iSettings = settings;
     }
 

@@ -1,15 +1,15 @@
-import DynamarksDB from "../dynamarksdb";
+import DB from "./db";
 import Messenger from "../../../common/messenger";
 import * as MessengerActions from "../../../common/constants/messengeractions.constants";
 import * as Types from "../../../common/types";
 
 class DBEvents {
     private topic: string = "db";
-    private iDynamarksDB: DynamarksDB = null;
+    private iDynamarksDB: DB = null;
     private iMessenger: Messenger = null;
 
-    constructor(dynamarksdb: DynamarksDB, messenger: Messenger) {
-        this.iDynamarksDB = dynamarksdb;
+    constructor(DB: DB, messenger: Messenger) {
+        this.iDynamarksDB = DB;
         this.iMessenger = messenger;
 
         this.iMessenger.subscribe("db", this.handleDispatch);
