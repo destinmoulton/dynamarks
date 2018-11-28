@@ -5,12 +5,12 @@ export const SettingKeys: ISettings = {
     token: "dynalistToken",
     doc: "dynalistBookmarksDocument",
     interval: "synchronizationInterval",
-    browserID: "browserID"
+    installationID: "installationID"
 };
 
 export const SettingDefaults: ISettings = {
     token: null,
     doc: null,
     interval: 15,
-    browserID: null
+    installationID: null
 };
