@@ -7,13 +7,14 @@ import * as Types from "../../common/types";
 import TabsController from "./TabsController";
 import KeyForm from "./forms/KeyForm";
 import SelectDoc from "./settings/SelectDoc";
+import SetupInstallation from "./SetupInstallation";
 
 import { SettingKeys } from "../../common/constants/settings.constants";
 import * as SettingsActions from "../redux/actions/settings.actions";
 import { settings } from "../instances";
 
 interface IMapStateToProps {
-    settingsState: Types.ISettingsState;
+    settingsState: Types.IStateSettings;
     isPopulated: boolean;
 }
 
@@ -48,6 +49,8 @@ class Nav extends React.Component<TNavProps, IState> {
             ) {
                 if (settingsState[SettingKeys.doc] === null) {
                     view = <SelectDoc />;
+                } else if (settingsState[SettingKeys.installationID] === null) {
+                    view = <SetupInstallation />;
                 } else {
                     view = <TabsController />;
                 }
