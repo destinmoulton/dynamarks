@@ -7,31 +7,13 @@
  * To be run as a background process in the manifest.json.
  */
 
-import * as types from "../common/types";
-
-import BrowserEvents from "./lib/browserevents";
-import Messenger from "../common/messenger";
-
-import LocalBookmarks from "./lib/localbookmarks";
-import Settings from "../common/settings";
-
-import SyncSetup from "./syncsetup";
+import Initializer from "./initializer";
 
 class Kernel {
-    private browserevents: BrowserEvents = null;
-    private settings: Settings = null;
-    private messenger: Messenger = null;
-    private syncsetup: SyncSetup = null;
+    private initializer: Initializer = null;
 
     constructor() {
-        this.messenger = new Messenger();
-
-        this.browserevents = new BrowserEvents();
-
-        this.settings = new Settings();
-        this.settings.initialize();
-
-        this.syncsetup = new SyncSetup(this.messenger, this.settings);
+        this.initializer = new Initializer();
     }
 }
 
