@@ -1,3 +1,10 @@
+/**
+ * Initializes all of the classes and begins
+ * setting up and synchronizing.
+ *
+ * @author Destin Moulton
+ *
+ */
 import debug from "debug";
 import { keys } from "lodash";
 
@@ -8,14 +15,12 @@ import DynalistAPI from "../common/dynalistapi";
 import DB from "./lib/db/db";
 import LocalBookmarks from "./lib/localbookmarks";
 import Messenger from "../common/messenger";
-import * as MessengerActions from "../common/constants/messengeractions.constants";
 import RemoteBookmarks from "./lib/remotebookmarks";
 import Settings from "../common/settings";
 import { SettingKeys } from "../common/constants/settings.constants";
 import Sync from "./lib/sync/sync";
 import SyncEvents from "./lib/sync/syncevents";
 import SyncOverwrite from "./lib/sync/syncoverwrite";
-import * as Types from "../common/types";
 
 const log = debug("kernel:syncsetup");
 class Initializer {
@@ -33,13 +38,14 @@ class Initializer {
 
     constructor() {
         this.iMessenger = new Messenger();
-        this.iSettings = new Settings();
-        this.iSettings.initialize();
+
         this.iBrowserEvents = new BrowserEvents();
 
+        // The order of the following is IMPORTANT
+        this.iSettings = new Settings();
+        this.iSettings.initialize();
         this.iDynalistAPI = new DynalistAPI(this.iSettings);
 
-        // The order of initialization is IMPORTANT
         this.initializeDB();
         this.initializeBookmarks();
         this.initializeSync();
@@ -48,7 +54,11 @@ class Initializer {
     }
 
     private initializeDB() {
-        this.iDB = new DB(this.iDynalistAPI, this.iSettings);
+        this.iDB = new DB(
+            this.iDynalistAPI,
+            this.iRemoteBookmarks,
+            this.iSettings
+        );
 
         this.iDBEvents = new DBEvents(this.iDB, this.iMessenger);
     }
@@ -100,32 +110,7 @@ class Initializer {
         await this.iRemoteBookmarks.setup();
 
         await this.iLocalBookmarks.populate();
-        await this.setupDB();
-    }
-
-    private async setupDB() {
-        const dbNode = this.iRemoteBookmarks.getSingleByName(
-            DynalistFolders.db
-        );
-        // Verify/instantiate the database
-        const isDB = this.iDB.doesNodeContainDB(dbNode);
-
-        await this.iDB.setupDB(dbNode);
-        if (!isDB) {
-            log("setupDB() isDB = false");
-            await this.mapRemoteFoldersToDB();
-        }
-    }
-
-    private async mapRemoteFoldersToDB() {
-        keys(DynalistFolders).forEach(folderKey => {
-            const folder = this.iRemoteBookmarks.getSingleByName(
-                DynalistFolders[folderKey]
-            );
-
-            this.iDB.addFolderMap(folderKey, folder.id);
-        });
-        await this.iDB.upload();
+        await this.iDB.setup();
     }
 }
 
