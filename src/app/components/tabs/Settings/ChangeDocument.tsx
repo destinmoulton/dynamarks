@@ -9,7 +9,7 @@ import * as SettingsActions from "../../../redux/actions/settings.actions";
 import { SettingKeys } from "../../../../common/constants/settings.constants";
 
 interface IMapStateToProps {
-    settingsStore: Types.ISettingsState;
+    settingsStore: Types.IStateSettings;
 }
 
 interface IMapDispatchToProps {
