@@ -15,7 +15,7 @@ class DBEvents {
         this.iMessenger.subscribe("db", this.handleDispatch);
     }
 
-    private handleDispatch = (packet: Types.IDispatchMessage) => {
+    private handleDispatch = (packet: Types.IMessage) => {
         switch (packet.action) {
             case MessengerActions.DB_GET_INSTALLATIONS:
                 return this.getInstallations();
@@ -28,7 +28,7 @@ class DBEvents {
         const installations = this.iDB.getAllInstallations();
         const packet = {
             action: MessengerActions.DB_INSTALLATIONS_DATA,
-            data: installations
+            payload: installations
         };
         this.iMessenger.send(this.topic, packet);
     }
