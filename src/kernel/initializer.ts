@@ -1,27 +1,32 @@
 import debug from "debug";
 import { keys } from "lodash";
 
+import DBEvents from "./lib/db/dbevents";
 import { DynalistFolders } from "./constants/folders.constants";
 import DynalistAPI from "../common/dynalistapi";
 import DynamarksDB from "./lib/dynamarksdb";
 import LocalBookmarks from "./lib/localbookmarks";
 import Messenger from "../common/messenger";
 import * as MessengerActions from "../common/constants/messengeractions.constants";
+import RemoteBookmarks from "./lib/remotebookmarks";
 import Settings from "../common/settings";
 import { SettingKeys } from "../common/constants/settings.constants";
-import SyncOverwrite from "./lib/syncoverwrite";
+import Sync from "./lib/sync/sync";
+import SyncEvents from "./lib/sync/syncevents";
+import SyncOverwrite from "./lib/sync/syncoverwrite";
 import * as Types from "../common/types";
 
-import RemoteBookmarks from "./lib/remotebookmarks";
-
 const log = debug("kernel:syncsetup");
-class SyncSetup {
+class Initializer {
+    private iDBEvents: DBEvents = null;
     private iDynalistAPI: DynalistAPI = null;
     private iDynamarksDB: DynamarksDB = null;
     private iMessenger: Messenger = null;
     private iLocalBookmarks: LocalBookmarks = null;
     private iRemoteBookmarks: RemoteBookmarks = null;
     private iSettings: Settings = null;
+    private iSync: Sync = null;
+    private iSyncEvents: SyncEvents = null;
     private iSyncOverwrite: SyncOverwrite = null;
 
     constructor(messenger: Messenger, settings: Settings) {
@@ -29,47 +34,49 @@ class SyncSetup {
         this.iSettings = settings;
 
         this.iDynalistAPI = new DynalistAPI(this.iSettings);
+
+        // The order of initialization is IMPORTANT
+        this.initializeDB();
+        this.initializeBookmarks();
+        this.initializeSync();
+
+        this.prepareToAct();
+    }
+
+    private initializeDB() {
         this.iDynamarksDB = new DynamarksDB(this.iDynalistAPI, this.iSettings);
+
+        this.iDBEvents = new DBEvents(this.iDynamarksDB, this.iMessenger);
+    }
+
+    private initializeBookmarks() {
         this.iLocalBookmarks = new LocalBookmarks();
         this.iRemoteBookmarks = new RemoteBookmarks(
             this.iDynalistAPI,
             this.iDynamarksDB,
             this.iSettings
         );
+    }
+
+    private initializeSync() {
+        this.iSync = new Sync(
+            this.iDynamarksDB,
+            this.iLocalBookmarks,
+            this.iRemoteBookmarks
+        );
+
         this.iSyncOverwrite = new SyncOverwrite(
             this.iDynamarksDB,
             this.iLocalBookmarks,
             this.iRemoteBookmarks
         );
 
-        this.iMessenger.subscribe("settings", this.handleDispatchSettings);
-        this.iMessenger.subscribe("sync", this.handleDispatchSync);
-
-        this.prepareToAct();
+        this.iSyncEvents = new SyncEvents(
+            this.iMessenger,
+            this.iSync,
+            this.iSyncOverwrite
+        );
     }
-
-    private handleDispatchSettings = async (packet: Types.IDispatchMessage) => {
-        switch (packet.action) {
-            case MessengerActions.SETTINGS_CHANGE:
-                return await this.prepareToAct();
-            default:
-                return;
-        }
-    };
-
-    private handleDispatchSync = async (packet: Types.IDispatchMessage) => {
-        await this.prepareToAct();
-        switch (packet.action) {
-            case MessengerActions.SYNC_OVERWRITE_SERVER:
-                return await this.iSyncOverwrite.overwriteServer();
-            case MessengerActions.SYNC_OVERWRITE_LOCAL:
-                return await this.iSyncOverwrite.overwriteLocal();
-            case MessengerActions.SYNC_SYNCHRONIZE:
-                return await this.synchronize();
-            default:
-                return;
-        }
-    };
 
     private prepareToAct() {
         return this.areSettingsLoaded().then(canSync => {
@@ -116,8 +123,6 @@ class SyncSetup {
         });
         await this.iDynamarksDB.upload();
     }
-
-    private synchronize() {}
 }
 
-export default SyncSetup;
+export default Initializer;
