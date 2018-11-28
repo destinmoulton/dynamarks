@@ -43,11 +43,11 @@ class Initializer {
 
         // The order of the following is IMPORTANT
         this.iSettings = new Settings();
-        this.iSettings.initialize();
+
         this.iDynalistAPI = new DynalistAPI(this.iSettings);
 
-        this.initializeDB();
         this.initializeBookmarks();
+        this.initializeDB();
         this.initializeSync();
 
         this.prepareToAct();

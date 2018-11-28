@@ -12,19 +12,6 @@ class Settings {
         log("ERROR", err);
     }
 
-    public async initialize() {
-        const hasBrowserId = await this.exists(SettingKeys.browserId);
-        if (!hasBrowserId) {
-            // Create a browser id
-            const browserID = sum(Date.now());
-            log(
-                "initialize() :: New installation. Generated browserID = %s",
-                browserID
-            );
-            await this.set(SettingKeys.browserID, browserID);
-        }
-    }
-
     public async set(name: string, data: any) {
         try {
             return await browser.storage.local.set({ [name]: data });
