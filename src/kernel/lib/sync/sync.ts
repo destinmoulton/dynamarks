@@ -1,12 +1,12 @@
 import {
     BookmarkFolderKeys,
     BrowserFolderIDs
-} from "../constants/folders.constants";
-import DynamarksDB from "./dynamarksdb";
-import LocalBookmarks from "./localbookmarks";
-import RemoteBookmarks from "./remotebookmarks";
+} from "../../constants/folders.constants";
+import DynamarksDB from "../dynamarksdb";
+import LocalBookmarks from "../localbookmarks";
+import RemoteBookmarks from "../remotebookmarks";
 
-class Synchronize {
+class Sync {
     private iDynamarksDB: DynamarksDB = null;
     private iLocalBookmarks: LocalBookmarks = null;
     private iRemoteBookmarks: RemoteBookmarks = null;
@@ -19,5 +19,7 @@ class Synchronize {
         this.iLocalBookmarks = localbookmarks;
         this.iRemoteBookmarks = remotebookmarks;
     }
+
+    public synchronize() {}
 }
-export default Synchronize;
+export default Sync;
