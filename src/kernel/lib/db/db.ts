@@ -3,6 +3,7 @@
  */
 import debug from "debug";
 import { cloneDeep, find, has, isObject, keys } from "lodash";
+const sum = require("hash-sum");
 
 import DocumentChanges from "../dynalist/documentchanges";
 import DynalistAPI from "../../../common/dynalistapi";
@@ -53,16 +54,20 @@ class DB {
         this.db = dbData;
 
         if (!isNodeDB) {
-            log("setupDB() isDB = false");
             await this.mapRemoteFolders();
         }
 
-        const browserID: any = await this.iSettings.get(SettingKeys.browserID);
-        if (!this.hasInstallation(browserID)) {
-            await this.addInstallation(browserID);
+        const installationID: any = await this.iSettings.get(
+            SettingKeys.installationID
+        );
+        if (!this.hasInstallation(installationID)) {
+            // Need to setup a new/fresh installation
+            await this.iSettings.remove(SettingKeys.installationID);
+        } else {
+            this.currentInstallation = this.getInstallation(installationID);
         }
-        this.currentInstallation = this.getInstallation(browserID);
-        log("setupDB() :: this.db", this.db);
+
+        log("setup() :: this.db", this.db);
     }
 
     private async mapRemoteFolders() {
@@ -109,7 +114,15 @@ class DB {
         return this.db.folderMap[key];
     }
 
-    private async addInstallation(installationID: string) {
+    public async addInstallation(installData: {
+        browser: string;
+        name: string;
+        os: string;
+    }) {
+        // Generate an installationID
+        const installationID = sum(Date.now());
+        await this.iSettings.set(SettingKeys.installationID, installationID);
+
         const inst: Types.IDBInstallation = {
             id: installationID,
             name: "",
@@ -119,7 +132,9 @@ class DB {
             bookmarkMap: []
         };
         this.db.installations.push(inst);
-        return await this.upload();
+        await this.upload();
+
+        this.currentInstallation = this.getInstallation(installationID);
     }
 
     private getInstallation(installationID: string): Types.IDBInstallation {
@@ -130,8 +145,9 @@ class DB {
         return this.db.installations;
     }
 
-    private hasInstallation(browserID: string) {
-        return isObject(this.getInstallation(browserID));
+    private hasInstallation(installationID: string) {
+        const possibleInstallation = this.getInstallation(installationID);
+        return isObject(possibleInstallation);
     }
 
     public clearBookmarkMap() {
