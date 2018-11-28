@@ -22,7 +22,7 @@ class Initializer {
     private iBrowserEvents: BrowserEvents = null;
     private iDBEvents: DBEvents = null;
     private iDynalistAPI: DynalistAPI = null;
-    private iDynamarksDB: DB = null;
+    private iDB: DB = null;
     private iMessenger: Messenger = null;
     private iLocalBookmarks: LocalBookmarks = null;
     private iRemoteBookmarks: RemoteBookmarks = null;
@@ -48,29 +48,29 @@ class Initializer {
     }
 
     private initializeDB() {
-        this.iDynamarksDB = new DB(this.iDynalistAPI, this.iSettings);
+        this.iDB = new DB(this.iDynalistAPI, this.iSettings);
 
-        this.iDBEvents = new DBEvents(this.iDynamarksDB, this.iMessenger);
+        this.iDBEvents = new DBEvents(this.iDB, this.iMessenger);
     }
 
     private initializeBookmarks() {
         this.iLocalBookmarks = new LocalBookmarks();
         this.iRemoteBookmarks = new RemoteBookmarks(
             this.iDynalistAPI,
-            this.iDynamarksDB,
+            this.iDB,
             this.iSettings
         );
     }
 
     private initializeSync() {
         this.iSync = new Sync(
-            this.iDynamarksDB,
+            this.iDB,
             this.iLocalBookmarks,
             this.iRemoteBookmarks
         );
 
         this.iSyncOverwrite = new SyncOverwrite(
-            this.iDynamarksDB,
+            this.iDB,
             this.iLocalBookmarks,
             this.iRemoteBookmarks
         );
@@ -108,9 +108,9 @@ class Initializer {
             DynalistFolders.db
         );
         // Verify/instantiate the database
-        const isDB = this.iDynamarksDB.doesNodeContainDB(dbNode);
+        const isDB = this.iDB.doesNodeContainDB(dbNode);
 
-        await this.iDynamarksDB.setupDB(dbNode);
+        await this.iDB.setupDB(dbNode);
         if (!isDB) {
             log("setupDB() isDB = false");
             await this.mapRemoteFoldersToDB();
@@ -123,9 +123,9 @@ class Initializer {
                 DynalistFolders[folderKey]
             );
 
-            this.iDynamarksDB.addFolderMap(folderKey, folder.id);
+            this.iDB.addFolderMap(folderKey, folder.id);
         });
-        await this.iDynamarksDB.upload();
+        await this.iDB.upload();
     }
 }
 

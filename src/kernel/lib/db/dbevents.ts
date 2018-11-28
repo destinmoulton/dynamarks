@@ -5,11 +5,11 @@ import * as Types from "../../../common/types";
 
 class DBEvents {
     private topic: string = "db";
-    private iDynamarksDB: DB = null;
+    private iDB: DB = null;
     private iMessenger: Messenger = null;
 
     constructor(DB: DB, messenger: Messenger) {
-        this.iDynamarksDB = DB;
+        this.iDB = DB;
         this.iMessenger = messenger;
 
         this.iMessenger.subscribe("db", this.handleDispatch);
@@ -25,7 +25,7 @@ class DBEvents {
     };
 
     private getInstallations() {
-        const installations = this.iDynamarksDB.getAllInstallations();
+        const installations = this.iDB.getAllInstallations();
         const packet = {
             action: MessengerActions.DB_INSTALLATIONS_DATA,
             data: installations

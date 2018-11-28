@@ -10,7 +10,7 @@ import RemoteBookmarks from "../remotebookmarks";
 import * as Types from "../../../common/types";
 
 class SyncOverwrite {
-    private iDynamarksDB: DB = null;
+    private iDB: DB = null;
     private iLocalBookmarks: LocalBookmarks = null;
     private iRemoteBookmarks: RemoteBookmarks = null;
 
@@ -19,7 +19,7 @@ class SyncOverwrite {
         localbookmarks: LocalBookmarks,
         remotebookmarks: RemoteBookmarks
     ) {
-        this.iDynamarksDB = DB;
+        this.iDB = DB;
         this.iLocalBookmarks = localbookmarks;
         this.iRemoteBookmarks = remotebookmarks;
     }
@@ -28,19 +28,19 @@ class SyncOverwrite {
         // Remove current children
         await this.iRemoteBookmarks.purgeTopFolderChildNodes();
 
-        this.iDynamarksDB.clearBookmarkMap();
+        this.iDB.clearBookmarkMap();
         for (let key of BookmarkFolderKeys) {
             const topLocalFolder = this.iLocalBookmarks.getSingleById(
                 BrowserFolderIDs[key]
             );
-            const remoteFolderID = this.iDynamarksDB.getMappedFolderByKey(key);
+            const remoteFolderID = this.iDB.getMappedFolderByKey(key);
             const remoteFolder = this.iRemoteBookmarks.getSingleById(
                 remoteFolderID
             );
             await this.addLocalChildrenToRemote(remoteFolder, topLocalFolder);
         }
 
-        await this.iDynamarksDB.upload();
+        await this.iDB.upload();
     }
 
     private async addLocalChildrenToRemote(
@@ -53,7 +53,7 @@ class SyncOverwrite {
         await this.iRemoteBookmarks.addChildren(remoteFolder.id, children);
 
         // Add the bookmark to the DB map
-        this.iDynamarksDB.addBookmarkMap(localFolder.id, remoteFolder.id);
+        this.iDB.addBookmarkMap(localFolder.id, remoteFolder.id);
 
         // Get the new version
         await this.iRemoteBookmarks.populateBookmarks();
@@ -75,7 +75,7 @@ class SyncOverwrite {
                         remoteChildId
                     );
 
-                    this.iDynamarksDB.addBookmarkMapChild(
+                    this.iDB.addBookmarkMapChild(
                         localFolder.id,
                         remoteFolder.id,
                         localChild.id,
@@ -95,19 +95,19 @@ class SyncOverwrite {
         await this.iLocalBookmarks.purgeTopFolderBookmarks();
 
         await this.iRemoteBookmarks.populateBookmarks();
-        this.iDynamarksDB.clearBookmarkMap();
+        this.iDB.clearBookmarkMap();
         for (let key of BookmarkFolderKeys) {
             const topLocalFolder = this.iLocalBookmarks.getSingleById(
                 BrowserFolderIDs[key]
             );
-            const remoteFolderID = this.iDynamarksDB.getMappedFolderByKey(key);
+            const remoteFolderID = this.iDB.getMappedFolderByKey(key);
             const remoteFolder = this.iRemoteBookmarks.getSingleById(
                 remoteFolderID
             );
             await this.addRemoteChildrenToBrowser(remoteFolder, topLocalFolder);
         }
 
-        await this.iDynamarksDB.upload();
+        await this.iDB.upload();
     }
 
     // Recursive method to add the remote bookmarks
@@ -144,7 +144,7 @@ class SyncOverwrite {
             newChildren.push(newChild);
         }
 
-        this.iDynamarksDB.addBookmarkMap(localFolder.id, remoteFolder.id);
+        this.iDB.addBookmarkMap(localFolder.id, remoteFolder.id);
 
         // Make sure the data model matches the browser tree
         await this.iLocalBookmarks.populate();
@@ -162,7 +162,7 @@ class SyncOverwrite {
                 remoteChildId
             );
 
-            this.iDynamarksDB.addBookmarkMapChild(
+            this.iDB.addBookmarkMapChild(
                 localFolder.id,
                 remoteFolder.id,
                 localChild.id,

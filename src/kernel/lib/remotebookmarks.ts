@@ -15,12 +15,12 @@ const log = debug("kernel:remotebookmarks");
 class RemoteBookmarks {
     private bookmarks: Types.IDynalistNode[];
     private iDynalistAPI: DynalistAPI = null;
-    private iDynamarksDB: DB = null;
+    private iDB: DB = null;
     private iSettings: Settings = null;
 
-    constructor(dynalistapi: DynalistAPI, DB: DB, settings: Settings) {
+    constructor(dynalistapi: DynalistAPI, db: DB, settings: Settings) {
         this.iDynalistAPI = dynalistapi;
-        this.iDynamarksDB = DB;
+        this.iDB = db;
         this.iSettings = settings;
     }
 
@@ -80,7 +80,7 @@ class RemoteBookmarks {
     public async purgeTopFolderChildNodes() {
         for (let key of BookmarkFolderKeys) {
             const changes = new DocumentChanges();
-            const topFolderID = this.iDynamarksDB.getMappedFolderByKey(key);
+            const topFolderID = this.iDB.getMappedFolderByKey(key);
             const topFolder = this.getSingleById(topFolderID);
             this.removeChildrenRecursively(topFolder.id, changes);
             await this.iDynalistAPI.submitChanges(changes);

@@ -7,7 +7,7 @@ import LocalBookmarks from "../localbookmarks";
 import RemoteBookmarks from "../remotebookmarks";
 
 class Sync {
-    private iDynamarksDB: DB = null;
+    private iDB: DB = null;
     private iLocalBookmarks: LocalBookmarks = null;
     private iRemoteBookmarks: RemoteBookmarks = null;
     constructor(
@@ -15,7 +15,7 @@ class Sync {
         localbookmarks: LocalBookmarks,
         remotebookmarks: RemoteBookmarks
     ) {
-        this.iDynamarksDB = DB;
+        this.iDB = DB;
         this.iLocalBookmarks = localbookmarks;
         this.iRemoteBookmarks = remotebookmarks;
     }
