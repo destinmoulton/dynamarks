@@ -15,10 +15,12 @@ class DBEvents {
         this.iMessenger.subscribe("db", this.handleDispatch);
     }
 
-    private handleDispatch = (packet: Types.IMessage) => {
+    private handleDispatch = async (packet: Types.IMessage) => {
         switch (packet.action) {
             case MessengerActions.DB_GET_INSTALLATIONS:
                 return this.getInstallations();
+            case MessengerActions.DB_ADD_INSTALLATION:
+                return await this.iDB.addInstallation(packet.payload);
             default:
                 return;
         }
