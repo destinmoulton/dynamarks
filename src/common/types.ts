@@ -6,40 +6,16 @@ export enum EKernelStatus {
     OK
 }
 
-// ---------------------
-// ClientMessenger Types
-//
-export interface IClientMessenger {
-    channel: any;
-    dispatcher: IDispatcher;
-    send: (msg: IDispatchMessage) => void;
-}
-//
-// END ClientMessenger Types
-// -------------------------
-
 // ----------------
-// Dispatcher Types
+// Messenger Types
 //
-export class IDispatcher {
-    subscriptions: TDispatchSubscriptions;
-    subscribe: (topic: string, subscriber: TDispatchSubscriber) => void;
-    dispatch: (msg: IDispatchMessage) => void;
-}
-
-export interface IDispatchMessage {
+export interface IMessage {
     topic: string;
     action?: string;
     payload?: any;
 }
-
-export type TDispatchSubscriber = (msg: IDispatchMessage) => void;
-
-export interface TDispatchSubscriptions {
-    [key: string]: TDispatchSubscriber[];
-}
 //
-// END Dispatcher Types
+// END Messenger Types
 // --------------------
 
 // --------------
@@ -142,7 +118,10 @@ export interface IDBBookmarkMap {
 }
 
 export interface IDBInstallation {
-    browserID: string;
+    id: string;
+    name: string;
+    browser: string;
+    os: string;
     lastSyncTime: number;
     bookmarkMap: IDBBookmarkMap[];
 }
