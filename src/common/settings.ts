@@ -1,9 +1,8 @@
 import debug from "debug";
 import * as _ from "lodash";
-const sum = require("hash-sum");
 
 import * as Types from "./types";
-import { SettingKeys } from "./constants/settings.constants";
+
 import { has } from "immutable";
 
 const log = debug("common:settings");
