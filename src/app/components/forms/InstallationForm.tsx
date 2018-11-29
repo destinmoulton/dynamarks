@@ -1,5 +1,5 @@
 import * as React from "react";
-import platform from "platform";
+import * as platform from "platform";
 
 interface IProps {}
 interface IState {
