@@ -1,7 +1,8 @@
 import * as React from "react";
+import platform from "platform";
 
 import Loading from "./shared/Loading";
-
+import InstallationForm from "./forms/InstallationForm";
 import { messenger } from "../instances";
 import * as MessengerActions from "../../common/constants/messengeractions.constants";
 import * as Types from "../../common/types";
@@ -33,11 +34,11 @@ class SetupInstallation extends React.Component<IProps, IState> {
         messenger.send(this.topic, packet);
     }
 
-    private _handleDispatchMessages = async (packet: any) => {
+    private _handleDispatchMessages = async (packet: Types.IMessage) => {
         switch (packet.action) {
             case MessengerActions.DB_INSTALLATIONS_DATA:
                 this.setState({
-                    installations: packet.data,
+                    installations: packet.payload,
                     isLoadingInstallations: false
                 });
                 return;
@@ -66,7 +67,7 @@ class SetupInstallation extends React.Component<IProps, IState> {
             if (installations.length > 0) {
                 view = this._viewListInstallations();
             } else {
-                view = this._installationForm();
+                view = <InstallationForm />;
             }
         }
 
