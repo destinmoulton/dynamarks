@@ -62,7 +62,7 @@ class DynalistAPI {
             });
     }
 
-    public async getBookmarks() {
+    public async getNodes() {
         try {
             const doc: any = await this.settings.get(SettingKeys.doc);
             if (doc === null) {
