@@ -133,3 +133,31 @@ export interface IDB {
 //
 // END DB Types
 // ------------
+
+// --------------
+// OO Types
+//
+export abstract class OOSubject {
+    protected abstract observers: OOObserver[];
+    public abstract registerObserver(observer: OOObserver): void;
+    protected abstract notifyObservers(): void;
+}
+
+export abstract class OOObserver {
+    protected abstract subject: OOSubject;
+    public abstract update(nodes: OONodeList): void;
+}
+
+export abstract class OONodeList {
+    protected abstract nodes: IDynalistNode[];
+    public abstract getSingleByName(name: string): IDynalistNode;
+    public abstract getSingleById(id: string): IDynalistNode;
+    public abstract getChildByIndex(
+        parent_id: string,
+        child_index: number
+    ): IDynalistNode;
+    public abstract getChildren(parent_node_id: string): IDynalistNode[];
+}
+//
+// END OO Types
+// ------------------
