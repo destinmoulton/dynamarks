@@ -44,6 +44,10 @@ class DB extends Types.OOObserver {
 
     public update(nodelist: Types.OONodeList) {
         this.nodelist = nodelist;
+
+        if (this.db === null) {
+            this.setup();
+        }
     }
 
     public async setup() {
