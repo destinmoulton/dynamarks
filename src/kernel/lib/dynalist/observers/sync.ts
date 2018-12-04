@@ -2,7 +2,7 @@ import {
     BookmarkFolderKeys,
     BrowserFolderIDs
 } from "../../../constants/folders.constants";
-import DB from "../db";
+import DB from "./db";
 import LocalBookmarks from "../../localbookmarks";
 import RemoteFolders from "./remotefolders";
 import * as Types from "../../../../common/types";
@@ -15,12 +15,15 @@ class Sync extends Types.OOObserver {
     protected subject: Types.OOSubject;
     private nodelist: Types.OONodeList;
     constructor(
-        DB: DB,
+        nodesubject: Types.OOSubject,
+        db: DB,
         localbookmarks: LocalBookmarks,
         remotefolders: RemoteFolders
     ) {
         super();
-        this.iDB = DB;
+
+        this.subject = nodesubject;
+        this.iDB = db;
         this.iLocalBookmarks = localbookmarks;
         this.iRemoteFolders = remotefolders;
 

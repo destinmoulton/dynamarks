@@ -4,7 +4,7 @@ import {
     BookmarkFolderKeys,
     BrowserFolderIDs
 } from "../../../constants/folders.constants";
-import DB from "../db";
+import DB from "./db";
 import LocalBookmarks from "../../localbookmarks";
 import DocumentChanges from "../documentchanges";
 import RemoteFolders from "./remotefolders";

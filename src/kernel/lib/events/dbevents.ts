@@ -1,4 +1,4 @@
-import DB from "./db";
+import DB from "../dynalist/observers/db";
 import Messenger from "../../../common/messenger";
 import * as MessengerActions from "../../../common/constants/messengeractions.constants";
 import * as Types from "../../../common/types";

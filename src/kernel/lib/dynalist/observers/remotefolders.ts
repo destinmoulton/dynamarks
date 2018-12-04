@@ -6,7 +6,7 @@ import {
     DynalistFolders
 } from "../../../constants/folders.constants";
 import DocumentChanges from "../documentchanges";
-import DB from "../db";
+import DB from "./db";
 import * as Types from "../../../../common/types";
 
 const log = debug("kernel:remotefolders");
