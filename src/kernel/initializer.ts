@@ -106,10 +106,8 @@ class Initializer {
     }
 
     private async populate() {
-        await this.iRemoteFolders.setup();
-
         await this.iLocalBookmarks.populate();
-        await this.iDB.setup();
+        await this.iNodeSubject.getData();
     }
 }
 
