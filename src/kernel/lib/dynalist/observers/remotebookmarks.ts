@@ -7,7 +7,7 @@ import {
 } from "../../../constants/folders.constants";
 import DocumentChanges from "../documentchanges";
 import DynalistAPI from "../../../../common/dynalistapi";
-import DB from "../../db/db";
+import DB from "../db";
 import Settings from "../../../../common/settings";
 import * as Types from "../../../../common/types";
 

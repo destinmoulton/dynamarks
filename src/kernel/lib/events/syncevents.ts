@@ -1,7 +1,7 @@
 import Messenger from "../../../common/messenger";
 import * as MessengerActions from "../../../common/constants/messengeractions.constants";
-import Sync from "./sync";
-import SyncOverwrite from "./syncoverwrite";
+import Sync from "../dynalist/observers/sync";
+import SyncOverwrite from "../dynalist/observers/syncoverwrite";
 import * as Types from "../../../common/types";
 
 class SyncEvents {
