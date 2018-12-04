@@ -4,20 +4,31 @@ import {
 } from "../../../constants/folders.constants";
 import DB from "../db";
 import LocalBookmarks from "../../localbookmarks";
-import RemoteBookmarks from "./remotebookmarks";
+import RemoteFolders from "./remotefolders";
+import * as Types from "../../../../common/types";
 
-class Sync {
+class Sync extends Types.OOObserver {
     private iDB: DB = null;
     private iLocalBookmarks: LocalBookmarks = null;
-    private iRemoteBookmarks: RemoteBookmarks = null;
+    private iRemoteFolders: RemoteFolders = null;
+
+    protected subject: Types.OOSubject;
+    private nodelist: Types.OONodeList;
     constructor(
         DB: DB,
         localbookmarks: LocalBookmarks,
-        remotebookmarks: RemoteBookmarks
+        remotefolders: RemoteFolders
     ) {
+        super();
         this.iDB = DB;
         this.iLocalBookmarks = localbookmarks;
-        this.iRemoteBookmarks = remotebookmarks;
+        this.iRemoteFolders = remotefolders;
+
+        this.subject.registerObserver(this);
+    }
+
+    public update(nodelist: Types.OONodeList) {
+        this.nodelist = nodelist;
     }
 
     public synchronize() {}

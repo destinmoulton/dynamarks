@@ -7,7 +7,7 @@ import {
 import DB from "../db";
 import LocalBookmarks from "../../localbookmarks";
 import DocumentChanges from "../documentchanges";
-import RemoteBookmarks from "./remotefolders";
+import RemoteFolders from "./remotefolders";
 import * as Types from "../../../../common/types";
 
 class SyncOverwrite extends Types.OOObserver {
