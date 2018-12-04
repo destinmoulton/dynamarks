@@ -17,6 +17,8 @@ class NodeSubject extends Types.OOSubject {
     constructor(dynalistapi: DynalistAPI) {
         super();
 
+        this.observers = [];
+
         this.iDynalistAPI = dynalistapi;
     }
 
@@ -24,15 +26,15 @@ class NodeSubject extends Types.OOSubject {
         this.observers.push(observer);
     }
 
-    protected notifyObservers() {
+    protected async notifyObservers() {
         for (let obs of this.observers) {
-            obs.update(this.nodelist);
+            await obs.update(this.nodelist);
         }
     }
 
     public async getData() {
         await this.populateNodes();
-        this.notifyObservers();
+        await this.notifyObservers();
     }
 
     public async modifyData(changes: DocumentChanges) {
