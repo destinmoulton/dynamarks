@@ -152,6 +152,7 @@ export abstract class OOObserver {
 
 export abstract class OONodeList {
     protected abstract nodes: IDynalistNode[];
+    public abstract getAll(): IDynalistNode[];
     public abstract getSingleByName(name: string): IDynalistNode;
     public abstract getSingleById(id: string): IDynalistNode;
     public abstract getChildByIndex(

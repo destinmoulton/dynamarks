@@ -13,8 +13,6 @@ import * as Types from "../../../../common/types";
 
 const log = debug("kernel:remotebookmarks");
 class RemoteBookmarks extends Types.OOObserver {
-    private bookmarks: Types.IDynalistNode[];
-
     private iDB: DB = null;
 
     protected subject: Types.OOSubject;
@@ -48,47 +46,16 @@ class RemoteBookmarks extends Types.OOObserver {
         }
     }
 
-    // Remove all the nodes from the top folders
-    public async purgeTopFolderChildNodes() {
-        const changes = new DocumentChanges();
-        for (let key of BookmarkFolderKeys) {
-            const topFolderID = this.iDB.getMappedFolderByKey(key);
-            const topFolder = this.nodelist.getSingleById(topFolderID);
-            this.removeChildrenRecursively(topFolder.id, changes);
-        }
-        this.subject.modifyData(changes);
-    }
-
-    public removeChildrenRecursively(
-        parent_id: string,
-        changes: DocumentChanges
-    ): void {
-        const children = this.nodelist.getChildren(parent_id);
-        for (let child of children) {
-            changes.deleteNode(child.id);
-            if (isArray(child.children) && child.children.length > 0) {
-                return this.removeChildrenRecursively(child.id, changes);
-            }
-        }
-    }
-
-    public addChildren(parent_id: string, children: Types.ILocalBookmark[]) {
-        const changes = new DocumentChanges();
-        children.forEach((child: Types.ILocalBookmark) => {
-            changes.addNode(parent_id, child.title, child.url);
-        });
-        return this.subject.modifyData(changes);
-    }
-
     private checkTopFolders() {
         const foldersToCreate = values(DynalistFolders);
+        const nodes = this.nodelist.getAll();
         keys(DynalistFolders).forEach(folderKey => {
             const folderName = DynalistFolders[folderKey];
-            this.bookmarks.forEach((node: Types.IDynalistNode) => {
+            for (let node of nodes) {
                 if (node.content === folderName) {
                     remove(foldersToCreate, val => val === folderName);
                 }
-            });
+            }
         });
 
         return {

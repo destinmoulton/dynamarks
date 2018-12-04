@@ -19,6 +19,10 @@ class NodeList extends Types.OONodeList {
         return find(this.nodes, { id });
     }
 
+    public getAll(): Types.IDynalistNode[] {
+        return this.nodes;
+    }
+
     public getChildByIndex(
         parent_id: string,
         child_index: number
