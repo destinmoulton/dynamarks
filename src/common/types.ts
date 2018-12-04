@@ -141,6 +141,8 @@ export abstract class OOSubject {
     protected abstract observers: OOObserver[];
     public abstract registerObserver(observer: OOObserver): void;
     protected abstract notifyObservers(): void;
+    public abstract getData(): void;
+    public abstract modifyData(data: any): void;
 }
 
 export abstract class OOObserver {
