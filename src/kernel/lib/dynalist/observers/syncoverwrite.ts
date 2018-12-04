@@ -3,11 +3,11 @@ import { has, isArray } from "lodash";
 import {
     BookmarkFolderKeys,
     BrowserFolderIDs
-} from "../../constants/folders.constants";
-import DB from "../db/db";
-import LocalBookmarks from "../localbookmarks";
-import RemoteBookmarks from "../remotebookmarks";
-import * as Types from "../../../common/types";
+} from "../../../constants/folders.constants";
+import DB from "../../db/db";
+import LocalBookmarks from "../../localbookmarks";
+import RemoteBookmarks from "./remotebookmarks";
+import * as Types from "../../../../common/types";
 
 class SyncOverwrite {
     private iDB: DB = null;

@@ -1,10 +1,10 @@
 import {
     BookmarkFolderKeys,
     BrowserFolderIDs
-} from "../../constants/folders.constants";
-import DB from "../db/db";
-import LocalBookmarks from "../localbookmarks";
-import RemoteBookmarks from "../remotebookmarks";
+} from "../../../constants/folders.constants";
+import DB from "../../db/db";
+import LocalBookmarks from "../../localbookmarks";
+import RemoteBookmarks from "./remotebookmarks";
 
 class Sync {
     private iDB: DB = null;
