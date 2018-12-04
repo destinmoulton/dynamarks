@@ -5,43 +5,49 @@ import debug from "debug";
 import { cloneDeep, find, has, isObject, keys } from "lodash";
 const sum = require("hash-sum");
 
-import DocumentChanges from "../dynalist/documentchanges";
-import DynalistAPI from "../../../common/dynalistapi";
-import { DynalistFolders } from "../../constants/folders.constants";
-import RemoteBookmarks from "../remotebookmarks";
-import Settings from "../../../common/settings";
-import { SettingKeys } from "../../../common/constants/settings.constants";
-import * as Types from "../../../common/types";
+import DocumentChanges from "../documentchanges";
+import { DynalistFolders } from "../../../constants/folders.constants";
+import RemoteFolders from "./remotefolders";
+import Settings from "../../../../common/settings";
+import { SettingKeys } from "../../../../common/constants/settings.constants";
+import * as Types from "../../../../common/types";
 
 const INITIAL_DB: Types.IDB = {
     folderMap: {},
     installations: []
 };
 
-const log = debug("kernel:DB");
-
-class DB {
+const log = debug("kernel:db");
+class DB extends Types.OOObserver {
     private db: Types.IDB = null;
-    private iDynalistAPI: DynalistAPI = null;
-    private iRemoteBookmarks: RemoteBookmarks = null;
+
+    private iRemoteFolders: RemoteFolders = null;
     iSettings: Settings = null;
     dbNode: Types.IDynalistNode = null;
     currentInstallation: Types.IDBInstallation = null;
 
+    protected subject: Types.OOSubject;
+    private nodelist: Types.OONodeList;
+
     constructor(
-        dynalistapi: DynalistAPI,
-        remotebookmarks: RemoteBookmarks,
+        nodesubject: Types.OOSubject,
+        remotefolders: RemoteFolders,
         settings: Settings
     ) {
-        this.iDynalistAPI = dynalistapi;
-        this.iRemoteBookmarks = remotebookmarks;
+        super();
+        this.subject = nodesubject;
+        this.iRemoteFolders = remotefolders;
         this.iSettings = settings;
+
+        this.subject.registerObserver(this);
+    }
+
+    public update(nodelist: Types.OONodeList) {
+        this.nodelist = nodelist;
     }
 
     public async setup() {
-        const dbNode = this.iRemoteBookmarks.getSingleByName(
-            DynalistFolders.db
-        );
+        const dbNode = this.nodelist.getSingleByName(DynalistFolders.db);
 
         // Verify/instantiate the database
 
@@ -72,7 +78,7 @@ class DB {
 
     private async mapRemoteFolders() {
         keys(DynalistFolders).forEach(folderKey => {
-            const folder = this.iRemoteBookmarks.getSingleByName(
+            const folder = this.nodelist.getSingleByName(
                 DynalistFolders[folderKey]
             );
 
@@ -99,7 +105,7 @@ class DB {
         changes.editNode(this.dbNode.id, this.dbNode.content, jsonDB);
         log("upload()", this.db);
         try {
-            return await this.iDynalistAPI.submitChanges(changes);
+            return await this.subject.modifyData(changes);
         } catch (err) {
             log("ERROR :: upload() :: Error uploading db.", err);
         }
