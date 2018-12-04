@@ -9,18 +9,19 @@ import debug from "debug";
 import { keys } from "lodash";
 
 import BrowserEvents from "./lib/browserevents";
-import DBEvents from "./lib/db/dbevents";
+import DBEvents from "./lib/events/dbevents";
 import { DynalistFolders } from "./constants/folders.constants";
 import DynalistAPI from "../common/dynalistapi";
-import DB from "./lib/db/db";
+import DB from "./lib/dynalist/observers/db";
 import LocalBookmarks from "./lib/localbookmarks";
 import Messenger from "../common/messenger";
-import RemoteBookmarks from "./lib/remotebookmarks";
+import NodeSubject from "./lib/dynalist/nodesubject";
+import RemoteFolders from "./lib/dynalist/observers/remotefolders";
 import Settings from "../common/settings";
 import { SettingKeys } from "../common/constants/settings.constants";
-import Sync from "./lib/sync/sync";
-import SyncEvents from "./lib/sync/syncevents";
-import SyncOverwrite from "./lib/sync/syncoverwrite";
+import Sync from "./lib/dynalist/observers/sync";
+import SyncEvents from "./lib/events/syncevents";
+import SyncOverwrite from "./lib/dynalist/observers/syncoverwrite";
 
 const log = debug("kernel:syncsetup");
 class Initializer {
@@ -30,7 +31,8 @@ class Initializer {
     private iDB: DB = null;
     private iMessenger: Messenger = null;
     private iLocalBookmarks: LocalBookmarks = null;
-    private iRemoteBookmarks: RemoteBookmarks = null;
+    private iNodeSubject: NodeSubject = null;
+    private iRemoteFolders: RemoteFolders = null;
     private iSettings: Settings = null;
     private iSync: Sync = null;
     private iSyncEvents: SyncEvents = null;
@@ -46,44 +48,41 @@ class Initializer {
 
         this.iDynalistAPI = new DynalistAPI(this.iSettings);
 
-        this.initializeBookmarks();
-        this.initializeDB();
-        this.initializeSync();
+        this.iLocalBookmarks = new LocalBookmarks();
+
+        this.initializeSubjectAndObservers();
+        this.initializeEvents();
 
         this.prepareToAct();
     }
 
-    private initializeDB() {
+    private initializeSubjectAndObservers() {
+        this.iNodeSubject = new NodeSubject(this.iDynalistAPI);
+
         this.iDB = new DB(
-            this.iDynalistAPI,
-            this.iRemoteBookmarks,
+            this.iNodeSubject,
+            this.iRemoteFolders,
             this.iSettings
         );
 
-        this.iDBEvents = new DBEvents(this.iDB, this.iMessenger);
-    }
+        this.iRemoteFolders = new RemoteFolders(this.iNodeSubject, this.iDB);
 
-    private initializeBookmarks() {
-        this.iLocalBookmarks = new LocalBookmarks();
-        this.iRemoteBookmarks = new RemoteBookmarks(
-            this.iDynalistAPI,
-            this.iDB,
-            this.iSettings
-        );
-    }
-
-    private initializeSync() {
         this.iSync = new Sync(
+            this.iNodeSubject,
             this.iDB,
             this.iLocalBookmarks,
-            this.iRemoteBookmarks
+            this.iRemoteFolders
         );
 
         this.iSyncOverwrite = new SyncOverwrite(
+            this.iNodeSubject,
             this.iDB,
-            this.iLocalBookmarks,
-            this.iRemoteBookmarks
+            this.iLocalBookmarks
         );
+    }
+
+    private initializeEvents() {
+        this.iDBEvents = new DBEvents(this.iDB, this.iMessenger);
 
         this.iSyncEvents = new SyncEvents(
             this.iMessenger,
@@ -107,7 +106,7 @@ class Initializer {
     }
 
     private async populate() {
-        await this.iRemoteBookmarks.setup();
+        await this.iRemoteFolders.setup();
 
         await this.iLocalBookmarks.populate();
         await this.iDB.setup();
