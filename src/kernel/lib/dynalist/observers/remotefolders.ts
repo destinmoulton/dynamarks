@@ -6,13 +6,11 @@ import {
     DynalistFolders
 } from "../../../constants/folders.constants";
 import DocumentChanges from "../documentchanges";
-import DynalistAPI from "../../../../common/dynalistapi";
 import DB from "../db";
-import Settings from "../../../../common/settings";
 import * as Types from "../../../../common/types";
 
-const log = debug("kernel:remotebookmarks");
-class RemoteBookmarks extends Types.OOObserver {
+const log = debug("kernel:remotefolders");
+class RemoteFolders extends Types.OOObserver {
     private iDB: DB = null;
 
     protected subject: Types.OOSubject;
@@ -77,4 +75,4 @@ class RemoteBookmarks extends Types.OOObserver {
     }
 }
 
-export default RemoteBookmarks;
+export default RemoteFolders;
