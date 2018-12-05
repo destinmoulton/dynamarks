@@ -15,7 +15,8 @@ interface IState {
     isConfirming: boolean;
 }
 
-class SignOut extends React.Component<IMapDispatchToProps, IState> {
+class Reset extends React.Component<IMapDispatchToProps, IState> {
+    private text = text.tabs.settings;
     constructor(props: IMapDispatchToProps) {
         super(props);
 
@@ -46,17 +47,17 @@ class SignOut extends React.Component<IMapDispatchToProps, IState> {
 
     private renderButton() {
         return (
-            <Button
-                onClick={this.handleClick}
-                text={text.tabs.settings.clear.button}
-            />
+            <Button onClick={this.handleClick} text={this.text.reset.button} />
         );
     }
 
     private renderConfirm() {
+        const msg = this.text.reset.confirmlines.map((line, idx) => {
+            return <div key={idx}>{line}</div>;
+        });
         return (
             <Confirm
-                message={text.tabs.settings.clear.message}
+                message={msg}
                 okHandler={this.handleConfirmOk}
                 cancelHandler={this.handleConfirmCancel}
             />
@@ -75,7 +76,7 @@ class SignOut extends React.Component<IMapDispatchToProps, IState> {
                             intent="danger"
                             className="dmks-settings-card-icon"
                         />
-                        {text.tabs.settings.clear.title}
+                        {this.text.reset.title}
                     </div>
                     {view}
                 </div>
@@ -99,4 +100,4 @@ const mapDispatchToProps = (dispatch: Types.IDispatch) => {
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(SignOut);
+)(Reset);

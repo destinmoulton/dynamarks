@@ -1,7 +1,7 @@
 import * as React from "react";
 
 import ChangeDocument from "./Settings/ChangeDocument";
-import SignOut from "./Settings/SignOut";
+import Reset from "./Settings/Reset";
 import SyncInterval from "./Settings/SyncInterval";
 
 class SettingsTab extends React.Component {
@@ -10,7 +10,7 @@ class SettingsTab extends React.Component {
             <div>
                 <ChangeDocument />
                 <SyncInterval />
-                <SignOut />
+                <Reset />
             </div>
         );
     }
