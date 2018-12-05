@@ -46,11 +46,11 @@ class DB extends Types.OOObserver {
         this.nodelist = nodelist;
 
         if (this.db === null) {
-            this.setup();
+            this.setupNewDB();
         }
     }
 
-    public async setup() {
+    public async setupNewDB() {
         const dbNode = this.nodelist.getSingleByName(DynalistFolders.db);
 
         // Verify/instantiate the database
@@ -74,10 +74,10 @@ class DB extends Types.OOObserver {
             // Need to setup a new/fresh installation
             await this.iSettings.remove(SettingKeys.installationID);
         } else {
-            this.currentInstallation = this.getInstallation(installationID);
+            this.setCurrentInstallation(installationID);
         }
 
-        log("setup() :: this.db", this.db);
+        log("setupNewDB() :: this.db", this.db);
     }
 
     private async mapRemoteFolders() {
@@ -135,15 +135,20 @@ class DB extends Types.OOObserver {
 
         const inst: Types.IDBInstallation = {
             id: installationID,
-            name: "",
-            browser: "",
-            os: "",
+            name: installData.name,
+            browser: installData.browser,
+            os: installData.os,
             lastSyncTime: 0,
             bookmarkMap: []
         };
         this.db.installations.push(inst);
         await this.upload();
 
+        this.setCurrentInstallation(installationID);
+        return installationID;
+    }
+
+    public setCurrentInstallation(installationID: string) {
         this.currentInstallation = this.getInstallation(installationID);
     }
 
