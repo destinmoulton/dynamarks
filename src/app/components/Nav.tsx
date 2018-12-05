@@ -12,6 +12,7 @@ import SetupInstallation from "./SetupInstallation";
 import { SettingKeys } from "../../common/constants/settings.constants";
 import * as SettingsActions from "../redux/actions/settings.actions";
 import { settings } from "../instances";
+import { getClassNamespace } from "@blueprintjs/core/lib/esm/common/classes";
 
 interface IMapStateToProps {
     settingsState: Types.IStateSettings;
@@ -20,22 +21,39 @@ interface IMapStateToProps {
 
 interface IMapDispatchToProps {
     settingsPopulate: () => void;
+    settingsSet: (key: string, value: any) => void;
 }
 
 interface IProps {}
 
 type TNavProps = IMapStateToProps & IMapDispatchToProps & IProps;
 interface IState {}
+
 class Nav extends React.Component<TNavProps, IState> {
     constructor(props: TNavProps) {
         super(props);
 
         this.state = {};
+
+        // Add a setting listener to detect when a setting is changed
+        // IMPORTANT!
+        settings.addListener(this._handleSettingChanged);
     }
 
     async componentDidMount() {
         this.props.settingsPopulate();
     }
+
+    private _handleSettingChanged = (changes: any, areaName: string) => {
+        if (areaName === "local") {
+            const changedKeys = _.keys(changes);
+            for (let key of changedKeys) {
+                if (_.has(SettingKeys, key)) {
+                    this.props.settingsSet(key, changes[key].newValue);
+                }
+            }
+        }
+    };
 
     render() {
         const { settingsState, isPopulated } = this.props;
@@ -77,7 +95,9 @@ const mapStateToProps = (state: Types.IRootStoreState) => {
 
 const mapDispatchToProps = (dispatch: Types.IDispatch) => {
     return {
-        settingsPopulate: () => dispatch(SettingsActions.populate())
+        settingsPopulate: () => dispatch(SettingsActions.populate()),
+        settingsSet: (key: string, value: any) =>
+            dispatch(SettingsActions.set(key, value))
     };
 };
 
