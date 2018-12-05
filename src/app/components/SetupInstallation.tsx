@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Button } from "@blueprintjs/core";
 import platform from "platform";
 
 import Loading from "./shared/Loading";
@@ -11,6 +12,7 @@ interface IProps {}
 
 interface IState {
     isLoadingInstallations: boolean;
+    isNewInstall: boolean;
     installations: Types.IDBInstallation[];
 }
 
@@ -21,6 +23,7 @@ class SetupInstallation extends React.Component<IProps, IState> {
 
         this.state = {
             isLoadingInstallations: true,
+            isNewInstall: false,
             installations: []
         };
 
@@ -47,27 +50,55 @@ class SetupInstallation extends React.Component<IProps, IState> {
         }
     };
 
+    private _handleClickNewInstall = (evt: any) => {
+        this.setState({
+            isNewInstall: true
+        });
+    };
+
+    private _handleCancelNewInstall = (evt: any) => {
+        this.setState({
+            isNewInstall: false
+        });
+    };
+
     componentDidMount() {
         this._requestInstallations();
     }
 
     private _viewListInstallations() {
         const { installations } = this.state;
-        const items = installations.map(install => {
-            return <li>{install.name}</li>;
+        const items = installations.map((install, idx) => {
+            return <li key={idx}>{install.name}</li>;
         });
-        return <ul>{items}</ul>;
+        return (
+            <div>
+                <h3>Existing Installation?</h3>
+                <ul>{items}</ul>
+                <Button onClick={this._handleClickNewInstall}>
+                    New Installation
+                </Button>
+            </div>
+        );
     }
 
     render() {
-        const { installations, isLoadingInstallations } = this.state;
+        const {
+            installations,
+            isLoadingInstallations,
+            isNewInstall
+        } = this.state;
         let view = <Loading message="Checking installation..." />;
 
         if (!isLoadingInstallations) {
-            if (installations.length > 0) {
+            if (installations.length > 0 && !isNewInstall) {
                 view = this._viewListInstallations();
             } else {
-                view = <InstallationForm />;
+                view = (
+                    <InstallationForm
+                        cancelHandler={this._handleCancelNewInstall}
+                    />
+                );
             }
         }
 
