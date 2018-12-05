@@ -3,7 +3,7 @@ import * as React from "react";
 import { Button } from "@blueprintjs/core";
 
 interface IProps {
-    message: string;
+    message: any;
     okHandler: () => void;
     cancelHandler: () => void;
 }
