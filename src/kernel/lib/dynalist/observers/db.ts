@@ -74,7 +74,7 @@ class DB extends Types.OOObserver {
             // Need to setup a new/fresh installation
             await this.iSettings.remove(SettingKeys.installationID);
         } else {
-            this.setCurrentInstallation(installationID);
+            await this.setCurrentInstallation(installationID);
         }
 
         log("setupNewDB() :: this.db", this.db);
@@ -131,7 +131,6 @@ class DB extends Types.OOObserver {
     }) {
         // Generate an installationID
         const installationID = sum(Date.now());
-        await this.iSettings.set(SettingKeys.installationID, installationID);
 
         const inst: Types.IDBInstallation = {
             id: installationID,
@@ -144,11 +143,12 @@ class DB extends Types.OOObserver {
         this.db.installations.push(inst);
         await this.upload();
 
-        this.setCurrentInstallation(installationID);
+        await this.setCurrentInstallation(installationID);
         return installationID;
     }
 
-    public setCurrentInstallation(installationID: string) {
+    public async setCurrentInstallation(installationID: string) {
+        await this.iSettings.set(SettingKeys.installationID, installationID);
         this.currentInstallation = this.getInstallation(installationID);
     }
 
