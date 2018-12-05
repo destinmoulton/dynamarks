@@ -21,6 +21,10 @@ class DBEvents {
                 return this.getInstallations();
             case MessengerActions.DB_ADD_INSTALLATION:
                 return await this.iDB.addInstallation(packet.payload);
+            case MessengerActions.DB_SET_CURRENT_INSTALLATION:
+                return await this.iDB.setCurrentInstallation(
+                    packet.payload.installationID
+                );
             default:
                 return;
         }
