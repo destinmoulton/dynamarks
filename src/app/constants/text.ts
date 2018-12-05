@@ -11,12 +11,6 @@ export default {
             }
         },
         settings: {
-            clear: {
-                title: "Remove Settings",
-                button: "Sign Out",
-                message:
-                    "Are you sure you want to sign out? This will clear the API key and stop all synchronization."
-            },
             changedocument: {
                 title: "Dynalist Bookmark Document",
                 button: "Change Synchronization Document",
@@ -28,6 +22,14 @@ export default {
                 editbutton: "Edit",
                 cancelbutton: "Cancel",
                 savebutton: "Save"
+            },
+            reset: {
+                title: "Remove Settings",
+                button: "Reset",
+                confirmlines: [
+                    "Are you sure you want to reset Dynamarks?",
+                    "This will clear the API key and stop all synchronization."
+                ]
             }
         }
     },
