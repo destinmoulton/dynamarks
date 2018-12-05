@@ -11,6 +11,15 @@ class Settings {
         log("ERROR", err);
     }
 
+    public addListener(
+        listener: (
+            changes: browser.storage.StorageChange,
+            areaName: string
+        ) => void
+    ) {
+        browser.storage.onChanged.addListener(listener);
+    }
+
     public async set(name: string, data: any) {
         try {
             return await browser.storage.local.set({ [name]: data });
