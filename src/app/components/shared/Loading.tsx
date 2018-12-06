@@ -9,7 +9,7 @@ const Loading = (props: IProps) => {
     return (
         <div>
             <Spinner />
-            <div className="dkmks-loading-message">{props.message}</div>
+            <div className="dmks-loading-message">{props.message}</div>
         </div>
     );
 };

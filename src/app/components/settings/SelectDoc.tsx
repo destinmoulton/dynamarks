@@ -58,7 +58,7 @@ class SelectDoc extends React.Component<TSelectDocProps, IState> {
         const doclist = docs.map(doc => {
             return (
                 <li
-                    className="dkmks-listlinks-item"
+                    className="dmks-listlinks-item"
                     key={doc.id}
                     onClick={this.handleClickDoc.bind(this, doc)}
                 >
@@ -70,7 +70,7 @@ class SelectDoc extends React.Component<TSelectDocProps, IState> {
         return (
             <div>
                 Select a Dynalist Bookmarks Document
-                <ul className="dkmks-listlinks-item">{doclist}</ul>
+                <ul className="dmks-listlinks-item">{doclist}</ul>
             </div>
         );
     }

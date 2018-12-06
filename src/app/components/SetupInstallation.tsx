@@ -65,7 +65,7 @@ class SetupInstallation extends React.Component<IProps, IState> {
     private _handleClickCurrentInstall(installationID: string) {
         const packet = {
             action: MessengerActions.DB_SET_CURRENT_INSTALLATION,
-            installationID
+            payload: { installationID }
         };
         messenger.send(this.topic, packet);
     }
@@ -76,12 +76,16 @@ class SetupInstallation extends React.Component<IProps, IState> {
 
     private _viewListInstallations() {
         const { installations } = this.state;
+
         const items = installations.map((install, idx) => {
             return (
                 <li
-                    className="dkmks-listlinks-item"
+                    className="dmks-listlinks-item"
                     key={idx}
-                    onClick={this._handleClickCurrentInstall.bind(install.id)}
+                    onClick={this._handleClickCurrentInstall.bind(
+                        this,
+                        install.id
+                    )}
                 >
                     {install.name}
                 </li>
@@ -91,7 +95,7 @@ class SetupInstallation extends React.Component<IProps, IState> {
             <div>
                 <h3>Existing Installation?</h3>
                 <p>Choose an existing installation or create a new one.</p>
-                <ul className="dkmks-listlinks">{items}</ul>
+                <ul className="dmks-listlinks">{items}</ul>
                 <Button onClick={this._handleClickNewInstall}>
                     New Installation
                 </Button>

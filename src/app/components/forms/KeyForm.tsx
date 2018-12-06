@@ -57,12 +57,12 @@ class KeyForm extends React.Component<TKeyFormProps, IState> {
                     labelFor="dynalist-token"
                 >
                     <textarea
-                        className="dkmks-keyform-textarea"
+                        className="dmks-keyform-textarea"
                         id="dynalist-token"
                         ref={this.textarea}
                     />
                 </FormGroup>
-                <div className="dkmks-keyform-button-container">
+                <div className="dmks-keyform-button-container">
                     <Button
                         onClick={this.handleContinue}
                         rightIcon="arrow-right"
@@ -71,7 +71,7 @@ class KeyForm extends React.Component<TKeyFormProps, IState> {
                         Continue
                     </Button>
                 </div>
-                <div className="dkmks-keyform-infolink">
+                <div className="dmks-keyform-infolink">
                     <a href="https://dynalist.io/developer" target="_blank">
                         Generate your API secret token.
                     </a>
