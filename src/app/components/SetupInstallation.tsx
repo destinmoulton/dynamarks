@@ -62,6 +62,14 @@ class SetupInstallation extends React.Component<IProps, IState> {
         });
     };
 
+    private _handleClickCurrentInstall(installationID: string) {
+        const packet = {
+            action: MessengerActions.DB_SET_CURRENT_INSTALLATION,
+            installationID
+        };
+        messenger.send(this.topic, packet);
+    }
+
     componentDidMount() {
         this._requestInstallations();
     }
@@ -69,12 +77,21 @@ class SetupInstallation extends React.Component<IProps, IState> {
     private _viewListInstallations() {
         const { installations } = this.state;
         const items = installations.map((install, idx) => {
-            return <li key={idx}>{install.name}</li>;
+            return (
+                <li
+                    className="dkmks-listlinks-item"
+                    key={idx}
+                    onClick={this._handleClickCurrentInstall.bind(install.id)}
+                >
+                    {install.name}
+                </li>
+            );
         });
         return (
             <div>
                 <h3>Existing Installation?</h3>
-                <ul>{items}</ul>
+                <p>Choose an existing installation or create a new one.</p>
+                <ul className="dkmks-listlinks">{items}</ul>
                 <Button onClick={this._handleClickNewInstall}>
                     New Installation
                 </Button>

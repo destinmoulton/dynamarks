@@ -67,17 +67,18 @@ div.dkmks-loading-message {
     font-size: 0.9em;
 }
 
-/** SelectDoc.tsx component styles **/
+/** List Link Styles **/
 
-ul.dkmks-selectdoc-list {
+ul.dkmks-listlinks {
     list-style-type: none;
     margin-left: 0;
     padding-left: 15px;
 }
 
-li.dkmks-selectdoc-list-item {
+li.dkmks-listlinks-item {
     margin-top: 4px;
     cursor: pointer;
+    color: blue;
 }
 
 /** settings card styles **/
