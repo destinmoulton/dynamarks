@@ -1,6 +1,6 @@
-import Messenger from "../../common/messenger";
-import * as MessengerActions from "../../common/constants/messengeractions.constants";
-import * as Types from "../../common/types";
+import Messenger from "../../../common/messenger";
+import * as MessengerActions from "../../../common/constants/messengeractions.constants";
+import * as Types from "../../../common/types";
 
 class SettingEvents {
     private iMessenger: Messenger = null;
