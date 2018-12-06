@@ -44,23 +44,23 @@ div.dmks-confirm-message-container {
 
 /** forms/KeyForm.tsx styles **/
 
-div.dkmks-keyform-button-container {
+div.dmks-keyform-button-container {
     text-align: right;
 }
 
-textarea.dkmks-keyform-textarea {
+textarea.dmks-keyform-textarea {
     width: 100%;
     resize: none;
 }
 
-div.dkmks-keyform-infolink {
+div.dmks-keyform-infolink {
     text-align: center;
     margin-top: 15px;
 }
 
 /** shared/Loading.tsx component styles **/
 
-div.dkmks-loading-message {
+div.dmks-loading-message {
     width: 100%;
     margin-top: 15px;
     text-align: center;
@@ -69,13 +69,13 @@ div.dkmks-loading-message {
 
 /** List Link Styles **/
 
-ul.dkmks-listlinks {
+ul.dmks-listlinks {
     list-style-type: none;
     margin-left: 0;
     padding-left: 15px;
 }
 
-li.dkmks-listlinks-item {
+li.dmks-listlinks-item {
     margin-top: 4px;
     cursor: pointer;
     color: blue;
