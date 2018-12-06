@@ -60,24 +60,20 @@ function populationComplete() {
 
 // Populate the settings from storage (or default)
 export function populate() {
-    return (dispatch: Types.IDispatch) => {
-        const promises = _.keys(SettingKeys).map((settingKey: string) => {
-            const settingName = SettingKeys[settingKey];
-            return settings.exists(settingName).then(doesExist => {
-                if (doesExist) {
-                    return settings.get(settingName).then(setting => {
-                        return dispatch(setSingle(settingName, setting));
-                    });
-                } else if (SettingDefaults[settingKey] !== null) {
-                    return dispatch(
-                        set(settingName, SettingDefaults[settingKey])
-                    );
-                }
-            });
-        });
-        return Promise.all(promises).then(() => {
-            dispatch(populationComplete());
-        });
+    return async (dispatch: Types.IDispatch) => {
+        await settings.debug();
+        for (let key of _.keys(SettingKeys)) {
+            const settingName = SettingKeys[key];
+            const isSet = await settings.exists(settingName);
+            if (isSet) {
+                console.log("setting IS set", settingName);
+                const setting = await settings.get(settingName);
+                dispatch(setSingle(settingName, setting));
+            } else if (SettingDefaults[key] !== null) {
+                dispatch(set(settingName, SettingDefaults[key]));
+            }
+        }
+        dispatch(populationComplete());
     };
 }
 
